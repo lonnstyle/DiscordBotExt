@@ -7,6 +7,7 @@ Warframe Discord 機器人<br/>
   * 必須搭配[dict](dict)當中的[Weapons.json](Weapons.json)以及[attributes.json](attributes.json)使用
 * [baroManual.py](baroManual.py)查詢虛空商人Baro Ki'Teer的目前狀態<br/>
   * 感謝[pa001024](https://github.com/pa001024)允許使用[riven.im](https://riven.im)項目的繁體翻譯檔[zh-Hant.json](https://raw.githubusercontent.com/lonnstyle/riven-mirror/dev/src/i18n/lang/zh-Hant.json)作為Dict
+  -pip install chinese-converter
 * [wfm.py](wfm.py)查詢物品於[wfm](https://warframe.market)上最低價的五個賣家訂單<br/>
   需要翻譯Dict以支持功能運行
   * 官方翻譯：[GitLocalize](https://gitlocalize.com/repo/5556/zh/dict/items_en.json)
