@@ -16,7 +16,7 @@ Warframe Discord 機器人<br/>
   * 自定義暱稱：[Google Sheet](https://docs.google.com/spreadsheets/d/1AMxTBp1_HdVbjdxnpTGqy_16OoP-CBeBc9117ZXGhEQ/edit?usp=sharing)
 
 ## 指令列表<br/>
-**所有指令均需要搭配指令前綴使用，可在機器人框架中的setting.json中修改
+**所有指令均需要搭配指令前綴使用，可在機器人框架中的setting.json中修改**
 * [worldState.py](worldState.py)當中的指令
   * POE/夜靈平原時間/poe  查詢夜靈平原目前日夜循環狀態和剩餘時間
   * Earth/地球時間  查詢地球目前日夜循環狀態和剩餘時間
