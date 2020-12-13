@@ -46,12 +46,13 @@ class baroManual(Cog_Extension):
       message += "```"
       await ctx.send(message)
     if html['active'] == False:
+      location = html['location']
+      location = chinese_converter.to_traditional(location)
       arrive = html['endString']
       arrive = arrive.replace("d","天")
       arrive = arrive.replace("h","小時")
       arrive = arrive.replace("m","分鐘")
       arrive = arrive.replace("s","秒")
-      arrive = html['location']
       await ctx.send(f"Baro Ki' Teer會在{arrive}後抵達{location}") 
 
 
