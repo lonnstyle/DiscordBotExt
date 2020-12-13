@@ -59,8 +59,10 @@ class wfm(Cog_Extension):
         await ctx.send(msg)
 
     def load():
-
-        return ("已重新載入Dict")
+      localDict = requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotMods/main/dict/items_zh-hant.json")
+      localDict = json.loads(localDict.text)
+      localDict = {x: y for y, x in localDict.items()}
+      return ("已重新載入Dict")
 
 
 def setup(bot):
