@@ -31,6 +31,7 @@ Warframe Discord 機器人<br/>
   * 此功能的自動版正在壓力測試中
 * [wfm.py](wfm.py)當中的指令
   * wfm/wm/市場查詢 [物品名稱]  查詢該物品於wf.m上最低價的五名賣家訂單
+  * reloadDict  Dict更新同步（目前僅支持官方翻譯Dict的更新）
   * 此功能所使用的Dict尚未編寫完成
   * 使用[GitLocalize](https://gitlocalize.com/repo/5556/zh/dict/items_en.json)協助完成官方翻譯的Dict編寫
   * 使用[Google Sheet](https://docs.google.com/spreadsheets/d/1AMxTBp1_HdVbjdxnpTGqy_16OoP-CBeBc9117ZXGhEQ/edit?usp=sharing)編寫自定義Dict
