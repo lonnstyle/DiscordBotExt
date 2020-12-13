@@ -8,6 +8,9 @@ localDict = requests.get(
 )
 localDict = json.loads(localDict.text)
 localDict = {x: y for y, x in localDict.items()}
+enDict = requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotMods/main/dict/items_en.json")
+enDict = json.loads(enDict.text)
+enDict = {x: y for y, x in enDict.items()}
 
 
 class wfm(Cog_Extension):
@@ -19,12 +22,10 @@ class wfm(Cog_Extension):
     def item(self, items):
         count = 5
         item = localDict.get(items, items)
-        #if item == items:
-
-        item = item.lower()
-        item = item.replace(' ', '_')
-        if item.find("primed") == -1 and item.find("prime_set") == -1:
-            item = item.replace("prime", "prime_set")
+        if item == items:
+          item = enDict.get(items,items)
+        if item == items:
+          return("Ordis不太清楚指揮官說的什麼呢")        
         url = "https://api.warframe.market/v1/items/" + item + "/orders"
         raw = requests.get(url)
         if raw.status_code != 200:
