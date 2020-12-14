@@ -14,6 +14,9 @@ Warframe Discord 機器人<br/>
   需要翻譯Dict以支持功能運行
   * 官方翻譯：[GitLocalize](https://gitlocalize.com/repo/5556/zh/dict/items_en.json)
   * 自定義暱稱：[Google Sheet](https://docs.google.com/spreadsheets/d/1AMxTBp1_HdVbjdxnpTGqy_16OoP-CBeBc9117ZXGhEQ/edit?usp=sharing)
+* [worldStateAuto.py](worldStateAuto.py)自動查詢世界循環狀態<br/>
+  * 僅允許owner執行，避免重複查詢對API伺服器造成負擔
+  * 目前僅支援仲裁/突擊，避免對伺服器造成洗板；如有大量回饋讚成開啟平原時間查詢，將作出更新
 
 ## 指令列表<br/>
 **所有指令均需要搭配指令前綴使用，可在機器人框架中的setting.json中修改**
@@ -35,3 +38,8 @@ Warframe Discord 機器人<br/>
   * 此功能所使用的Dict尚未編寫完成
   * 使用[GitLocalize](https://gitlocalize.com/repo/5556/zh/dict/items_en.json)協助完成官方翻譯的Dict編寫
   * 使用[Google Sheet](https://docs.google.com/spreadsheets/d/1AMxTBp1_HdVbjdxnpTGqy_16OoP-CBeBc9117ZXGhEQ/edit?usp=sharing)編寫自定義Dict
+* [worldStateAuto.py](worldStateAuto.py)當中的指令
+  * **延遲時間建議為150秒或以上，避免API返回空白數據導致執行出錯**
+  * ArbitrationAuto [延遲時間（秒）] 在指定延遲時間後查詢當前仲裁任務和剩餘時間
+  * SortieAuto [延遲時間（秒）] 在指定延遲時間後查詢當前突擊任務和剩餘時間
+  
