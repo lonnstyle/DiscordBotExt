@@ -17,8 +17,10 @@ class worldStateAuto(Cog_Extension):
   async def arbitration(self,ctx,*args):
     if ctx.message.author.id == jdata['owner']:
       args = str(args).replace(",","")
-      offset = eval(args)
-      offset = int(offset)
+      args = args.replace("\'","")
+      args = args.replace("(","")
+      args = args.replace(")","")
+      offset = int(args)
       if offset > 0:
         while(True):
           raw = requests.get("https://api.warframestat.us/pc/tc/arbitration",headers={'Accept-Language':'zh'})
@@ -40,9 +42,10 @@ class worldStateAuto(Cog_Extension):
   async def Sortie(self,ctx,*args):
     if ctx.message.author.id == jdata['owner']:
       args = str(args).replace(",","")
-      offset = eval(args)
-      print(offset)
-      offset = int(offset)
+      args = args.replace("\'","")
+      args = args.replace("(","")
+      args = args.replace(")","")
+      offset = int(args)
       if offset > 0:
         while(True):
           count = 1
