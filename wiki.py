@@ -33,7 +33,7 @@ class wiki(Cog_Extension):
       url = "https://warframe.huijiwiki.com/wiki/"+name
     text = page.text()
     url = url.replace(" ","_")
-    embed = discord.Embed(title=name,url=url,description=text[:300]) 
+    embed = discord.Embed(title=name,url=url,description=text[:500]) 
     await ctx.send(embed=embed)
 
 
