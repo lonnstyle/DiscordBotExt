@@ -2,6 +2,12 @@ from discord.ext import commands
 from core.classes import Cog_Extension
 import requests
 import json
+import discord
+from discord_webhook import DiscordWebhook, DiscordEmbed
+
+with open('setting.json', 'r', encoding='utf8') as jfile:
+    jdata = json.load(jfile)
+
 
 localDict = requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotMods/main/dict/items_zh-hant.json")
 localDict = json.loads(localDict.text)
@@ -12,22 +18,21 @@ enDict = {x: y for y, x in enDict.items()}
 
 
 class wfm(Cog_Extension):
-  @commands.command(name='wfm', aliases=['wm', '市場查詢'])
+  @commands.command(name='wfmtest', aliases=['wmtest', '市場查詢test'])
   async def market(self, ctx, *args):
-    msg = self.item(' '.join(args))
-    await ctx.send(msg)
-
-  def item(self, items):
+    items = ' '.join(args)
     count = 5
     item = localDict.get(items, items)
     if item == items:
       item = enDict.get(items,items)
     if item == items:
-      return("Ordis不太清楚指揮官說的什麼呢")        
+      await ctx.send("Ordis不太清楚指揮官說的什麼呢") 
+      return       
     url = "https://api.warframe.market/v1/items/" + item + "/orders"
     raw = requests.get(url)
     if raw.status_code != 200:
-      return ("Ordis覺得...指揮官是不是搞錯了什麼")
+      await ctx.send("Ordis覺得...指揮官是不是搞錯了什麼")
+      return
     else:
       raw = json.loads(raw.text.encode(encoding='UTF-8'))
       raw = raw['payload']
@@ -47,6 +52,7 @@ class wfm(Cog_Extension):
           if (orderList[y]['platinum'] >orderList[y + 1]['platinum']):
             orderList[y], orderList[y + 1] = orderList[y + 1], orderList[y]
         message = f"以下為{items}的五個最低價賣家資料:\n"
+        webhook = DiscordWebhook(url=jdata['webhook'],content=message)
         for orders in raw:
           if count > 0:
             user = orders['user']
@@ -54,10 +60,16 @@ class wfm(Cog_Extension):
               rank = orders.get("mod_rank","")
               if rank != "":
                 rank = f"(rank {rank})"
-              message += f"```價格:{int(orders['platinum'])}\t賣家:{user['ingame_name']}\n"
-              message += f"/w {user['ingame_name']} Hi! I want to Buy: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)```"
+              embed = DiscordEmbed(title=f"賣家:{user['ingame_name']}",description=f"價格:{int(orders['platinum'])}")
+              embed.add_embed_field(name="複製信息", value =f"/w {user['ingame_name']} Hi! I want to Buy: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)")
+              avatar = user['avatar']
+              if avatar == None:
+                avatar = "user/default-avatar.png"
+              embed.set_author(name=user['ingame_name'], icon_url="https://warframe.market/static/assets/"+avatar, url = "https://warframe.market/zh-hant/profile/"+user['ingame_name'])
+              webhook.add_embed(embed)
               count -= 1
-        return (message)
+        response = webhook.execute()
+        break
 
 def setup(bot):
     bot.add_cog(wfm(bot))
