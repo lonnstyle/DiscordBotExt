@@ -59,8 +59,11 @@ class wfm(Cog_Extension):
             if orders['order_type'] == 'sell' and user['status'] == 'ingame' and orders['platform'] == 'pc':
               rank = orders.get("mod_rank","")
               if rank != "":
+                ChiRank = f"等級:{rank}"
                 rank = f"(rank {rank})"
-              embed = DiscordEmbed(title=f"賣家:{user['ingame_name']}",description=f"價格:{int(orders['platinum'])}")
+              else:
+                ChiRank = ""
+              embed = DiscordEmbed(title=f"物品:{itemName}\t數量:{orders['quantity']}\t{ChiRank}",description=f"價格:{int(orders['platinum'])}")
               embed.add_embed_field(name="複製信息", value =f"/w {user['ingame_name']} Hi! I want to Buy: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)")
               avatar = user['avatar']
               if avatar == None:
