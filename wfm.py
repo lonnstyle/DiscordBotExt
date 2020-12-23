@@ -51,28 +51,27 @@ class wfm(Cog_Extension):
         for y in range(0, len(orderList) - x - 1):
           if (orderList[y]['platinum'] >orderList[y + 1]['platinum']):
             orderList[y], orderList[y + 1] = orderList[y + 1], orderList[y]
-        message = f"以下為{items}的五個最低價賣家資料:\n"
-        webhook = DiscordWebhook(url=jdata['webhook'],content=message)
-        for orders in raw:
-          if count > 0:
-            user = orders['user']
-            if orders['order_type'] == 'sell' and user['status'] == 'ingame' and orders['platform'] == 'pc':
-              rank = orders.get("mod_rank","")
-              if rank != "":
-                ChiRank = f"等級:{rank}"
-                rank = f"(rank {rank})"
-              else:
-                ChiRank = ""
-              embed = DiscordEmbed(title=f"物品:{itemName}\t數量:{orders['quantity']}\t{ChiRank}",description=f"價格:{int(orders['platinum'])}")
-              embed.add_embed_field(name="複製信息", value =f"/w {user['ingame_name']} Hi! I want to Buy: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)")
-              avatar = user['avatar']
-              if avatar == None:
-                avatar = "user/default-avatar.png"
-              embed.set_author(name=user['ingame_name'], icon_url="https://warframe.market/static/assets/"+avatar, url = "https://warframe.market/zh-hant/profile/"+user['ingame_name'])
-              webhook.add_embed(embed)
-              count -= 1
-        response = webhook.execute()
-        break
+      message = f"以下為{items}的五個最低價賣家資料:\n"
+      webhook = DiscordWebhook(url=jdata['webhook'],content=message)
+      for orders in raw:
+        if count > 0:
+          user = orders['user']
+          if orders['order_type'] == 'sell' and user['status'] == 'ingame' and orders['platform'] == 'pc':
+            rank = orders.get("mod_rank","")
+            if rank != "":
+              ChiRank = f"等級:{rank}"
+              rank = f"(rank {rank})"
+            else:
+              ChiRank = ""
+            embed = DiscordEmbed(title=f"物品:{itemName}\t數量:{orders['quantity']}\t{ChiRank}",description=f"價格:{int(orders['platinum'])}")
+            embed.add_embed_field(name="複製信息", value =f"/w {user['ingame_name']} Hi! I want to Buy: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)")
+            avatar = user['avatar']
+            if avatar == None:
+              avatar = "user/default-avatar.png"
+            embed.set_author(name=user['ingame_name'], icon_url="https://warframe.market/static/assets/"+avatar, url = "https://warframe.market/zh-hant/profile/"+user['ingame_name'])
+            webhook.add_embed(embed)
+            count -= 1
+      response = webhook.execute()
 
 def setup(bot):
     bot.add_cog(wfm(bot))
