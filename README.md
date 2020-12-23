@@ -21,6 +21,9 @@ Warframe Discord 機器人<br/>
 * [worldStateAuto.py](worldStateAuto.py)自動查詢世界循環狀態<br/>
   * 僅允許owner執行，避免重複查詢對API伺服器造成負擔
   * 目前僅支援仲裁/突擊，避免對伺服器造成洗板；如有大量回饋讚成開啟平原時間查詢，將作出更新
+* [wiki.py](wiki.py)生成wiki鏈接<br/>
+  -pip install mwclient
+  * 查詢順序為[簡中](https://warframe.huijiwiki.com)→[繁中](https://warframe.fandom.com/zh-tw)→[英文](https://warframe.fandom.com)
 
 ## 指令列表<br/>
 **所有指令均需要搭配指令前綴使用，可在機器人框架中的setting.json中修改**
@@ -46,6 +49,10 @@ Warframe Discord 機器人<br/>
   * **延遲時間建議為150秒或以上，避免API返回空白數據導致執行出錯**
   * ArbitrationAuto [延遲時間（秒）] 在指定延遲時間後查詢當前仲裁任務和剩餘時間
   * SortieAuto [延遲時間（秒）] 在指定延遲時間後查詢當前突擊任務和剩餘時間
+* [wiki.py](wiki.py)
+  * wiki [頁面名稱] 查詢wiki並生成鏈接
+  * 為避免對wiki伺服器造成過大壓力，未啟用模糊搜索，**請確保你輸入的頁面名稱並無出錯**
+  * 由於並非所有wiki頁面均有section,因此嵌入內容為頁面源代碼的前**500**字元
   
 <br/><br/>
 <a href="https://www.patreon.com/bePatron?u=47066858" data-patreon-widget-type="贊助lonnstyle開發機器人">贊助lonnstyle開發機器人</a>
