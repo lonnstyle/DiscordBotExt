@@ -47,3 +47,5 @@ Warframe Discord 機器人<br/>
   * ArbitrationAuto [延遲時間（秒）] 在指定延遲時間後查詢當前仲裁任務和剩餘時間
   * SortieAuto [延遲時間（秒）] 在指定延遲時間後查詢當前突擊任務和剩餘時間
   
+<br/><br/>
+<a href="https://www.patreon.com/bePatron?u=47066858" data-patreon-widget-type="贊助lonnstyle開發機器人">贊助lonnstyle開發機器人</a>
