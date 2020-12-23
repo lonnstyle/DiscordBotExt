@@ -18,7 +18,7 @@ enDict = {x: y for y, x in enDict.items()}
 
 
 class wfm(Cog_Extension):
-  @commands.command(name='wfmtest', aliases=['wmtest', '市場查詢test'])
+  @commands.command(name='wfm', aliases=['wm', '市場查詢'])
   async def market(self, ctx, *args):
     items = ' '.join(args)
     count = 5
