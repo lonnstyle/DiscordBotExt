@@ -31,9 +31,17 @@ class wiki(Cog_Extension):
       page = page.resolve_redirect()
       name = page.name
       url = "https://warframe.huijiwiki.com/wiki/"+name
-    text = page.text()
     url = url.replace(" ","_")
-    embed = discord.Embed(title=name,url=url,description=text[:500]) 
+    found = False
+    desc = "以下為相關頁面鏈接:\n"
+    for link in page.links():
+      if name in link.name:
+        linkURL = url.replace(name,"")+"/"+link.name.replace(" ","_")
+        desc += f"[{link.name}]({linkURL})\n"
+        found = True
+    if found == False:
+      desc = ""
+    embed = discord.Embed(title=name,url=url,description=desc)
     await ctx.send(embed=embed)
 
 
