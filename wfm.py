@@ -21,6 +21,9 @@ class wfm(Cog_Extension):
   @commands.command(name='wfm', aliases=['wm', '市場查詢'])
   async def market(self, ctx, *args):
     items = ' '.join(args)
+    itemSet = False
+    if "Set" in items:
+      itemSet = True
     count = 5
     item = localDict.get(items, items)
     if item == items:
@@ -45,8 +48,11 @@ class wfm(Cog_Extension):
       itemName = itemName['items_in_set']
       for item in itemName:
         itemName = item
-      itemName = itemName['en']
-      itemName = itemName['item_name']
+        itemName = itemName['en']
+        itemName = itemName['item_name']
+        if itemSet == True:
+          if "Set" in itemName:
+            break
       for x in range(len(orderList)):
         for y in range(0, len(orderList) - x - 1):
           if (orderList[y]['platinum'] >orderList[y + 1]['platinum']):
