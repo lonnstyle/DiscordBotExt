@@ -20,10 +20,11 @@ enDict = {x: y for y, x in enDict.items()}
 class wfm(Cog_Extension):
   @commands.command(name='wfm', aliases=['wm', '市場查詢'])
   async def market(self, ctx, *args):
+    if str(ctx.channel.type) != 'private':
+      channel_id = ctx.channel.id
+    else:
+      channel_id = None
     items = ' '.join(args)
-    itemSet = False
-    if "Set" in items:
-      itemSet = True
     count = 5
     item = localDict.get(items, items)
     if item == items:
@@ -46,38 +47,60 @@ class wfm(Cog_Extension):
       itemName = itemName['payload']
       itemName = itemName['item']
       itemName = itemName['items_in_set']
-      for item in itemName:
-        itemName = item
-        itemName = itemName['en']
-        itemName = itemName['item_name']
-        if itemSet == True:
-          if "Set" in itemName:
-            break
+      for language in itemName:
+        en = language['en']
+        tc = language['zh-hant']
+        if en["item_name"] == items or tc['item_name'] == items:
+          itemName = language['en']
+          itemName = itemName['item_name']
+          break
       for x in range(len(orderList)):
         for y in range(0, len(orderList) - x - 1):
           if (orderList[y]['platinum'] >orderList[y + 1]['platinum']):
             orderList[y], orderList[y + 1] = orderList[y + 1], orderList[y]
       message = f"以下為{items}的五個最低價賣家資料:\n"
-      webhook = DiscordWebhook(url=jdata['webhook'],content=message)
-      for orders in raw:
-        if count > 0:
-          user = orders['user']
-          if orders['order_type'] == 'sell' and user['status'] == 'ingame' and orders['platform'] == 'pc':
-            rank = orders.get("mod_rank","")
-            if rank != "":
-              ChiRank = f"等級:{rank}"
-              rank = f"(rank {rank})"
-            else:
-              ChiRank = ""
-            embed = DiscordEmbed(title=f"物品:{itemName}\t數量:{orders['quantity']}\t{ChiRank}",description=f"價格:{int(orders['platinum'])}")
-            embed.add_embed_field(name="複製信息", value =f"/w {user['ingame_name']} Hi! I want to Buy: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)")
-            avatar = user['avatar']
-            if avatar == None:
-              avatar = "user/default-avatar.png"
-            embed.set_author(name=user['ingame_name'], icon_url="https://warframe.market/static/assets/"+avatar, url = "https://warframe.market/zh-hant/profile/"+user['ingame_name'])
-            webhook.add_embed(embed)
-            count -= 1
-      response = webhook.execute()
+      webhookID = jdata.get("webhook","Blank")
+      webhookID = requests.get(webhookID)
+      webhookID = json.loads(webhookID.text)
+      webhookID = webhookID['channel_id']
+      if eval(webhookID) == channel_id:
+        print("true")
+        webhook = DiscordWebhook(url=jdata['webhook'],content=message)
+        for orders in raw:
+          if count > 0:
+            user = orders['user']
+            if orders['order_type'] == 'sell' and user['status'] == 'ingame' and orders['platform'] == 'pc':
+              rank = orders.get("mod_rank","")
+              if rank != "":
+                ChiRank = f"等級:{rank}"
+                rank = f"(rank {rank})"
+              else:
+                ChiRank = ""
+              embed = DiscordEmbed(title=f"物品:{itemName}\t數量:{orders['quantity']}\t{ChiRank}",description=f"價格:{int(orders['platinum'])}")
+              embed.add_embed_field(name="複製信息", value =f"/w {user['ingame_name']} Hi! I want to Buy: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)")
+              avatar = user['avatar']
+              if avatar == None:
+                avatar = "user/default-avatar.png"
+              embed.set_author(name=user['ingame_name'], icon_url="https://warframe.market/static/assets/"+avatar, url = "https://warframe.market/zh-hant/profile/"+user['ingame_name'])
+              webhook.add_embed(embed)
+              count -= 1
+        response = webhook.execute()
+      else:
+        for orders in raw:
+          if count > 0:
+            user = orders['user']
+            if orders['order_type'] == 'sell' and user['status'] == 'ingame' and orders['platform'] == 'pc':
+              rank = orders.get("mod_rank","")
+              if rank != "":
+                ChiRank = f"等級:{rank}"
+                rank = f"(rank {rank})"
+              else:
+                ChiRank = ""
+              message+=f"```賣家:{user['ingame_name']}\n物品:{itemName}\t數量:{orders['quantity']}\t{ChiRank}\n價格:{int(orders['platinum'])}\n"
+              message+=f"複製信息\n/w {user['ingame_name']} Hi! I want to Buy: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)```"
+              count -= 1
+        await ctx.send(message)
+      
 
 def setup(bot):
     bot.add_cog(wfm(bot))
