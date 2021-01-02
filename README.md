@@ -12,7 +12,7 @@ Warframe Discord 機器人<br/>
   -pip install chinese-converter
 * [wfm.py](wfm.py)查詢物品於[wfm](https://warframe.market)上最低價的五個賣家訂單<br/>
   -pip install discord-webhook
-  * 請在setting.json當中加入以下數據：
+  * 請在setting.json當中加入以下數據(可選)：
     "webhook": "<你的webhook URL>"
   <s>需要翻譯Dict以支持功能運行
   * 官方翻譯：[GitLocalize](https://gitlocalize.com/repo/5556/zh/dict/items_en.json)</s>
