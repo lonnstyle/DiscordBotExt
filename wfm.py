@@ -24,14 +24,26 @@ class wfm(Cog_Extension):
       channel_id = ctx.channel.id
     else:
       channel_id = None
-    items = ' '.join(args)
+    args = ' '.join(args).split(',')
+    items = args[0]
+    itemrank = int(args[1]) if len(args) > 1 else None
     count = 5
     item = localDict.get(items, items)
     if item == items:
       item = enDict.get(items,items)
     if item == items:
       await ctx.send("Ordis不太清楚指揮官說的什麼呢") 
-      return       
+      return 
+    itemsDetail = json.loads(requests.get("https://api.warframe.market/v1/items/" + item).text.encode(encoding="UTF-8"))["payload"]["item"]["items_in_set"]
+    max_rank = None
+    for itemDetail in itemsDetail:
+      if "mod_max_rank" in itemDetail:
+        if itemrank is not None:
+          max_rank = int(itemDetail["mod_max_rank"])
+          print(itemrank, max_rank)
+          if itemrank > max_rank:
+            await ctx.send("指揮官所輸入的等級超出物品最高等級呢 0.0") 
+            return
     url = "https://api.warframe.market/v1/items/" + item + "/orders"
     raw = requests.get(url)
     if raw.status_code != 200:
@@ -69,6 +81,9 @@ class wfm(Cog_Extension):
         for orders in raw:
           if count > 0:
             user = orders['user']
+            if max_rank is not None:
+              if orders['mod_rank'] != itemrank:
+                continue
             if orders['order_type'] == 'sell' and user['status'] == 'ingame' and orders['platform'] == 'pc':
               rank = orders.get("mod_rank","")
               if rank != "":
@@ -77,7 +92,7 @@ class wfm(Cog_Extension):
               else:
                 ChiRank = ""
               embed = DiscordEmbed(title=f"物品:{itemName}\t數量:{orders['quantity']}\t{ChiRank}",description=f"價格:{int(orders['platinum'])}")
-              embed.add_embed_field(name="複製信息", value =f"/w {user['ingame_name']} Hi! I want to Buy: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)")
+              embed.add_embed_field(name="複製信息", value = f"\n/w {user['ingame_name']} Hi! I want to buy: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)\n```")
               avatar = user['avatar']
               if avatar == None:
                 avatar = "user/default-avatar.png"
@@ -89,6 +104,9 @@ class wfm(Cog_Extension):
         for orders in raw:
           if count > 0:
             user = orders['user']
+            if max_rank is not None:
+              if orders['mod_rank'] != itemrank:
+                continue
             if orders['order_type'] == 'sell' and user['status'] == 'ingame' and orders['platform'] == 'pc':
               rank = orders.get("mod_rank","")
               if rank != "":
@@ -97,7 +115,7 @@ class wfm(Cog_Extension):
               else:
                 ChiRank = ""
               message+=f"```賣家:{user['ingame_name']}\n物品:{itemName}\t數量:{orders['quantity']}\t{ChiRank}\n價格:{int(orders['platinum'])}\n"
-              message+=f"複製信息\n/w {user['ingame_name']} Hi! I want to Buy: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)```"
+              message+=f"複製信息\n/w {user['ingame_name']} Hi! I want to buy: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)```\n"
               count -= 1
         await ctx.send(message)
       
