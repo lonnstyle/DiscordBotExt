@@ -81,7 +81,7 @@ class wfm(Cog_Extension):
         for orders in raw:
           if count > 0:
             user = orders['user']
-            if itemrank is not None:
+            if max_rank is not None:
               if orders['mod_rank'] != itemrank:
                 continue
             if orders['order_type'] == 'sell' and user['status'] == 'ingame' and orders['platform'] == 'pc':
@@ -104,7 +104,7 @@ class wfm(Cog_Extension):
         for orders in raw:
           if count > 0:
             user = orders['user']
-            if itemrank is not None:
+            if max_rank is not None:
               if orders['mod_rank'] != itemrank:
                 continue
             if orders['order_type'] == 'sell' and user['status'] == 'ingame' and orders['platform'] == 'pc':
