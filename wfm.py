@@ -15,6 +15,7 @@ localDict = {x: y for y, x in localDict.items()}
 enDict = requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotMods/main/dict/items_en.json")
 enDict = json.loads(enDict.text)
 enDict = {x: y for y, x in enDict.items()}
+Chinese_order_type = {'buy':'買','sell':'賣'}
 
 
 class wfm(Cog_Extension):
@@ -24,9 +25,32 @@ class wfm(Cog_Extension):
       channel_id = ctx.channel.id
     else:
       channel_id = None
-    args = ' '.join(args).split(',')
-    items = args[0]
-    itemrank = int(args[1]) if len(args) > 1 else None
+    action = 'buy'
+    order_type = 'sell'
+    args = ' '.join(args)
+    if args.count(',')==0:
+        items = args
+    elif args.count(',')==1:
+        if '買,'in args:
+            args = args.replace('買,','')
+        elif '賣,' in args:
+            args = args.replace('賣,','')
+            action = 'sell'
+            order_type = 'buy'
+        else
+            itemrank = eval(args.split(',')[1])
+            args = args.replace(f',{itemrank}')
+        items = args
+    elif args.count(',')==2:
+        order_type,items,itemrank = args.split(',')
+        if order_type == '買':
+            order_type = 'buy'
+        elif order_type == '賣':
+            order_type = 'sell'
+        else
+            await ctx.send('指揮官是要買還是賣呢？')
+    else
+        await ctx.send("指揮官說的太多了,Ordis不是很懂呢")
     count = 5
     item = localDict.get(items, items)
     if item == items:
@@ -70,7 +94,7 @@ class wfm(Cog_Extension):
         for y in range(0, len(orderList) - x - 1):
           if (orderList[y]['platinum'] >orderList[y + 1]['platinum']):
             orderList[y], orderList[y + 1] = orderList[y + 1], orderList[y]
-      message = f"以下為{items}的五個最低價賣家資料:\n"
+      message = f"以下為{items}的五個最低價{Chinese_order_type[order_type]}家資料:\n"
       webhookID = jdata.get("webhook","Blank")
       webhookID = requests.get(webhookID)
       webhookID = json.loads(webhookID.text)
@@ -84,7 +108,7 @@ class wfm(Cog_Extension):
             if max_rank is not None:
               if orders['mod_rank'] != itemrank:
                 continue
-            if orders['order_type'] == 'sell' and user['status'] == 'ingame' and orders['platform'] == 'pc':
+            if orders['order_type'] == order_type and user['status'] == 'ingame' and orders['platform'] == 'pc':
               rank = orders.get("mod_rank","")
               if rank != "":
                 ChiRank = f"等級:{rank}"
@@ -92,7 +116,7 @@ class wfm(Cog_Extension):
               else:
                 ChiRank = ""
               embed = DiscordEmbed(title=f"物品:{itemName}\t數量:{orders['quantity']}\t{ChiRank}",description=f"價格:{int(orders['platinum'])}")
-              embed.add_embed_field(name="複製信息", value = f"\n/w {user['ingame_name']} Hi! I want to buy: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)\n```")
+              embed.add_embed_field(name="複製信息", value = f"\n/w {user['ingame_name']} Hi! I want to {action}: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)\n```")
               avatar = user['avatar']
               if avatar == None:
                 avatar = "user/default-avatar.png"
@@ -107,15 +131,15 @@ class wfm(Cog_Extension):
             if max_rank is not None:
               if orders['mod_rank'] != itemrank:
                 continue
-            if orders['order_type'] == 'sell' and user['status'] == 'ingame' and orders['platform'] == 'pc':
+            if orders['order_type'] == order_type and user['status'] == 'ingame' and orders['platform'] == 'pc':
               rank = orders.get("mod_rank","")
               if rank != "":
                 ChiRank = f"等級:{rank}"
                 rank = f"(rank {rank})"
               else:
                 ChiRank = ""
-              message+=f"```賣家:{user['ingame_name']}\n物品:{itemName}\t數量:{orders['quantity']}\t{ChiRank}\n價格:{int(orders['platinum'])}\n"
-              message+=f"複製信息\n/w {user['ingame_name']} Hi! I want to buy: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)```\n"
+              message+=f"```{Chinese_order_type[order_type]}家:{user['ingame_name']}\n物品:{itemName}\t數量:{orders['quantity']}\t{ChiRank}\n價格:{int(orders['platinum'])}\n"
+              message+=f"複製信息\n/w {user['ingame_name']} Hi! I want to {action}: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)```\n"
               count -= 1
         await ctx.send(message)
       
