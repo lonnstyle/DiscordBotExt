@@ -37,19 +37,20 @@ class wfm(Cog_Extension):
             args = args.replace('賣,','')
             action = 'sell'
             order_type = 'buy'
-        else
-            itemrank = eval(args.split(',')[1])
-            args = args.replace(f',{itemrank}')
+        else:
+            itemrank = args.split(',')[1]
+            args = args.replace(f',{itemrank}','')
         items = args
     elif args.count(',')==2:
         order_type,items,itemrank = args.split(',')
         if order_type == '買':
-            order_type = 'buy'
-        elif order_type == '賣':
             order_type = 'sell'
-        else
+        elif order_type == '賣':
+            order_type = 'buy'
+            action = 'sell'
+        else:
             await ctx.send('指揮官是要買還是賣呢？')
-    else
+    else:
         await ctx.send("指揮官說的太多了,Ordis不是很懂呢")
     count = 5
     item = localDict.get(items, items)
@@ -64,91 +65,7 @@ class wfm(Cog_Extension):
       if "mod_max_rank" in itemDetail:
         if itemrank is not None:
           max_rank = int(itemDetail["mod_max_rank"])
-          print(itemrank, max_rank)
-          if itemrank > max_rank:
-            await ctx.send("指揮官所輸入的等級超出物品最高等級呢 0.0") 
-            return
-    url = "https://api.warframe.market/v1/items/" + item + "/orders"
-    raw = requests.get(url)
-    if raw.status_code != 200:
-      await ctx.send("Ordis覺得...指揮官是不是搞錯了什麼")
-      return
-    else:
-      raw = json.loads(raw.text.encode(encoding='UTF-8'))
-      raw = raw['payload']
-      raw = raw['orders']
-      orderList = raw
-      itemName = requests.get(url.replace("/orders","")).text.encode(encoding='UTF-8')
-      itemName = json.loads(itemName)
-      itemName = itemName['payload']
-from discord.ext import commands
-from core.classes import Cog_Extension
-import requests
-import json
-import discord
-from discord_webhook import DiscordWebhook, DiscordEmbed
-
-with open('setting.json', 'r', encoding='utf8') as jfile:
-    jdata = json.load(jfile)
-
-
-localDict = requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotMods/main/dict/items_zh-hant.json")
-localDict = json.loads(localDict.text)
-localDict = {x: y for y, x in localDict.items()}
-enDict = requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotMods/main/dict/items_en.json")
-enDict = json.loads(enDict.text)
-enDict = {x: y for y, x in enDict.items()}
-Chinese_order_type = {'buy':'買','sell':'賣'}
-
-
-class wfm(Cog_Extension):
-  @commands.command(name='wfm', aliases=['wm', '市場查詢'])
-  async def market(self, ctx, *args):
-    if str(ctx.channel.type) != 'private':
-      channel_id = ctx.channel.id
-    else:
-      channel_id = None
-    action = 'buy'
-    order_type = 'sell'
-    args = ' '.join(args)
-    if args.count(',')==0:
-        items = args
-    elif args.count(',')==1:
-        if '買,'in args:
-            args = args.replace('買,','')
-        elif '賣,' in args:
-            args = args.replace('賣,','')
-            action = 'sell'
-            order_type = 'buy'
-        else
-            itemrank = eval(args.split(',')[1])
-            args = args.replace(f',{itemrank}')
-        items = args
-    elif args.count(',')==2:
-        order_type,items,itemrank = args.split(',')
-        if order_type == '買':
-            order_type = 'sell'
-        elif order_type == '賣':
-            order_type = 'buy'
-            action = 'sell'
-        else
-            await ctx.send('指揮官是要買還是賣呢？')
-    else
-        await ctx.send("指揮官說的太多了,Ordis不是很懂呢")
-    count = 5
-    item = localDict.get(items, items)
-    if item == items:
-      item = enDict.get(items,items)
-    if item == items:
-      await ctx.send("Ordis不太清楚指揮官說的什麼呢") 
-      return 
-    itemsDetail = json.loads(requests.get("https://api.warframe.market/v1/items/" + item).text.encode(encoding="UTF-8"))["payload"]["item"]["items_in_set"]
-    max_rank = None
-    for itemDetail in itemsDetail:
-      if "mod_max_rank" in itemDetail:
-        if itemrank is not None:
-          max_rank = int(itemDetail["mod_max_rank"])
-          print(itemrank, max_rank)
+          itemrank = int(itemrank)
           if itemrank > max_rank:
             await ctx.send("指揮官所輸入的等級超出物品最高等級呢 0.0") 
             return
