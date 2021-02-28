@@ -9,16 +9,43 @@ with open('setting.json', 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
 
-localDict = requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotMods/main/dict/items_zh-hant.json")
-localDict = json.loads(localDict.text)
-localDict = {x: y for y, x in localDict.items()}
+zhDict = requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotMods/main/dict/items_zh-hant.json")
+zhDict = json.loads(zhDict.text)
+zhDictRev = zhDict
+zhDict = {x: y for y, x in zhDict.items()}
 enDict = requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotMods/main/dict/items_en.json")
 enDict = json.loads(enDict.text)
+enDictRev = enDict
 enDict = {x: y for y, x in enDict.items()}
 Chinese_order_type = {'buy':'買','sell':'賣'}
 
 
 class wfm(Cog_Extension):
+  @commands.command(name='translate',aliases=['trans','翻譯'])
+  async def translate(self,ctx,*args):
+    item = ' '.join(args)
+    url_name = enDict.get(item,item)
+    language = ''
+    if url_name == item:
+      url_name = zhDict.get(item,item)
+      if url_name == item:
+        message = "Ordis沒找到指揮官說的物品呢"
+        await ctx.send(message)
+        return
+      else:
+        translate = enDictRev[url_name]
+        language = "英文"
+        print(translate+url_name)
+    else:
+      translate = zhDictRev.get(url_name,item)
+      if translate == item:
+        message = "Ordis也不太清楚翻譯是什麼呢"
+        await ctx.send(message)
+        return
+      else:
+        language = "中文"
+    message = f"`{item}`  的{language}翻譯為  `{translate}`"
+    await ctx.send(message)
   @commands.command(name='wfm', aliases=['wm', '市場查詢'])
   async def market(self, ctx, *args):
     if str(ctx.channel.type) != 'private':
@@ -27,6 +54,7 @@ class wfm(Cog_Extension):
       channel_id = None
     action = 'buy'
     order_type = 'sell'
+    itemrank = None
     args = ' '.join(args)
     if args.count(',')==0:
         items = args
@@ -53,13 +81,15 @@ class wfm(Cog_Extension):
     else:
         await ctx.send("指揮官說的太多了,Ordis不是很懂呢")
     count = 5
-    item = localDict.get(items, items)
+    item = zhDict.get(items, items)
     if item == items:
       item = enDict.get(items,items)
     if item == items:
-      await ctx.send("Ordis不太清楚指揮官說的什麼呢") 
-      return 
-    itemsDetail = json.loads(requests.get("https://api.warframe.market/v1/items/" + item).text.encode(encoding="UTF-8"))["payload"]["item"]["items_in_set"]
+       item=item.replace(" ","_").lower()
+    try: itemsDetail = json.loads(requests.get("https://api.warframe.market/v1/items/" + item).text.encode(encoding="UTF-8"))["payload"]["item"]["items_in_set"]
+    except:
+      await ctx.send("Ordis不太清楚指揮官說的什麼呢")
+      return
     max_rank = None
     for itemDetail in itemsDetail:
       if "mod_max_rank" in itemDetail:
@@ -117,7 +147,7 @@ class wfm(Cog_Extension):
               else:
                 ChiRank = ""
               embed = DiscordEmbed(title=f"物品:{itemName}\t數量:{orders['quantity']}\t{ChiRank}",description=f"價格:{int(orders['platinum'])}")
-              embed.add_embed_field(name="複製信息", value = f"\n/w {user['ingame_name']} Hi! I want to {action}: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)\n```")
+              embed.add_embed_field(name="複製信息", value = f"\n/w {user['ingame_name']} Hi! I want to {action}: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)\n")
               avatar = user['avatar']
               if avatar == None:
                 avatar = "user/default-avatar.png"
@@ -139,7 +169,7 @@ class wfm(Cog_Extension):
                 rank = f"(rank {rank})"
               else:
                 ChiRank = ""
-              message+=f"```{Chinese_order_type[order_type]}家:{user['ingame_name']}\n物品:{itemName}\t數量:{orders['quantity']}\t{ChiRank}\n價格:{int(orders['platinum'])}\n"
+              message+=f"```{Chinese_order_type[order_type]}\n玩家:{user['ingame_name']}\n物品:{itemName}\t數量:{orders['quantity']}\t{ChiRank}\n價格:{int(orders['platinum'])}\n"
               message+=f"複製信息\n/w {user['ingame_name']} Hi! I want to {action}: {itemName} {rank} for {int(orders['platinum'])} platinum. (warframe.market)```\n"
               count -= 1
         await ctx.send(message)
