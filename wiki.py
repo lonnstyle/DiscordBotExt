@@ -2,63 +2,69 @@ from discord.ext import commands
 from core.classes import Cog_Extension
 import discord
 from mwclient import Site
+from fuzzywuzzy import process
 
-zh = Site('warframe.huijiwiki.com', scheme='https')
-tc = Site('warframe.fandom.com', path='/zh-tw/', scheme='https')
-en = Site('warframe.fandom.com', path='/', scheme='https')
+zhURL = 'warframe.huijiwiki.com'
+tcURL = 'warframe.fandom.com'
+enURL = 'warframe.fandom.com'
 
-subpage = {"Main":"概述","Prime":"Prime","Abilities":"技能","Equip":"可替換裝備","Patch_History":"更新歷史","Media":"影音資料"}
+zh = Site(zhURL,scheme='http')
+tc = Site(tcURL, path='/zh-tw/', scheme='http')
+en = Site(enURL, path='/', scheme='http')
+
 
 class wiki(Cog_Extension):
+  @commands.command(name='update_wiki')
+  async def update_wiki(self,ctx,*args):
+    name = " ".join(args)
+    if name == "zh":
+      allpages= zh.allpages()
+      with open("dict/zh_pages.txt","w") as zh_pages:
+        for page in allpages:
+          print(page.name,file = zh_pages)
+    elif name == "tc":
+      allpages= tc.allpages()
+      with open("dict/tc_pages.txt","w") as tc_pages:
+        for page in allpages:
+          print(page.name,file = tc_pages)
+    elif name == "en":
+      allpages= en.allpages()
+      with open("dict/en_pages.txt","w") as en_pages:
+        for page in allpages:
+          print(page.name,file = en_pages)
   @commands.command(name='wiki',aliases=['維基'])
   async def wiki(self,ctx,*args):
     name = " ".join(args)
-    page = zh.pages[name]
-    if page.exists == False:
-      page = tc.pages[name]
-      if page.exists == False:
-        page = en.pages[name]
-        if page.exists == False:
-          await ctx.send("頁面不存在，Ordis在等待指揮官為Wiki作出貢獻呢")
-          return
-        else: 
-          page = page.resolve_redirect()
-          name = page.name
-          url = "https://warframe.fandom.com/wiki/"+name
-          footer="英文Fandom"
-          host = en
-      else:
-        page = page.resolve_redirect()
-        name = page.name
-        url = "https://warframe.fandom.com/zh-tw/wiki/"+name
-        footer="繁中Fandom"
-        host = tc
+    with open("dict/zh_pages.txt","r") as zh_pages:
+      zhpage = []
+      for page in zh_pages.readlines():
+        zhpage.append(page)
+    with open("dict/tc_pages.txt","r") as tc_pages:
+      tcpage = []
+      for page in tc_pages.readlines():
+        tcpage.append(page)
+    with open("dict/en_pages.txt","r") as en_pages:
+      enpage = []
+      for page in en_pages.readlines():
+        enpage.append(page)
+    title,ratio = process.extractOne(name,zhpage)
+    if ratio>75:
+      footer = "灰機"
+      URL = f"https://{zhURL}/wiki/{title}"
     else:
-      page = page.resolve_redirect()
-      name = page.name
-      url = "https://warframe.huijiwiki.com/wiki/"+name
-      footer="灰機Wiki"
-      host = zh
-    url = url.replace(" ","_")
-    found = 0
-    desc = "以下為嵌入頁面鏈接:\n"
-    for items in subpage:
-      sub = host.pages[f"{name}/{items}"]
-      if sub.exists == True:
-        linkURL = url.replace(name,"")+items
-        desc += f"[{subpage[items]}]({linkURL})\n"
-    if desc == "以下為嵌入頁面鏈接:\n":
-      desc = ""
-    desc += "以下為相關頁面鏈接:\n"
-    for link in page.links():
-      if name in link.name:
-        linkURL = url.replace(name,"")+link.name.replace(" ","_")
-        if found <=5:
-          desc += f"[{link.name}]({linkURL})\n"
-        found += 1
-    if found == 0:
-      desc = ""
-    embed = discord.Embed(title=name,url=url,description=desc)
+      title,ratio = process.extractOne(name,tcpage)
+      if ratio>75:
+        footer = "繁體"
+        URL = f"https://{tcURL}/zh-tw/wiki/{title}"
+      else:
+        title,ratio = process.extractOne(name,enpage)
+        if ratio>75:
+          footer = "英文"
+          URL = f"https://{enURL}/wiki/{title}"
+        else:
+          await ctx.send("Ordis找不到指揮官想要的頁面呢")
+          return
+    embed = discord.Embed(title=title,url=URL)
     embed.set_footer(text=footer)
     await ctx.send(embed=embed)
 
