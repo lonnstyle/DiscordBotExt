@@ -1,0 +1,6 @@
+{
+    "TOKEN": <你的Token>,
+    "command_prefix":<你想要的指令前綴>,
+    "owner":<你的Discord ID>,
+    "webhook":<你想要弄的Webhook頻道URL>
+}
