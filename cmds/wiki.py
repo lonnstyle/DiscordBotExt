@@ -20,17 +20,17 @@ class wiki(Cog_Extension):
     name = " ".join(wiki)
     if name == "zh"or"all":
       allpages= zh.allpages()
-      with open("dict/zh_pages.txt","w") as zh_pages:
+      with open("dict/zh_pages.txt","w",encoding='utf8') as zh_pages:
         for page in allpages:
           print(page.name,file = zh_pages)
-    elif name == "tc"or"all":
+    if name == "tc"or"all":
       allpages= tc.allpages()
-      with open("dict/tc_pages.txt","w") as tc_pages:
+      with open("dict/tc_pages.txt","w",encoding='utf8') as tc_pages:
         for page in allpages:
           print(page.name,file = tc_pages)
-    elif name == "en"or"all":
+    if name == "en"or"all":
       allpages= en.allpages()
-      with open("dict/en_pages.txt","w") as en_pages:
+      with open("dict/en_pages.txt","w",encoding='utf8') as en_pages:
         for page in allpages:
           print(page.name,file = en_pages)
   @commands.command(name='wiki',aliases=['維基'],brief="查詢維基頁面",description="查詢`page`的維基頁面")
