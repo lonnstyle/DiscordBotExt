@@ -2,6 +2,15 @@
 Warframe Discord 機器人<br/>
 基於[MeowXiaoXiang](https://github.com/MeowXiaoXiang/Meow_Bot-Public_Version-/commits?author=MeowXiaoXiang)的[Meow_Bot-Public_Version-](https://github.com/MeowXiaoXiang/Meow_Bot-Public_Version-)開發的Mod<br/>
 與[Meow_Bot-Public_Version-](https://github.com/MeowXiaoXiang/Meow_Bot-Public_Version-)兼容,但[main.py](main.py)為調整過後的優化版本,兼容性更佳
+
+## 第三方庫列表<br/>
+* -pip install discord
+* -pip install chinese_converter
+* -pip install discord-webhook
+* -pip install mwclient
+* -pip install fuzzywuzzy
+* -pip install flask
+
 ## Mod列表<br/>
 * [worldState.py](cmds/worldState.py)查詢當前世界循環狀態<br/>
   * 使用[WFCD](https://github.com/WFCD/)的[API](https://docs.warframestat.us/)數據
@@ -18,6 +27,7 @@ Warframe Discord 機器人<br/>
   * <s>自定義暱稱：[Google Sheet](https://docs.google.com/spreadsheets/d/1AMxTBp1_HdVbjdxnpTGqy_16OoP-CBeBc9117ZXGhEQ/edit?usp=sharing)</s>
 * [wiki.py](cmds/wiki.py)生成wiki鏈接<br/>
   -pip install mwclient
+  -pip install fuzzywuzzy
   * 查詢順序為[簡中](https://warframe.huijiwiki.com)→[繁中](https://warframe.fandom.com/zh-tw)→[英文](https://warframe.fandom.com)
 
 ## 指令列表<br/>
