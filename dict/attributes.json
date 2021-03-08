@@ -1,7 +1,7 @@
 {
   "ammo_maximum":"彈藥最大值",
   "base_damage_/_melee_damage":"傷害/近戰傷害",
-  "chance_to_gain_extra_combo_count":"連擊數機率",
+  "chance_to_gain_combo_count":"連擊數機率",
   "cold_damage":"冰凍傷害",
   "combo_duration":"連擊持續時間",
   "critical_chance_on_slide_attack":"滑行攻擊暴擊率",
@@ -31,5 +31,4 @@
   "status_duration":"狀態持續時間",
   "toxin_damage":"毒素傷害",
   "zoom":"變焦",
-  "chance_to_gain_extra_combo_count":"連擊數機率"
 }
