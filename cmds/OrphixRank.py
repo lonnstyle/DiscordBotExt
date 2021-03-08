@@ -7,7 +7,7 @@ import json
 
 Chi = ["玩家","幽靈氏族","暗影氏族","風暴氏族","山脈氏族","月亮氏族"]
 
-class orphixRank(Cog_Extension):
+class OrphixRank(Cog_Extension):
   tag = "Warframe"
   @commands.command(name='orphix', aliases=['奧菲斯'])
   async def orphix(self, ctx, *args):
@@ -33,4 +33,4 @@ class orphixRank(Cog_Extension):
       await ctx.send("指揮官所查詢的氏族/玩家不在榜上,請繼續加油！")
 
 def setup(bot):
-    bot.add_cog(orphixRank(bot))
+    bot.add_cog(OrphixRank(bot))
