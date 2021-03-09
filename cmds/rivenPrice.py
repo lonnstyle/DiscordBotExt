@@ -8,7 +8,7 @@ from discord_webhook import DiscordWebhook,DiscordEmbed
 
 weapons = json.loads(requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotMods/main/dict/Weapons.json").text)
 weapons = {x: y for y, x in weapons.items()}
-attrDict = json.loads(requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotMods/main/dict/attributes.json").text)
+attrDict = json.loads(requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotExt/main/dict/attributes.json").text)
 
 with open('setting.json', 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
@@ -28,7 +28,9 @@ class rivenPrice(Cog_Extension):
     html = requests.get(url)
     weapon = weapon.replace("_"," ")
     if html.status_code != 200:
-      return('查到...Ordis發生錯誤...API出錯！')
+      await ctx.send(embed=discord.Embed(title="出錯啦!",description='查到...Ordis發生錯誤...API出錯！',color=0xff0000))
+      print(weapon)
+      return()
     else:
       rivenData = json.loads(html.text)
       rivenData = rivenData['payload']
