@@ -13,11 +13,12 @@ intents = discord.Intents.all()
 with open('setting.json', 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
-bot = commands.Bot(command_prefix=jdata['command_prefix'],intents = intents)
+bot = commands.Bot(command_prefix=commands.when_mentioned_or(jdata['command_prefix']),intents = intents)
+start_time = datetime.now()
 
 @bot.event
 async def on_ready():
-    print(">> 目前版本：v2.0.0beta <<")
+    print(">> 目前版本：v2.1.0beta <<")
     print(">> OrdisBeta is online <<")
     activity = discord.Activity(type=discord.ActivityType.watching,name = "指揮官帥氣的臉龐")
     await bot.change_presence(activity=activity)
@@ -32,6 +33,7 @@ bot.remove_command('help')
 async def help(ctx, command:str="all", page:int=1):
   fields = 0
   embed = discord.Embed(title="幫助列表",color=0xccab2b)
+  embed.set_author(name="Patreon", url="https://patreon.com/join/lonnstyle", icon_url="https://i.imgur.com/CCYuxwH.png")
   if command == "all":
     for command in bot.commands:
       if command.brief != None:
@@ -109,6 +111,26 @@ async def turn_off_bot(ctx):
     
 #--------------------------------
 
+
+@bot.command(name='status', aliases=['debug'],brief="除錯信息",description="回報當前機器人狀態信息進行除錯")
+async def status(ctx):
+  if await bot.is_owner(ctx.message.author):
+    embed = discord.Embed(title="目前狀態:")
+    embed.add_field(name="目前延遲",value=f"{round(bot.latency*1000)}ms",inline=False)
+    perms = ">>> "
+    for name,value in ctx.channel.permissions_for(ctx.me):
+      if value == True:
+        perms += name + '\n'
+    embed.add_field(name="本機權限",value=perms,inline=True)
+    exts = ">>> "
+    for ext in bot.extensions:
+      exts += ext.replace("cmds.","")+'\n'
+    embed.add_field(name="已加載擴展",value=exts,inline=True)
+    uptime = datetime.now()-start_time
+    embed.set_footer(text=f"在線時間:{uptime.days}天{int(uptime.seconds/3600)}:{int(uptime.seconds%3600/60)}:{uptime.seconds%3600%60}")
+    await ctx.send(embed=embed)
+  else:
+    await ctx.send(embed=discord.Embed(title="權限不足",description='本指令只提供給伺服器傭有者 \n本伺服器擁有者為 <@' + str(ctx.guild.owner_id) + '>'))
 
 for filename in os.listdir('./cmds'):
     if filename.endswith('.py'):
