@@ -26,8 +26,18 @@ class common(Cog_Extension):
     async def sayd(self,ctx,*,msg):
         await ctx.message.delete()
         embed=discord.Embed(description=msg,color=0x3C879C)
-        await ctx.send(embed=embed)
-            
+        message = await ctx.send(embed=embed)
+    
+    @commands.command(name= 'poll', aliases=['投票'],brief="發起投票",description="讓機器人發起一項投票")
+    async def poll(self,ctx,topic,option1,emoji1,option2,emoji2):
+        await ctx.message.delete()
+        embed=discord.Embed(description=topic,color=0x3C879C)
+        embed.add_field(name=option1,value=emoji1)
+        embed.add_field(name=option2,value=emoji2)
+        message = await ctx.send(embed=embed)
+        await message.add_reaction(emoji1)
+        await message.add_reaction(emoji2)
+
     
 def setup(bot):
     bot.add_cog(common(bot))
