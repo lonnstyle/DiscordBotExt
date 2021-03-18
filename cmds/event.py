@@ -3,6 +3,7 @@ from core.classes import Cog_Extension
 from core.time import time_info
 from datetime import datetime,timedelta
 import json
+import os
 
 with open('setting.json', 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
@@ -20,6 +21,8 @@ class event(Cog_Extension):
     else:
       if str(msg.channel.type) == 'text' and msg.author != self.bot.user:
         print(time_info.UTC_8_CH() + str(msg.author) + '說:' + msg.content)
+        for items in msg.attachments:
+          print(items)
         a = str(msg.guild)
         b = str(msg.channel)
         fp = open('./log/' + a + '-' + b + '.log', 'a',encoding='utf8')
@@ -28,4 +31,6 @@ class event(Cog_Extension):
     pass
 
 def setup(bot):
-    bot.add_cog(event(bot))
+  if not os.path.exists('log'):
+    os.mkdir('log')
+  bot.add_cog(event(bot))
