@@ -18,7 +18,7 @@ start_time = datetime.now()
 
 @bot.event
 async def on_ready():
-    print(">> 目前版本：v2.1.0beta <<")
+    print(">> 目前版本：v2.0.3 <<")
     print(">> OrdisBeta is online <<")
     activity = discord.Activity(type=discord.ActivityType.watching,name = "指揮官帥氣的臉龐")
     await bot.change_presence(activity=activity)
