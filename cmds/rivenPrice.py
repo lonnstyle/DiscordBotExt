@@ -5,10 +5,23 @@ import os
 import requests
 import json
 from discord_webhook import DiscordWebhook,DiscordEmbed
+from language import language as lang
 
-weapons = json.loads(requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotMods/main/dict/Weapons.json").text)
-weapons = {x: y for y, x in weapons.items()}
-attrDict = json.loads(requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotExt/main/dict/attributes.json").text)
+lang = lang()
+lang = lang.langpref()['rivenPrice']
+
+temp = {}
+weapons = json.loads(requests.get("http://api.warframe.market/v1/riven/items",headers=lang['api.header']).text)
+weapons = weapons['payload']['items']
+for item in weapons:
+  temp[item['item_name']]=item['url_name']
+weapons = temp
+temp = {}
+attrDict = json.loads(requests.get("http://api.warframe.market/v1/riven/attributes",headers=lang['api.header']).text)
+attrDict = attrDict['payload']['attributes']
+for attr in attrDict:
+  temp[attr['url_name']]=attr['effect']
+attrDict=temp
 
 with open('setting.json', 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
@@ -16,10 +29,10 @@ with open('setting.json', 'r', encoding='utf8') as jfile:
 
 class rivenPrice(Cog_Extension):
   tag = "Warframe"
-  @commands.command(name='riven',aliases=['紫卡','紫卡查詢'],brief="查詢裂罅價格",description="查詢`weapon`裂罅價格")
+  @commands.command(name='riven',aliases=lang['riven.aliases'],brief=lang['riven.brief'],description=lang['riven.description'])
   async def rivenPrice(self,ctx,*weapon):
     name = ' '.join(weapon)
-    Chinese= name
+    userInput= name
     weapon = weapons.get(name, "Empty")
     if weapon == "Empty":
       weapon = name
@@ -28,7 +41,7 @@ class rivenPrice(Cog_Extension):
     html = requests.get(url)
     weapon = weapon.replace("_"," ")
     if html.status_code != 200:
-      await ctx.send(embed=discord.Embed(title="出錯啦!",description='查到...Ordis發生錯誤...API出錯！',color=0xff0000))
+      await ctx.send(embed=discord.Embed(title=lang['riven.error.title'],description=lang['riven.error.description'],color=0xff0000))
       print(weapon)
       return()
     else:
@@ -44,7 +57,7 @@ class rivenPrice(Cog_Extension):
       webhookID = requests.get(webhookID)
       webhookID = json.loads(webhookID.text)
       webhookID = webhookID['channel_id']
-      message = f'以下為{Chinese}紫卡的查詢結果（按價格由低至高順序）\n'
+      message = lang['riven.message.title'].format(userInput=userInput)
       webhook = DiscordWebhook(url=jdata['webhook'],content=message)
       for items in rivenData:
         if count < 3:
@@ -52,32 +65,33 @@ class rivenPrice(Cog_Extension):
           if owner['status'] != 'offline':
             rivenItem = items['item']
             rivenName = rivenItem['name']
-            message += f'```\n紫卡名稱:{Chinese} {rivenName}\n'
+            message += lang['riven.message.rivenName'].format(userInput=userInput,rivenName=rivenName)
             ownerName = owner['ingame_name']
             avatar = owner['avatar']
             if avatar == None:
               avatar = "user/default-avatar.png"
-            message += f'賣家:{ownerName}\n'
+            message += lang['riven.message.owner'].format(ownerName=ownerName)
             rank = rivenItem['mod_rank']
             rerolls = rivenItem['re_rolls']
-            message += f'等級:{rank}\n'
-            message += f'迴圈次數:{rerolls}\n'
-            embed = DiscordEmbed(title=f"紫卡名稱:{Chinese} {rivenName}",description=f'等級:{rank}    迴圈次數:{rerolls}',color=0xb59dd4)
-            embed.set_author(name=ownerName, icon_url="https://warframe.market/static/assets/"+avatar, url = "https://warframe.market/zh-hant/profile/"+ownerName)
+            message += lang['riven.message.rank'].format(rank=rank)
+            message += lang['riven.message.reroll'].format(rerolls=rerolls)
+            embed = DiscordEmbed(title=lang['riven.embed.title'].format(userInput=userInput,rivenName=rivenName),description=lang['riven.embed.description'].format(rank=rank,rerolls=rerolls),color=0xb59dd4)
+            embed.set_author(name=ownerName, icon_url="https://warframe.market/static/assets/"+avatar, url = f"https://warframe.market/{lang['riven.link.language']}/profile/"+ownerName)
             if items['top_bid'] == 'None':
               top_bid = items['top_bid']
-              message += f'目前競標:{top_bid}\n'
-              embed.add_embed_field(name="目前競標:",value=top_bid)
+              message += lang['riven.message.topbid'].format(top_bid=top_bid)
+              embed.add_embed_field(name=lang['riven.embed.field.topbid'],value=top_bid)
             else:
               starting_price = items['starting_price']
               buyout_price = items['buyout_price']
               if starting_price == buyout_price:
-                message += f'價格:{buyout_price}\n'
-                embed.add_embed_field(name="價格:",value=buyout_price)
+                message += lang['riven.message.price'].format(buyout_price=buyout_price)
+                embed.add_embed_field(name=lang['riven.embed.field.price'],value=buyout_price)
               else:
-                message += f'起標價格:{starting_price}\n'
-                message += f'買斷價格:{buyout_price}\n'
-                embed.add_embed_field(name="價格:",value=buyout_price,inline=False)
+                message += lang['riven.message.starting'].format(starting_price=starting_price)
+                message += lang['riven.message.buyout'].format(buyout_price=buyout_price)
+                embed.add_embed_field(name=lang['riven.embed.field.starting'],value=starting_price,inline=False)
+                embed.add_embed_field(name=lang['riven.embed.field.buyout'],value=buyout_price,inline=False)
             positive = ''
             negative = ''
             for attr in rivenItem['attributes']:
@@ -85,14 +99,14 @@ class rivenPrice(Cog_Extension):
               attribute = attrDict.get(attribute,attribute)
               value = attr['value']
               if attr['positive'] == True:
-                message += f'正面詞條:{attribute} {value}\n'
+                message += lang['riven.message.attr.pos'].format(attribute=attribute,value=value)
                 positive += f'{attribute} {value}\n'
               elif attr['positive'] == False:
-                message += f'負面詞條:{attribute} {value}\n'
+                message += lang['riven.message.attr.neg'].format(attribute=attribute,value=value)
                 negative = f'{attribute} {value}'
-            embed.add_embed_field(name="正面詞條:",value=positive[:-1])
+            embed.add_embed_field(name=lang['riven.embed.attr.pos'],value=positive[:-1])
             if negative != '':
-              embed.add_embed_field(name="負面詞條:",value=negative)
+              embed.add_embed_field(name=lang['riven.embed.attr.neg'],value=negative)
             count += 1
             message += '```'
             webhook.add_embed(embed)

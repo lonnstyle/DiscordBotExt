@@ -3,6 +3,11 @@ from discord.ext import commands
 from core.classes import Cog_Extension
 import os
 import json
+from language import language as lang
+
+lang = lang()
+lang = lang.langpref()['event']
+
 with open('setting.json','r',encoding='utf8') as jset:
     jdata = json.load(jset)
 
@@ -19,7 +24,7 @@ class logup(Cog_Extension):
   tag = "common"
   @commands.command()
   async def loglist(self,ctx):
-    if str(ctx.author.id) == jdata['owner']:
+    if await self.bot.is_owner(ctx.message.author):
       msg = ''
       dou = 0
       for i in loglist:
@@ -34,7 +39,7 @@ class logup(Cog_Extension):
     
   @commands.command()
   async def reloadlog(self,ctx):
-    if str(ctx.author.id) == jdata['owner']:
+    if await self.bot.is_owner(ctx.message.author):
       global loglist,logindex
       loglist = []
       for logname in os.listdir('./log'):
@@ -42,12 +47,12 @@ class logup(Cog_Extension):
           loglist.append(logindex)
           loglist.append(logname)
           logindex += 1
-      await ctx.send('已重新加載')
+      await ctx.send(lang['reloadlog.reloaded'])
       logindex = 0
 
   @commands.command()
   async def downloadlog(self,ctx,index):
-    if str(ctx.author.id) == jdata['owner']:
+    if await self.bot.is_owner(ctx.message.author):
       for i in loglist:
         if i == int(index):
           a = 'log\\'+loglist[i+1]
