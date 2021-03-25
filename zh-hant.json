@@ -202,7 +202,7 @@
 		"sortie.aliases":["突擊" , "sortie"],
 		"sortie.brief":"查詢突擊任務",
 		"sortie.description":"查詢目前突擊任務和剩餘時間",
-		"sortie.embed.title":"突擊剩餘時間：{data['eta']}",
+		"sortie.embed.title":"突擊剩餘時間：{eta}",
 		"sortie.embed.description":"{boss}的部隊，{faction}陣營",
 		"sortie.embed.field.name":"突擊{count}:\n節點:{node} 等級{lower}-{upper}",
 		"sortie.embed.field.value":"任務:{missionType}\n狀態:{modifier}"
