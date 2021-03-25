@@ -32,6 +32,7 @@ class rivenPrice(Cog_Extension):
   @commands.command(name='riven',aliases=lang['riven.aliases'],brief=lang['riven.brief'],description=lang['riven.description'])
   async def rivenPrice(self,ctx,*weapon):
     name = ' '.join(weapon)
+    name = name.title()
     userInput= name
     weapon = weapons.get(name, "Empty")
     if weapon == "Empty":
@@ -41,8 +42,7 @@ class rivenPrice(Cog_Extension):
     html = requests.get(url)
     weapon = weapon.replace("_"," ")
     if html.status_code != 200:
-      await ctx.send(embed=discord.Embed(title=lang['riven.error.title'],description=lang['riven.error.description'],color=0xff0000))
-      print(weapon)
+      await ctx.send(embed=discord.Embed(title=lang['riven.error.title'],description=lang['riven.error.description'].format(self=jdata['self'],color=0xff0000)))
       return()
     else:
       rivenData = json.loads(html.text)
