@@ -95,7 +95,7 @@ class worldState(Cog_Extension):
     raw = requests.get('https://api.warframestat.us/pc/zh/sortie',headers={'Accept-Language':'tc'})
     text = raw.text
     data = json.loads(text)
-    embed = discord.Embed(title=lang["sortie.embed.title"].format(eta=data['eta'],),description=lang['sortie.embed.description'].format(boss=data['boss'],faction=data['faction']),color=0xff9500)
+    embed = discord.Embed(title=lang["sortie.embed.title"].format(eta=data['eta']),description=lang['sortie.embed.description'].format(boss=data['boss'],faction=data['faction']),color=0xff9500)
     for missions in data['variants']:
       node = missions['node']
       missionType= missions['missionType']
