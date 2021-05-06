@@ -5,7 +5,6 @@ import os
 import requests
 import json
 import asyncio
-import chinese_converter
 from language import language as lang
 
 lang = lang()
@@ -24,7 +23,6 @@ class baro(Cog_Extension):
     if html['active'] == True:
       message = "```"
       location = html['location']
-      location = chinese_converter.to_traditional(location)
       stay = html['endString']
       stay = stay.replace("d",lang['baro.time.day'])
       stay = stay.replace("h",lang['baro.time.hour'])
@@ -52,7 +50,6 @@ class baro(Cog_Extension):
       await ctx.send(embed=embed)
     if html['active'] == False:
       location = html['location']
-      location = chinese_converter.to_traditional(location)
       arrive = html['startString']
       arrive = arrive.replace("d",lang['baro.time.day'])
       arrive = arrive.replace("h",lang['baro.time.hour'])
