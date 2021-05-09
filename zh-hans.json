@@ -202,7 +202,7 @@
 		"sortie.aliases":["突击" , "sortie"],
 		"sortie.brief":"查询突击任务",
 		"sortie.description":"查询目前突击任务和剩余时间",
-		"sortie.embed.title":"突击剩余时间：{data['eta']}",
+		"sortie.embed.title":"突击剩余时间：{eta}",
 		"sortie.embed.description":"{boss}的部队，{faction}阵营",
 		"sortie.embed.field.name":"突击{count}:\n节点:{node} 等级{lower}-{upper}",
 		"sortie.embed.field.value":"任务:{missionType}\n状态:{modifier}"
