@@ -4,6 +4,8 @@ import requests
 import json
 from datetime import datetime
 import discord
+from discord_slash.utils.manage_commands import create_option, create_choice
+from discord_slash import cog_ext,SlashContext
 from language import language as lang
 
 lang = lang()
@@ -35,6 +37,10 @@ class worldState(Cog_Extension):
       embed = discord.Embed(title=lang['poe.embed.title.night'],description=desc,color=0xaca9ca)
       await ctx.send(embed=embed)
 
+  @cog_ext.cog_slash(name='POE',description=lang['poe.description'])
+  async def slash_POE(self,ctx:SlashContext):
+    await self.eidolontime(ctx)
+
   @commands.command(name='Earth',aliases=lang['earth.aliases'],brief=lang['earth.brief'],description=lang['earth.description'])
   async def earthtime(self,ctx):
     html = requests.get('https://api.warframestat.us/pc/tc/earthCycle').text
@@ -47,6 +53,10 @@ class worldState(Cog_Extension):
       desc = lang['earth.embed.description.night'].format(expiry=self.timeConv(data['expiry'])) + data["timeLeft"]
       embed = discord.Embed(title=lang['earth.embed.title.night'],description=desc,color=0xaca9ca)
       await ctx.send(embed=embed)
+
+  @cog_ext.cog_slash(name="Earth",description=lang['earth.description'])
+  async def slash_Earth(self,ctx:SlashContext):
+    await self.earthtime(ctx)
 
   @commands.command(name='Cambion',aliases=lang['cambion.aliases'],brief=lang['cambion.brief'],description=lang['cambion.description'])
   async def cambiontime(self,ctx):
@@ -61,6 +71,10 @@ class worldState(Cog_Extension):
       embed = discord.Embed(title=lang['cambion.embed.title.vome'],description=desc,color=0x458691)
       await ctx.send(embed=embed)
 
+  @cog_ext.cog_slash(name="Cambion",description=lang['cambion.description'])
+  async def slash_Cambion(self,ctx:SlashContext):
+    await self.cambiontime(ctx)
+
   @commands.command(name='Orb',aliases=lang["orb.aliases"],brief=lang['orb.brief'],description=lang['orb.description'])
   async def orbtime(self,ctx):
     html = requests.get('https://api.warframestat.us/pc/vallisCycle',headers={'Accept-Language':'tc','Cache-Control': 'no-cache'}).text
@@ -73,6 +87,10 @@ class worldState(Cog_Extension):
       desc = lang["orb.embed.description.warm"].format(expiry=self.timeConv(data['expiry'])) + data["timeLeft"]
       embed = discord.Embed(title=lang["orb.embed.title.warm"],description=desc,color=0xd9b4a1)
       await ctx.send(embed=embed)
+
+  @cog_ext.cog_slash(name="Orb",description=lang['orb.description'])
+  async def slash_Orb(self,ctx:SlashContext):
+    await self.orbtime(ctx)
 
   @commands.command(name="Arbitration",aliases=lang["arbitration.aliases"],brief=lang['arbitration.brief'],description=lang['arbitration.description'])
   async def arbitration(self,ctx):
@@ -89,6 +107,10 @@ class worldState(Cog_Extension):
     embed.add_field(name=lang['arbitration.embed.field.name'].format(node=data['node']),value=lang["arbitration.embed.field.value"].format(enemy=data['enemy'],minutes=minutes,seconds=seconds))
     await ctx.send(embed=embed)
 
+  @cog_ext.cog_slash(name="Arbitration",description=lang['arbitration.description'])
+  async def slash_Arbitration(self,ctx:SlashContext):
+    await self.arbitration(ctx)
+
   @commands.command(name='Sortie',aliases=lang['sortie.aliases'],brief=lang['sortie.brief'],description=lang['sortie.description'])
   async def sortie(self,ctx):
     count = 1
@@ -104,7 +126,9 @@ class worldState(Cog_Extension):
       count += 1
     await ctx.send(embed=embed)
     
-    
+  @cog_ext.cog_slash(name="Sortie",description=lang['sortie.description'])
+  async def slash_Sortie(self,ctx:SlashContext):
+    await self.sortie(ctx)    
 
 def setup(bot):
   bot.add_cog(worldState(bot))

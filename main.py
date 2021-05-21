@@ -7,6 +7,8 @@ from datetime import datetime,timedelta
 import requests
 import asyncio
 import sys
+from discord_slash import SlashCommand,client
+from discord_slash.utils.manage_commands import create_option, create_choice
 from language import language as lang
 
 
@@ -17,13 +19,14 @@ intents = discord.Intents.all()
 with open('setting.json', 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(jdata['command_prefix']),intents = intents)
+slash = SlashCommand(bot, sync_commands=True,override_type=True, sync_on_cog_reload=True)
 start_time = datetime.now()
-version = "v2.1.0"
+version = "v2.2.0"
 
 @bot.event
 async def on_ready():
   print(lang['startup.version'].format(version=version))
-  print(">> OrdisBeta is online <<")
+  print(">> Ordis is online <<")
   activity = discord.Activity(type=discord.ActivityType.watching,name = jdata['watching'])
   await bot.change_presence(activity=activity)
   while(1):
@@ -41,7 +44,7 @@ async def help(ctx, command:str="all", page:int=1):
   if command == "all":
     for command in bot.commands:
       if command.brief != None:
-        if (page-1)*25<fields<=page*25-1:
+        if (page-1)*25<=fields<=page*25-1:
           embed.add_field(name=f"{jdata['command_prefix']}{command.name}", value=command.brief, inline=True)
         fields += 1
     embed.set_footer(text=lang['help.embed.footer'].format(command_prefix=jdata['command_prefix'],page=page,total=int((fields-fields%25)/25+1)))
@@ -143,9 +146,9 @@ async def status(ctx):
 
 
 for filename in os.listdir('./cmds'):
-    if filename.endswith('.py'):
-        bot.load_extension(f'cmds.{filename[:-3]}')
-        
+  if filename.endswith('.py'):
+    bot.load_extension(f'cmds.{filename[:-3]}')
+
 commands = {}
 for extension in bot.extensions:
   package = extension
@@ -156,8 +159,22 @@ for extension in bot.extensions:
   except:
     pass
 
-
+choices = []
+for botcommand in bot.commands:
+  if botcommand.brief != None:
+    if len(choices)<25:
+      choices.append(create_choice(name=botcommand.name,value=botcommand.name))
+@slash.slash(name="help",description=lang['help.description'],
+options=[
+  create_option(name="command",description=lang["help.options.command"],option_type=3,required=False,choices=choices),
+  create_option(name="page",description=lang['help.options.page'],option_type=4,required=False,choices=[create_choice(name=1,value=1)])
+  ])
+async def slashhelp(ctx,command:str="all", page:int=1):
+  await help(ctx,command,page)
     
 if __name__ == "__main__":
   keep_alive.keep_alive()
-  bot.run(jdata['TOKEN'])
+  try:
+    bot.run(jdata['TOKEN'])
+  except Exception as exc:
+    print(exc)

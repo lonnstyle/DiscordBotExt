@@ -5,6 +5,8 @@ import os
 import requests
 import json
 import asyncio
+from discord_slash import SlashContext,cog_ext
+# import chinese_converter
 from language import language as lang
 
 lang = lang()
@@ -17,12 +19,13 @@ Dict = Dict['messages']
 class baro(Cog_Extension):
   tag = "Warframe"
   @commands.command(name='baro',aliases=lang['baro.aliases'],brief=lang['baro.brief'],description=lang['baro.description'])
-  async def baroManual(self,ctx):
+  async def baro(self,ctx):
     url = requests.get("https://api.warframestat.us/pc/tc/voidTrader",headers={'Accept-Language':'zh','Cache-Control': 'no-cache'})
     html = json.loads(url.text)
     if html['active'] == True:
       message = "```"
       location = html['location']
+      # location = chinese_converter.to_traditional(location)
       stay = html['endString']
       stay = stay.replace("d",lang['baro.time.day'])
       stay = stay.replace("h",lang['baro.time.hour'])
@@ -50,6 +53,7 @@ class baro(Cog_Extension):
       await ctx.send(embed=embed)
     if html['active'] == False:
       location = html['location']
+      # location = chinese_converter.to_traditional(location)
       arrive = html['startString']
       arrive = arrive.replace("d",lang['baro.time.day'])
       arrive = arrive.replace("h",lang['baro.time.hour'])
@@ -58,6 +62,9 @@ class baro(Cog_Extension):
       embed = discord.Embed(description=lang['baro.arrival'].format(arrive=arrive,location=location),color=0x429990)
       await ctx.send(embed=embed) 
 
+  @cog_ext.cog_slash(name="baro",description=lang['baro.description'])
+  async def slash_baro(self, ctx:SlashContext):
+    await self.baro(ctx)
 
 def setup(bot):
     bot.add_cog(baro(bot))

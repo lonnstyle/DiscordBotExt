@@ -4,6 +4,8 @@ import requests
 import json
 import discord
 from discord_webhook import DiscordWebhook, DiscordEmbed
+from discord_slash.utils.manage_commands import create_option, create_choice
+from discord_slash import SlashContext,cog_ext
 from language import language as lang
 
 lang = lang()
@@ -62,6 +64,11 @@ class wfm(Cog_Extension):
         language = lang['translate.language.local']
     message = lang['translate.translate.message'].format(item=item,language=language,translate=translate)
     await ctx.send(message)
+
+  @cog_ext.cog_slash(name="translate",description=lang['translate.description'],options=[create_option(name="item",description=lang["translate.options.item"],option_type=3,required=True)])
+  async def slash_translate(self,ctx,item):
+    await self.translate(ctx,item)
+    
   @commands.command(name='wfm', aliases=lang['wfm.aliases'],brief=lang['wfm.brief'],description=lang['wfm.description'])
   async def market(self, ctx, *args):
     if str(ctx.channel.type) != 'private':
@@ -167,7 +174,7 @@ class wfm(Cog_Extension):
             if orders['order_type'] == order_type and user['status'] == 'ingame' and orders['platform'] == 'pc':
               rank = orders.get("mod_rank","")
               if rank != "":
-                localRank = f"等級:{rank}"
+                localRank = lang['wfm.rank'].format(rank=rank)
                 rank = f"(rank {rank})"
               else:
                 localRank = ""

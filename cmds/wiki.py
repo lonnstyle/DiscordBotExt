@@ -4,6 +4,8 @@ import discord
 from mwclient import Site
 import json
 from fuzzywuzzy import process
+from discord_slash.utils.manage_commands import create_option, create_choice
+from discord_slash import SlashContext,cog_ext
 from language import language as lang
 
 lang = lang()
@@ -41,6 +43,12 @@ class wiki(Cog_Extension):
       with open("dict/en_pages.txt","w") as en_pages:
         for page in allpages:
           print(page.name,file = en_pages)
+
+  @cog_ext.cog_slash(name="update_wiki",description=lang['update_wiki.description'],options=[create_option(name="wiki",description=lang["update_wiki.options.wiki"],option_type=3,required=True,choices=[create_choice(name=lang["update_wiki.options.zh"],value="zh"),create_choice(name=lang["update_wiki.options.tc"],value="tc"),create_choice(name=lang["update_wiki.options.en"],value="en"),create_choice(name=lang["update_wiki.options.all"],value="all")])])
+  async def slash_update_wiki(self, ctx:SlashContext,wiki):
+    await ctx.defer()
+    await self.update_wiki(ctx,wiki)
+
   @commands.command(name='wiki',aliases=lang['wiki.aliases'],brief=lang['wiki.brief'],description=lang['wiki.description'])
   async def wiki(self,ctx,*page):
     name = " ".join(page)
@@ -77,6 +85,10 @@ class wiki(Cog_Extension):
     embed.set_footer(text=footer)
     await ctx.send(embed=embed)
 
+  @cog_ext.cog_slash(name="wiki",description=lang['wiki.description'],options=[create_option(name="page",description=lang["wiki.options.page"],option_type=3,required=True)])
+  async def slash_wiki(self,ctx,page):
+    await ctx.defer()
+    await self.wiki(ctx,page)
 
 def setup(bot):
     bot.add_cog(wiki(bot))

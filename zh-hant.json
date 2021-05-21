@@ -7,6 +7,8 @@
 		"help.embed.title" : "幫助列表",
 		"help.embed.footer" : "使用{command_prefix}help <指令名稱>查看更多信息\n第{page}/{total}頁",
 		"help.not_found" : "找不到{user}要問的呢",
+		"help.options.command":"需要查詢的指令",
+		"help.options.page":"需要查詢第幾頁",
 		"load.aliases" : ["載入" , "載入模組" , "啟用"],
 		"load.brief" : "載入擴展庫",
 		"load.description" : "載入`extension`擴展庫",
@@ -76,7 +78,12 @@
 		"poll.description":"讓機器人發起一項投票",
 		"poll.error.title":"錯誤信息",
 		"poll.error.description.same":"兩個一樣你要投什麼?",
-		"poll.error.description.emoji":"請確保選項為emoji"
+		"poll.error.description.emoji":"請確保選項為emoji",
+		"poll.options.topic":"投票項目",
+		"poll.options.option1":"選項1",
+		"poll.options.option2":"選項2",
+		"poll.options.emoji1":"代表選項1的表情符號",
+		"poll.options.emoji2":"代表選項2的表情符號"
 	},
 	"event":{
 		"role.aliases":["身份組"],
@@ -84,9 +91,12 @@
 		"role.description":"新增可自動分發的身份組",
 		"role.error.title":"發生錯誤",
 		"role.error.description":"請檢查內容",
+		"role.options.role":"自動分派的身份組名稱",
+		"role.options.emoji":"用於派發身份組的表情符號",
 		"reactionRole.aliases":["rr"],
 		"reactionRole.brief":"指定自動身份組訊息",
 		"reactionRole.description":"指定可自動分發身份組的訊息",
+		"reactionRole.options.message":"指定自動身份組訊息ID"
 		"onMessage.say":"說:"
 	},
 	"logup":{
@@ -150,18 +160,25 @@
 		"wfm.link.language":"zh-hant",
 		"wfm.rank":"等級:{rank}",
 		"wfm.message.item":"```玩家:{user}\n物品:{itemName}\t數量:{quantity}\t{localRank}\n價格:{platinum}\n交易稅:{tax}\t{ducats}\n",
-		"wfm.message.cpMsg":"複製信息\n"
+		"wfm.message.cpMsg":"複製信息\n",
+		"wfm.options.item":"目標物品"
 	},
 	"wiki":{
 		"update_wiki.brief":"更新維基頁面列表",
 		"update_wiki.description":"更新`wiki`語言維基的本地緩存頁面列表\n輸入`all`以更新所有維基",
+		"update_wiki.options.wiki":"目標維基",
+		"update_wiki.options.zh":"灰機",
+		"update_wiki.options.tc":"繁體",
+		"update_wiki.options.en":"英文",
+		"update_wiki.options.all":"全部",
 		"wiki.aliases":["維基"],
 		"wiki.brief":"查詢維基頁面",
 		"wiki.description":"查詢`page`的維基頁面",
 		"wiki.footer.huiji":"灰機",
 		"wiki.footer.tc":"繁體",
 		"wiki.footer.en":"英文",
-		"wiki.error.notFound":"{self}找不到{user}想要的頁面呢"
+		"wiki.error.notFound":"{self}找不到{user}想要的頁面呢",
+		"wiki.options.page":"目標維基頁面"
 	},
 	"worldState":{
 		"poe.aliases":["夜靈平原時間" , "poe"],
