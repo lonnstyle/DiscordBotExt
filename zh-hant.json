@@ -142,6 +142,7 @@
 		"translate.language.local":"中文",
 		"translate.error.noTrans":"{self}也不太清楚翻譯是什麼呢",
 		"translate.translate.message":"`{item}`的{language}翻譯為  `{translate}`",
+		"translate.options.item":"目標物品",
 		"wfm.aliases":["wm", "市場查詢"],
 		"wfm.brief":"查詢物品價格",
 		"wfm.description":"查詢`args`於[wf.m](https://warframe.market)上的價格\n`args`可填以下參數:\n`type`買賣類別,`item`物品(必填),`rank`等級",
