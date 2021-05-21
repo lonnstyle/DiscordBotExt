@@ -173,10 +173,10 @@
 		"wiki.aliases":["维基"],
 		"wiki.brief":"查询维基页面",
 		"wiki.description":"查询`page`的维基页面",
-		"wiki.footer.huiji":"灰機",
-		"wiki.footer.tc":"繁體",
+		"wiki.footer.huiji":"灰机",
+		"wiki.footer.tc":"繁体",
 		"wiki.footer.en":"英文",
-		"wiki.error.notFound":"{self}找不到{user}想要的页面呢"，
+		"wiki.error.notFound":"{self}找不到{user}想要的页面呢",
 		"wiki.options.page":"目标维基页面"
 	},
 	"worldState":{
