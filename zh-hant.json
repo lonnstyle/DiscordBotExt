@@ -96,7 +96,7 @@
 		"reactionRole.aliases":["rr"],
 		"reactionRole.brief":"指定自動身份組訊息",
 		"reactionRole.description":"指定可自動分發身份組的訊息",
-		"reactionRole.options.message":"指定自動身份組訊息ID"
+		"reactionRole.options.message":"指定自動身份組訊息ID",
 		"onMessage.say":"說:"
 	},
 	"logup":{
