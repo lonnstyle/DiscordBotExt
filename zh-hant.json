@@ -223,6 +223,12 @@
 		"sortie.embed.title":"突擊剩餘時間：{eta}",
 		"sortie.embed.description":"{boss}的部隊，{faction}陣營",
 		"sortie.embed.field.name":"突擊{count}:\n節點:{node} 等級{lower}-{upper}",
-		"sortie.embed.field.value":"任務:{missionType}\n狀態:{modifier}"
+		"sortie.embed.field.value":"任務:{missionType}\n狀態:{modifier}",
+		"fissure.aliases":["裂縫","核桃","虛空裂縫"],
+		"fissure.brief":"查詢當前虛空裂縫任務",
+		"fissure.description":"查詢當前虛空裂縫任務和剩餘時間",
+		"fissure.embed.title":"虛空裂縫",
+		"fissure.embed.description":"目前進行中的虛空裂縫任務",
+		"fissure.embed.field":"階級:{tier}\t任務:{missionType}\n剩餘時間:{eta}"
   }
 }
