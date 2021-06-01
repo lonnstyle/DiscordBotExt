@@ -21,7 +21,7 @@ with open('setting.json', 'r', encoding='utf8') as jfile:
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(jdata['command_prefix']),intents = intents)
 slash = SlashCommand(bot, sync_commands=True,override_type=True, sync_on_cog_reload=True)
 start_time = datetime.now()
-version = "v2.2.0"
+version = "v2.3.0"
 
 @bot.event
 async def on_ready():
@@ -68,10 +68,10 @@ async def help(ctx, command:str="all", page:int=1):
         aliases = botcommand.name
         params = ""
         for param in botcommand.clean_params:
-          params += f"<{param}>"
+          params += f" <{param}>"
         for alias in botcommand.aliases:
           aliases += f"|{alias}"
-        embed.add_field(name=f"{jdata['command_prefix']}[{aliases}] {params}",value=botcommand.description)
+        embed.add_field(name=f"{jdata['command_prefix']}[{aliases}]{params}",value=botcommand.description)
         await ctx.send(embed=embed)
         return
     await ctx.send(lang['help.not_found'].format(user=jdata['user']))

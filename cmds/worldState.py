@@ -128,7 +128,33 @@ class worldState(Cog_Extension):
     
   @cog_ext.cog_slash(name="Sortie",description=lang['sortie.description'])
   async def slash_Sortie(self,ctx:SlashContext):
-    await self.sortie(ctx)    
-
+    await self.sortie(ctx)
+    
+  @commands.command(name="Fissure",aliases=lang['fissure.aliases'],brief=lang['fissure.brief'],description=lang['fissure.description'])
+  async def fissure(self,ctx,tier="all",isStorm="False"):
+    payload= requests.get('https://api.warframestat.us/pc/fissures',headers={'Accept-Language':'en','Cache-Control': 'no-cache'})
+    payload = json.loads(payload.text)
+    tierList = lang['fissure.tierList']
+    planets = lang['fissure.planets']
+    mission = lang['fissure.missionType']
+    tierOption =lang['fissure.tierOption']
+    fissures = sorted(payload, key=itemgetter('tierNum'))
+    embed = discord.Embed(title=lang['fissure.embed.title'],description=lang['fissure.embed.description'],color=0x725D33)
+    for fissure in fissures:
+      if fissure['expired'] != True and (str(fissure['isStorm']) == isStorm or isStorm == 'all') and (fissure['tierNum'] == tierOption.get(tier,tier) or tier == 'all'):
+        node = fissure['node']
+        for planet,trans in planets.items():
+          if planet in node:
+            if fissure['isStorm'] == True:
+              trans += lang['fissure.proxima']
+            node = node.replace(planet,trans)
+        missionType = mission[fissure['missionType']]
+        missionTier = tierList[str(fissure['tierNum'])]
+        eta = fissure['eta']
+        description = lang['fissure.embed.field'].format(tier=missionTier,missionType=missionType,eta=eta)
+        print(fissure['expired'] != True and fissure['isStorm'] != True)
+        embed.add_field(name=node,value=description,inline=False)
+    await ctx.send(embed=embed)
+    
 def setup(bot):
   bot.add_cog(worldState(bot))
