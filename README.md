@@ -1,4 +1,12 @@
 # DiscordBotExt
+[![Documentation Status](https://readthedocs.org/projects/discordbotextension/badge/?version=latest)](https://discordbotextension.readthedocs.io/zh_TW/latest/?badge=latest)
+[![Support me on Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dlonnstyle%26type%3Dpatrons&style=flat)](https://patreon.com/lonnstyle)
+[![GitHub release](https://img.shields.io/github/release/lonnstyle/DiscordBotExt.svg)](https://github.com/lonnstyle/DiscordBotExt/releases)
+[![GitHub license](https://img.shields.io/github/license/lonnstyle/DiscordBotExt.svg)](https://github.com/lonnstyle/DiscordBotExt/blob/main/LICENSE)
+[![Github all releases](https://img.shields.io/github/downloads/lonnstyle/DiscordBotExt/total.svg)](https://GitHub.com/lonnstyle/DiscordBotExt/releases/)
+[![Discord](https://img.shields.io/discord/591914197219016707.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/MdZxTNkpGF)
+
+<br/>
 Warframe Discord 機器人<br/>
 基於[MeowXiaoXiang](https://github.com/MeowXiaoXiang/Meow_Bot-Public_Version-/commits?author=MeowXiaoXiang)的[Meow_Bot-Public_Version-](https://github.com/MeowXiaoXiang/Meow_Bot-Public_Version-)開發的Mod<br/>
 與[Meow_Bot-Public_Version-](https://github.com/MeowXiaoXiang/Meow_Bot-Public_Version-)兼容,但[main.py](main.py)為調整過後的優化版本,兼容性更佳
