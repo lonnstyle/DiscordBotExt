@@ -1,4 +1,5 @@
 # DiscordBotExt
+[![Documentation Status](https://readthedocs.org/projects/discordbotextension/badge/?version=latest)](https://discordbotextension.readthedocs.io/zh_TW/latest/?badge=latest)
 Warframe Discord 機器人<br/>
 基於[MeowXiaoXiang](https://github.com/MeowXiaoXiang/Meow_Bot-Public_Version-/commits?author=MeowXiaoXiang)的[Meow_Bot-Public_Version-](https://github.com/MeowXiaoXiang/Meow_Bot-Public_Version-)開發的Mod<br/>
 與[Meow_Bot-Public_Version-](https://github.com/MeowXiaoXiang/Meow_Bot-Public_Version-)兼容,但[main.py](main.py)為調整過後的優化版本,兼容性更佳
