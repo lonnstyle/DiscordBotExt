@@ -11,6 +11,7 @@ Warframe Discord 機器人<br/>
 * -pip install mwclient
 * -pip install fuzzywuzzy
 * -pip install flask
+* -pip install discord-py-slash-command
 
 ## Mod列表<br/>
 * [worldState.py](cmds/worldState.py)查詢當前世界循環狀態<br/>
