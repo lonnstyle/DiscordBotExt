@@ -5,7 +5,6 @@
 [![GitHub license](https://img.shields.io/github/license/lonnstyle/DiscordBotExt.svg)](https://github.com/lonnstyle/DiscordBotExt/blob/main/LICENSE)
 [![Github all releases](https://img.shields.io/github/downloads/lonnstyle/DiscordBotExt/total.svg)](https://GitHub.com/lonnstyle/DiscordBotExt/releases/)
 [![Discord](https://img.shields.io/discord/591914197219016707.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/MdZxTNkpGF)
-
 <br/>
 Warframe Discord 機器人<br/>
 基於[MeowXiaoXiang](https://github.com/MeowXiaoXiang/Meow_Bot-Public_Version-/commits?author=MeowXiaoXiang)的[Meow_Bot-Public_Version-](https://github.com/MeowXiaoXiang/Meow_Bot-Public_Version-)開發的Mod<br/>
