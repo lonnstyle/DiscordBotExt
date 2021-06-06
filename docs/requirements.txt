@@ -1,6 +1,5 @@
-# File: docs/requirements.txt
-
-# Defining the exact version will make sure things don't break
-sphinx==3.4.3
-sphinx_rtd_theme==0.5.1
-readthedocs-sphinx-search==0.1.0
+# requirements.txt
+mkdocs==0.15.0
+mkdocs-bootstrap==0.1.1
+mkdocs-bootswatch==0.1.0
+markdown>=2.3.1,<2.5
