@@ -1,16 +1,31 @@
 Welcome to DiscordBotExt's documentation!
-[Patreon](https://patreon.com/join/lonnstyle)
 ===============================================
+|Documentation Status| |Support me on Patreon| |GitHub release| |GitHub
+license| |Github all releases| |Discord|
+
+.. |Documentation Status| image:: https://readthedocs.org/projects/discordbotextension/badge/?version=latest
+   :target: https://discordbotextension.readthedocs.io/zh_TW/latest/?badge=latest
+.. |Support me on Patreon| image:: https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dlonnstyle%26type%3Dpatrons&style=flat
+   :target: https://patreon.com/lonnstyle
+.. |GitHub release| image:: https://img.shields.io/github/release/lonnstyle/DiscordBotExt.svg
+   :target: https://github.com/lonnstyle/DiscordBotExt/releases
+.. |GitHub license| image:: https://img.shields.io/github/license/lonnstyle/DiscordBotExt.svg
+   :target: https://github.com/lonnstyle/DiscordBotExt/blob/main/LICENSE
+.. |Github all releases| image:: https://img.shields.io/github/downloads/lonnstyle/DiscordBotExt/total.svg
+   :target: https://GitHub.com/lonnstyle/DiscordBotExt/releases/
+.. |Discord| image:: https://img.shields.io/discord/591914197219016707.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2
+   :target: https://discord.gg/MdZxTNkpGF
+   
+`DiscordBotExt <https://github.com/lonnstyle/DiscordBotExt>`_ is a Discord bot developed by lonnstyle based on `discord.py <https://pypi.org/project/discord.py/>`_
 
 .. toctree::
+   :titlesonly:
+   :hidden:
+   :caption: Table of Contents
    :maxdepth: 2
    
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   quickInstall
+   ext
+   donate
+   
+You may download `Github releases <https://github.com/lonnstyle/DiscordBotExt/releases>`_ for `quick install <./quickInstall.html>`_ or implement with `cmds <https://github.com/lonnstyle/DiscordBotExt/blob/main/cmds>`_ with your own configuration.
