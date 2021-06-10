@@ -4,4 +4,6 @@ Donation
 Support lonnstyle for further developments.
 
 ```{toctree}
+:hidden:
+
 ```

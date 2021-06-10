@@ -3,6 +3,7 @@ from core.classes import Cog_Extension
 import requests
 import json
 from datetime import datetime
+from operator import itemgetter
 import discord
 from discord_slash.utils.manage_commands import create_option, create_choice
 from discord_slash import cog_ext,SlashContext
@@ -128,8 +129,8 @@ class worldState(Cog_Extension):
     
   @cog_ext.cog_slash(name="Sortie",description=lang['sortie.description'])
   async def slash_Sortie(self,ctx:SlashContext):
-    await self.sortie(ctx)
-    
+    await self.sortie(ctx)    
+
   @commands.command(name="Fissure",aliases=lang['fissure.aliases'],brief=lang['fissure.brief'],description=lang['fissure.description'])
   async def fissure(self,ctx,tier="all",isStorm="False"):
     payload= requests.get('https://api.warframestat.us/pc/fissures',headers={'Accept-Language':'en','Cache-Control': 'no-cache'})
@@ -155,6 +156,6 @@ class worldState(Cog_Extension):
         print(fissure['expired'] != True and fissure['isStorm'] != True)
         embed.add_field(name=node,value=description,inline=False)
     await ctx.send(embed=embed)
-    
+
 def setup(bot):
   bot.add_cog(worldState(bot))

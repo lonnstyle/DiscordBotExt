@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Quick Install &mdash; DiscordBotExt v2.3.0 documentation</title>
+  <title>快速安裝 &mdash; DiscordBotExt v2.3.0 documentation</title>
   
 
   
@@ -38,8 +38,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Extensions" href="ext.html" />
-    <link rel="prev" title="Welcome to DiscordBotExt’s documentation!" href="index.html" /> 
+    <link rel="next" title="指令擴展" href="ext.html" />
+    <link rel="prev" title="歡迎來到DiscordBotExt的項目文檔" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -86,8 +86,8 @@
             
               <p class="caption"><span class="caption-text">Table of Contents</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Install</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ext.html">Extensions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">快速安裝</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ext.html">指令擴展</a></li>
 <li class="toctree-l1"><a class="reference internal" href="donate.html">Donation</a></li>
 </ul>
 
@@ -137,7 +137,7 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Quick Install</li>
+      <li>快速安裝</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -156,11 +156,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="quick-install">
-<h1>Quick Install<a class="headerlink" href="#quick-install" title="Permalink to this headline">¶</a></h1>
-<p>Assuming you had already installed <a class="reference external" href="https://www.python.org/">python 3</a>, you can install the Discord bot from the <a class="reference external" href="https://github.com/lonnstyle/DiscordBotExt/releases">GitHub Release</a> .<br/></p>
-<div class="section" id="required-packages">
-<h2>Required packages<a class="headerlink" href="#required-packages" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="id1">
+<h1>快速安裝<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>假設你已經安裝了<a class="reference external" href="https://www.python.org/">python 3</a>，你可以直接從<a class="reference external" href="https://github.com/lonnstyle/DiscordBotExt/releases">GitHub Release</a>下載機器人所需要的文件。<br/></p>
+<div class="section" id="id2">
+<h2>需要的模組<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">pip</span> <span class="n">install</span> <span class="n">discord</span>
 <span class="o">-</span><span class="n">pip</span> <span class="n">install</span> <span class="n">chinese_converter</span>
 <span class="o">-</span><span class="n">pip</span> <span class="n">install</span> <span class="n">discord</span><span class="o">-</span><span class="n">webhook</span>
@@ -171,17 +171,27 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="create-bot-account">
-<h2>Create bot account<a class="headerlink" href="#create-bot-account" title="Permalink to this headline">¶</a></h2>
-<p>Follow <a class="reference external" href="https://discordpy.readthedocs.io/en/stable/discord.html">discord.py</a>’s tutorial to create and invite your bot.<br/>
-The bot will need the following premissions:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">WIP</span>
+<div class="section" id="id3">
+<h2>創建機器人賬號<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>跟隨<a class="reference external" href="https://discordpy.readthedocs.io/en/stable/discord.html">discord.py的教學</a>創建並邀請你的機器人。<br/>
+機器人會需要以下權限：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">add_reactions</span>
+<span class="n">read_messages</span>
+<span class="n">send_messages</span>
+<span class="n">manage_messages</span>
+<span class="n">embed_links</span>
+<span class="n">attach_files</span>
+<span class="n">read_message_history</span>
+<span class="n">mention_everyone</span>
+<span class="n">external_emojis</span>
+<span class="n">manage_roles</span>
+<span class="n">manage_webhooks</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="configure-setting-json">
-<h2>Configure <a class="reference external" href="https://github.com/lonnstyle/DiscordBotExt/blob/main/setting.json">setting.json</a><a class="headerlink" href="#configure-setting-json" title="Permalink to this headline">¶</a></h2>
-<p>Blank template as follow:</p>
+<div class="section" id="setting-json">
+<h2>設置<a class="reference external" href="https://github.com/lonnstyle/DiscordBotExt/blob/main/setting.json">setting.json</a><a class="headerlink" href="#setting-json" title="Permalink to this headline">¶</a></h2>
+<p>以下為空白模板:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="nt">&quot;TOKEN&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="nt">&quot;command_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -195,38 +205,38 @@ The bot will need the following premissions:</p>
 </div>
 <table class="colwidths-auto docutils align-default">
 <thead>
-<tr class="row-odd"><th class="head"><p>key</p></th>
-<th class="head"><p>accepting value</p></th>
-<th class="head"><p>type</p></th>
+<tr class="row-odd"><th class="head"><p>鍵值</p></th>
+<th class="head"><p>接受的數值</p></th>
+<th class="head"><p>數據類別</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>TOKEN</p></td>
-<td><p>bot’s token</p></td>
+<td><p>機器人的token</p></td>
 <td><p>str</p></td>
 </tr>
 <tr class="row-odd"><td><p>command_prefix</p></td>
-<td><p>the prefix to raise bot command</p></td>
+<td><p>機器人執行指令的前綴</p></td>
 <td><p>str</p></td>
 </tr>
 <tr class="row-even"><td><p>webhook</p></td>
-<td><p>webhook address for webhook embed responses</p></td>
+<td><p>機器人發webhook嵌入信息的鏈接</p></td>
 <td><p>str</p></td>
 </tr>
 <tr class="row-odd"><td><p>user</p></td>
-<td><p>the nickname for the bot to call users</p></td>
+<td><p>機器人對用戶的稱呼</p></td>
 <td><p>str</p></td>
 </tr>
 <tr class="row-even"><td><p>self</p></td>
-<td><p>the nickname for the bot to call self</p></td>
+<td><p>機器人的自稱</p></td>
 <td><p>str</p></td>
 </tr>
 <tr class="row-odd"><td><p>watching</p></td>
-<td><p>the status of bot</p></td>
+<td><p>機器人的自訂狀態</p></td>
 <td><p>str</p></td>
 </tr>
 <tr class="row-even"><td><p>publish</p></td>
-<td><p>channel ID of self-publishing message sent by <code class="docutils literal notranslate"><span class="pre">sayd</span></code> command</p></td>
+<td><p>機器人自動發佈<code class="docutils literal notranslate"><span class="pre">sayd</span></code>信息的頻道ID</p></td>
 <td><p>int</p></td>
 </tr>
 </tbody>
@@ -240,8 +250,8 @@ The bot will need the following premissions:</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="ext.html" class="btn btn-neutral float-right" title="Extensions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to DiscordBotExt’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ext.html" class="btn btn-neutral float-right" title="指令擴展" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="歡迎來到DiscordBotExt的項目文檔" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

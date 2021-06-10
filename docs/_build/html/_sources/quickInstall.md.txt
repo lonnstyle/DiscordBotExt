@@ -1,8 +1,8 @@
-Quick Install
+快速安裝
 =====
-Assuming you had already installed [python 3](https://www.python.org/), you can install the Discord bot from the [GitHub Release](https://github.com/lonnstyle/DiscordBotExt/releases) .<br/>
+假設你已經安裝了[python 3](https://www.python.org/)，你可以直接從[GitHub Release](https://github.com/lonnstyle/DiscordBotExt/releases)下載機器人所需要的文件。<br/>
 
-## Required packages
+## 需要的模組
 ```
 -pip install discord
 -pip install chinese_converter
@@ -13,15 +13,25 @@ Assuming you had already installed [python 3](https://www.python.org/), you can 
 -pip install discord-py-slash-command
 ```
 
-## Create bot account
-Follow [discord.py](https://discordpy.readthedocs.io/en/stable/discord.html)'s tutorial to create and invite your bot.<br/>
-The bot will need the following premissions:
+## 創建機器人賬號
+跟隨[discord.py的教學](https://discordpy.readthedocs.io/en/stable/discord.html)創建並邀請你的機器人。<br/>
+機器人會需要以下權限：
 ```
-WIP
+add_reactions
+read_messages
+send_messages
+manage_messages
+embed_links
+attach_files
+read_message_history
+mention_everyone
+external_emojis
+manage_roles
+manage_webhooks
 ```
 
-## Configure [setting.json](https://github.com/lonnstyle/DiscordBotExt/blob/main/setting.json)
-Blank template as follow:
+## 設置[setting.json](https://github.com/lonnstyle/DiscordBotExt/blob/main/setting.json)
+以下為空白模板:
 ```json
 {
     "TOKEN": "",
@@ -33,12 +43,12 @@ Blank template as follow:
     "publish":
 }
 ```
-|key|accepting value|type|
+|鍵值|接受的數值|數據類別|
 |----|----|----|
-|TOKEN|bot's token|str|
-|command_prefix|the prefix to raise bot command|str|
-|webhook|webhook address for webhook embed responses|str|
-|user|the nickname for the bot to call users|str|
-|self|the nickname for the bot to call self|str|
-|watching|the status of bot|str|
-|publish|channel ID of self-publishing message sent by `sayd` command|int|
+|TOKEN|機器人的token|str|
+|command_prefix|機器人執行指令的前綴|str|
+|webhook|機器人發webhook嵌入信息的鏈接|str|
+|user|機器人對用戶的稱呼|str|
+|self|機器人的自稱|str|
+|watching|機器人的自訂狀態|str|
+|publish|機器人自動發佈`sayd`信息的頻道ID|int|

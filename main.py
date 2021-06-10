@@ -21,7 +21,7 @@ with open('setting.json', 'r', encoding='utf8') as jfile:
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(jdata['command_prefix']),intents = intents)
 slash = SlashCommand(bot, sync_commands=True,override_type=True, sync_on_cog_reload=True)
 start_time = datetime.now()
-version = "v2.3.0"
+version = "v2.4.1"
 
 @bot.event
 async def on_ready():

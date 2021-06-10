@@ -1,4 +1,4 @@
-Welcome to DiscordBotExt's documentation!
+歡迎來到DiscordBotExt的項目文檔
 ===============================================
 |Documentation Status| |Support me on Patreon| |GitHub release| |GitHub
 license| |Github all releases| |Discord|
@@ -16,16 +16,16 @@ license| |Github all releases| |Discord|
 .. |Discord| image:: https://img.shields.io/discord/591914197219016707.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2
    :target: https://discord.gg/MdZxTNkpGF
    
-`DiscordBotExt <https://github.com/lonnstyle/DiscordBotExt>`_ is a Discord bot developed by lonnstyle based on `discord.py <https://pypi.org/project/discord.py/>`_
+`DiscordBotExt <https://github.com/lonnstyle/DiscordBotExt>`_ 是由lonnstyle基於 `discord.py <https://pypi.org/project/discord.py/>`_ 開發的一款Discord機器人擴展程序檔。
 
 .. toctree::
    :titlesonly:
    :hidden:
    :caption: Table of Contents
-   :maxdepth: 2
+   :maxdepth: 1
    
    quickInstall
    ext
    donate
    
-You may download `Github releases <https://github.com/lonnstyle/DiscordBotExt/releases>`_ for `quick install <./quickInstall.html>`_ or implement with `cmds <https://github.com/lonnstyle/DiscordBotExt/blob/main/cmds>`_ with your own configuration.
+你可以在 `Github releases <https://github.com/lonnstyle/DiscordBotExt/releases>`_ 下載並進行 `快速安裝 <./quickInstall.html>`_ 或使用 `指令擴展庫 <https://github.com/lonnstyle/DiscordBotExt/blob/main/cmds>`_ 自行調整。
