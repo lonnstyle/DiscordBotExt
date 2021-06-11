@@ -1,0 +1,4 @@
+baro.py
+==============
+.. autoclass:: mwclient.page.Page
+   :members:

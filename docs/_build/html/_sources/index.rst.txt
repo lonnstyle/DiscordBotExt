@@ -21,7 +21,7 @@ license| |Github all releases| |Discord|
 .. toctree::
    :titlesonly:
    :hidden:
-   :caption: Table of Contents
+   :caption: 目錄
    :maxdepth: 1
    
    quickInstall
