@@ -1,4 +1,3 @@
-site_name: DiscordBotExt
 repo_url: https://github.com/lonnstyle/DiscordBotExt
 repo_name: DiscordBotExt
 site_author: lonnstyle
@@ -6,8 +5,6 @@ copyright: © 2021 lonnstyle
 theme:
     name: readthedocs
     titles_only: true
-site_name: DiscordBotExt
-site_url: https://discordbotextension.readthedocs.io/zh_TW/latest/
 nav:
     - 歡迎: index.md
     - 快速安裝: quickInstall.md
