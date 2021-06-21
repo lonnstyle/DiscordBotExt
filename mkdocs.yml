@@ -3,7 +3,7 @@ repo_url: https://github.com/lonnstyle/DiscordBotExt
 repo_name: DiscordBotExt
 site_author: lonnstyle
 copyright: © 2021 lonnstyle
-docs_dir: ./docs
+docs_dir: docs
 nav:
     - 歡迎: index.md
     - 快速安裝: quickInstall.md
