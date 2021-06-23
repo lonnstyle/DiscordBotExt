@@ -41,7 +41,7 @@
 		"status.embed.field.exts" : "已加載擴展",
 		"status.embed.footer.time" : "在線時間:{days}天{hours}:{minutes}:{seconds}\n",
 		"status.error.title" : "權限不足",
-		"status.error.description" : "本指令只提供給伺服器擁有者\n本伺服器擁有者為<@{owner}>"
+		"status.error.description" : "本指令只提供給機器人擁有者\n本機器人擁有者為<@{owner}>"
 	},
 	"admin":{
 		"clear.aliases":["clean" , "清除"],
@@ -49,7 +49,7 @@
 		"clear.description":"clear [指定數量]\n刪除指定數量的聊天記錄",
 		"clear.cleared":"在<<{channel}>>頻道使用了clear指令刪除了{num}個對話",
 		"clear.error.title":"權限不足",
-		"clear.error.description":"本指令只提供給機器人傭有者 \n本機器人擁有者為 <@{owner}>"
+		"clear.error.description":"本指令只提供給機器人擁有者 \n本機器人擁有者為 <@{owner}>"
 	},
 	"baro":{
 		"rawDict.URL":"https://raw.githubusercontent.com/pa001024/riven-mirror/dev/src/i18n/lang/zh-Hant.json",

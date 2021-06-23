@@ -41,7 +41,7 @@
 		"status.embed.field.exts" : "已加载扩展",
 		"status.embed.footer.time" : "在线时间:{days}天{hours}:{minutes}:{seconds}\n",
 		"status.error.title" : "权限不足",
-		"status.error.description" : "本指令只提供给服务器拥有者\n本服务器拥有者为<@{owner}>"
+		"status.error.description" : "本指令只提供给机器人拥有者\n本机器人拥有者为<@{owner}>"
 	},
 	"admin":{
 		"clear.aliases":["clean" , "清除"],

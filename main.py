@@ -36,6 +36,17 @@ async def on_ready():
 #----------------------------------------------------------------------------
 bot.remove_command('help')
 #help指令
+
+@bot.listen()
+async def on_command_error(ctx, error):
+    owner = await bot.application_info()
+    owner = owner.owner
+    embed = discord.Embed(title="Error",description=str(error))
+    embed.set_author(name=ctx.author.name,icon_url=ctx.author.avatar_url)
+    embed.add_field(name="Context",value=ctx.message.content)
+    embed.add_field(name="Channel",value=ctx.guild.name+'/'+ctx.channel.name)
+    await owner.send(embed=embed)
+    
 @bot.command(name="help" , aliases=lang['help.aliases'] ,description=lang['help.description'], brief=lang['help.brief'])
 async def help(ctx, command:str="all", page:int=1):
   fields = 0

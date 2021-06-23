@@ -4,7 +4,7 @@
 [![GitHub release](https://img.shields.io/github/release/lonnstyle/DiscordBotExt.svg)](https://github.com/lonnstyle/DiscordBotExt/releases)
 [![GitHub license](https://img.shields.io/github/license/lonnstyle/DiscordBotExt.svg)](https://github.com/lonnstyle/DiscordBotExt/blob/main/LICENSE)
 [![Github all releases](https://img.shields.io/github/downloads/lonnstyle/DiscordBotExt/total.svg)](https://GitHub.com/lonnstyle/DiscordBotExt/releases/)
-[![Discord](https://img.shields.io/discord/591914197219016707.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/MdZxTNkpGF)
+[![Discord](https://img.shields.io/discord/815462037840330762.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/MdZxTNkpGF)
 <br/>
 
 [DiscordBotExt](https://github.com/lonnstyle/DiscordBotExt)是由**lonnstyle**基於[discord.py](https://pypi.org/project/discord.py/)開發的一款Discord機器人擴展程序檔。<br/>
