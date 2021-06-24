@@ -15,5 +15,7 @@ nav:
     - 指令擴展: ext.md
     - 現成的指令擴展:
         - admin.py: ext/admin.md
+        - baro.py: ext/baro.md
+        - common.py: ext/common.md
     - 關於:
         - 贊助: donate.md

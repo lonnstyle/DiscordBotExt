@@ -18,17 +18,13 @@ class 自訂名稱(Cog_Extension):
 		bot.add_cog(自訂名稱(bot))
 ```
 ## 現成的指令擴展
-```{toctree}
-:maxdepth: 1
-
-ext/admin
-ext/baro
-ext/common
-ext/event
-ext/logup
-ext/OrphixRank
-ext/rivenPrice
-ext/wfm
-ext/wiki
-ext/worldState
-```
+- [admin](admin)<br/>
+- [baro](baro)<br/>
+- [common](common)<br/>
+- [event](event)<br/>
+- [logup](logup)<br/>
+- [OrphixRank](OrphixRank)<br/>
+- [rivenPrice](rivenPrice)<br/>
+- [wfm](wfm)<br/>
+- [wiki](wiki)<br/>
+- [worldState](worldState)

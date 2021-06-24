@@ -21,7 +21,7 @@
 		"unload.unloaded" : "unloaded:{extension}",
 		"unload.error.title" : "Missing permission",
 		"unload.error.description" : "This command is only available to the bot owner\nThe owner of this bot is<@{owner}>",
-		"reload.aliases" : ["reload","refresh"],
+		"reload.aliases" : ["refresh"],
 		"reload.brief" : "reload extension",
 		"reload.description" : "reload `extension` from the bot",
 		"reload.reloaded" : "reloaded:{extension}",
