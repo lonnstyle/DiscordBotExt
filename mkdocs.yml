@@ -17,5 +17,10 @@ nav:
         - admin.py: ext/admin.md
         - baro.py: ext/baro.md
         - common.py: ext/common.md
+        - event.py: ext/event.md
+        - rivenPrice.py: ext/rivenPrice.md
+        - wfm.py:   ext/wfm.md
+        - wiki.py:  ext/wiki.md
+        - worldState.py:    ext/worldState.md
     - 關於:
         - 贊助: donate.md

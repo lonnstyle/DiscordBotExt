@@ -22,8 +22,6 @@ class 自訂名稱(Cog_Extension):
 - [baro](baro)<br/>
 - [common](common)<br/>
 - [event](event)<br/>
-- [logup](logup)<br/>
-- [OrphixRank](OrphixRank)<br/>
 - [rivenPrice](rivenPrice)<br/>
 - [wfm](wfm)<br/>
 - [wiki](wiki)<br/>
