@@ -18,11 +18,11 @@ class 自訂名稱(Cog_Extension):
 		bot.add_cog(自訂名稱(bot))
 ```
 ## 現成的指令擴展
-- [admin](admin)<br/>
-- [baro](baro)<br/>
-- [common](common)<br/>
-- [event](event)<br/>
-- [rivenPrice](rivenPrice)<br/>
-- [wfm](wfm)<br/>
-- [wiki](wiki)<br/>
-- [worldState](worldState)
+- [admin](admin.html)<br/>
+- [baro](baro.html)<br/>
+- [common](common.html)<br/>
+- [event](event.html)<br/>
+- [rivenPrice](rivenPrice.html)<br/>
+- [wfm](wfm.html)<br/>
+- [wiki](wiki.html)<br/>
+- [worldState](worldState.html)<br/>
