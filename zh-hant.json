@@ -232,7 +232,7 @@
 		"fissure.embed.field":"階級:{tier}\n任務:{missionType}\n剩餘時間:{eta}",
 		"fissure.tierList":{"1":"古紀","2":"前紀","3":"中紀","4":"後紀","5":"鎮魂"},
 		"fissure.planets":{"Mercury":"水星","Venus":"金星","Earth":"地球","Mars":"火星","Phobos":"火衛一","Deimos":"火衛二","Ceres":"穀神星","Jupiter":"木星","Europa":"歐羅巴","Saturn":"土星","Uranus":"天王星","Neptune":"海王星","Pluto":"冥王星","Sedna":"賽德娜","Eris":"鬩神星","Void":"虛空","Lua":"月球","Kuva Fortress":"赤毒要塞","Veil":"面紗"},
-		"fissure.missionType":{"Assault":"強襲","Capture":"捕獲","Defense":"防禦","Disruption":"中斷","Excavation":"挖掘","Extermination":"殲滅","Hive":"清巢","Interception":"攔截","Mobile Defense":"移動防禦","Rescue":"救援","Sabotage":"破壞","Spy":"間諜","Survival":"生存","Skirmish":"前哨戰","Volatile":"爆發"},
+		"fissure.missionType":{"Assault":"強襲","Capture":"捕獲","Defense":"防禦","Disruption":"中斷","Excavation":"挖掘","Extermination":"殲滅","Hive":"清巢","Interception":"攔截","Mobile Defense":"移動防禦","Rescue":"救援","Sabotage":"破壞","Spy":"間諜","Survival":"生存","Skirmish":"前哨戰","Volatile":"爆發","Orphix":"奧菲斯"},
 		"fissure.proxima":"毗鄰星",
 		"fissure.tierOption":{"t1":1,"t2":2,"t3":3,"t4":4,"t5":5,"古紀":1,"前紀":2,"中紀":3,"後紀":4,"鎮魂":5,"lith":1,"meso":2,"neo":3,"axi":4,"requiem":5}
   }
