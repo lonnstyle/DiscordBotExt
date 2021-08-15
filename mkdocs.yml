@@ -6,6 +6,7 @@ copyright: © 2021 lonnstyle
 theme:
     name: readthedocs
     highlightjs: true
+    custom_dir: override
     hljs_languages:
         - yaml
         - rust
