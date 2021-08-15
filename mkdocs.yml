@@ -2,6 +2,7 @@ site_name: DiscordBotExt
 repo_url: https://github.com/lonnstyle/DiscordBotExt
 repo_name: DiscordBotExt
 site_author: lonnstyle
+site_description: lonnstyle的DiscordBotExt繁體中文文檔
 copyright: © 2021 lonnstyle
 theme:
     name: readthedocs
@@ -9,9 +10,6 @@ theme:
     hljs_languages:
         - yaml
         - rust
-        
-markdown_extensions:
-  - meta
 
 nav:
     - 歡迎: index.md
