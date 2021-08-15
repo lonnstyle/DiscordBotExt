@@ -13,4 +13,4 @@
 
 <p style="position:relative;right:-345px;"><iframe src="https://discord.com/widget?id=815462037840330762&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
 </p>
-
+<meta name="description" content="lonnstyle的DiscordBotExt繁體中文文檔">
