@@ -73,24 +73,7 @@ class event(Cog_Extension):
     for role in member.roles:
       if (role.name == roles.get(payload.emoji.name) or role.name == roles.get(f"<:{payload.emoji.name}:{payload.emoji.id}>")) and str(payload.message_id) in message:
         await member.remove_roles(role)
-
-  @commands.Cog.listener()
-  async def on_ready(self):
-    print("working")
-    bot = self.bot
-    vc1 = bot.get_channel(822681456437362712)
-    vc2 = bot.get_channel(823548462896644166)
-    vc3 = bot.get_channel(823548483797385256)
-    while True:
-      if vc1.members == [] and vc2.members == [] and vc3.members == []:
-        text = bot.get_channel(824462815900205097)
-        async for message in text.history(limit=1):
-          if message != None:
-            lonns = bot.get_user(535295352115560488)
-            await lonns.send(message)
-            await text.purge(limit=100, bulk=True)
-      await asyncio.sleep(300)
-   
+  
 
 def setup(bot):
   if not os.path.exists('log'):
