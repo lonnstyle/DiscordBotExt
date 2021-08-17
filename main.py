@@ -21,7 +21,7 @@ with open('setting.json', 'r', encoding='utf8') as jfile:
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(jdata['command_prefix']),intents = intents)
 slash = SlashCommand(bot, sync_commands=True,override_type=True, sync_on_cog_reload=True)
 start_time = datetime.now()
-version = "v2.4.1"
+version = "v2.4.2"
 
 @bot.event
 async def on_ready():
@@ -155,6 +155,16 @@ async def status(ctx):
   else:
     await ctx.send(embed=discord.Embed(title=lang['status.error.title'],description=lang['status.error.description'].format(owner=bot.owner_id)))
 
+@bot.command(name='sponsor',aliases=lang['sponsor.aliases'],description=lang['sponsor.description'])
+async def sponsor(ctx):
+    embed=discord.Embed(title=lang['sponsor.embed.title'], description=lang['sponsor.embed.description'], color=0xff424d,url="https://patreon.com/join/lonnstyle")
+    embed.set_thumbnail(url="https://i.imgur.com/CCYuxwH.png")
+    await ctx.send(embed=embed)
+
+@bot.command(name='documentation',aliases=lang['documentation.aliases'],description=lang['documentation.description'])
+async def documentation(ctx):
+    embed=discord.Embed(title=lang['documentation.embed.title'],description=lang['documentation.embed.description'],color=0x2980b9,url=lang['documentation.embed.url'])
+    await ctx.send(embed=embed)
 
 for filename in os.listdir('./cmds'):
   if filename.endswith('.py'):

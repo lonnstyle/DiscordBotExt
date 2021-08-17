@@ -41,7 +41,16 @@
 		"status.embed.field.exts" : "loaded extensions",
 		"status.embed.footer.time" : "online time:{days}days{hours}:{minutes}:{seconds}\n",
 		"status.error.title" : "Missing permission",
-		"status.error.description" : "this command is only available for bot owner\nThe bot owner is <@{owner}>"
+		"status.error.description" : "this command is only available for bot owner\nThe bot owner is <@{owner}>",
+		"sponsor.aliases": ["patreon","support","donate"],
+		"sponsor.description": "support the dev",
+		"sponsor.embed.title": "Donation",
+		"sponsor.embed.description": "Support lonnstyle to develop the bot",
+		"documentation.aliases": ["doc","rtfd"],
+		"documentation.description": "Documentation",
+		"documentation.embed.title": "Docs",
+		"documentation.embed.description": "empowered by readthedocs",
+		"documentation.embed.url": "https://discordbotextension.readthedocs.io/en/latest/"
 	},
 	"admin":{
 		"clear.aliases":["clean","delete"],

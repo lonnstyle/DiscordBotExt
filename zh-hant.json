@@ -41,7 +41,16 @@
 		"status.embed.field.exts" : "已加載擴展",
 		"status.embed.footer.time" : "在線時間:{days}天{hours}:{minutes}:{seconds}\n",
 		"status.error.title" : "權限不足",
-		"status.error.description" : "本指令只提供給機器人擁有者\n本機器人擁有者為<@{owner}>"
+		"status.error.description" : "本指令只提供給機器人擁有者\n本機器人擁有者為<@{owner}>",
+		"sponsor.aliases": ["patreon","贊助"],
+		"sponsor.description": "給開發者贊助",
+		"sponsor.embed.title": "贊助",
+		"sponsor.embed.description": "贊助lonnstyle開發此機器人",
+		"documentation.aliases": ["doc","rtfd","文檔"],
+		"documentation.description": "機器人使用文檔",
+		"documentation.embed.title": "使用文檔",
+		"documentation.embed.description": "使用readthedocs建立",
+		"documentation.embed.url": "https://discordbotextension.readthedocs.io/zh_TW/latest/"
 	},
 	"admin":{
 		"clear.aliases":["clean" , "清除"],

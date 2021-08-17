@@ -41,7 +41,16 @@
 		"status.embed.field.exts" : "已加载扩展",
 		"status.embed.footer.time" : "在线时间:{days}天{hours}:{minutes}:{seconds}\n",
 		"status.error.title" : "权限不足",
-		"status.error.description" : "本指令只提供给机器人拥有者\n本机器人拥有者为<@{owner}>"
+		"status.error.description" : "本指令只提供给机器人拥有者\n本机器人拥有者为<@{owner}>",
+		"sponsor.aliases": ["patreon","赞助"],
+		"sponsor.description": "赞助开发者",
+		"sponsor.embed.title": "赞助",
+		"sponsor.embed.description": "赞助lonnstyle开发此机器人",
+		"documentation.aliases": ["doc","rtfd","文档"],
+		"documentation.description": "机器人使用文档",
+		"documentation.embed.title": "使用文档",
+		"documentation.embed.description": "使用readthedocs建立",
+		"documentation.embed.url": "https://discordbotextension.readthedocs.io/zh_CN/latest/"
 	},
 	"admin":{
 		"clear.aliases":["clean" , "清除"],
