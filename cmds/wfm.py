@@ -65,7 +65,7 @@ class wfm(Cog_Extension):
     message = lang['translate.translate.message'].format(item=item,language=language,translate=translate)
     await ctx.send(message)
 
-  @cog_ext.cog_slash(name="translate",description=lang['translate.description'],options=[create_option(name="item",description=lang["translate.options.item"],option_type=3,required=True)])
+  @cog_ext.cog_slash(name="translate",description=lang['translate.description'],options=[create_option(name="item",description=lang["translate.options.item"],option_type=3,required=True)],guild_ids=[815462037840330762])
   async def slash_translate(self,ctx,item):
     await self.translate(ctx,item)
     
@@ -160,10 +160,11 @@ class wfm(Cog_Extension):
           orderList[x],orderList[len(orderList)-x] = orderList[len(orderList)-x],orderList[x]
       message = lang["wfm.message.title"].format(items=items,order=price_order[action],order_type=local_order_type[order_type])
       webhookID = jdata.get("webhook","Blank")
-      webhookID = requests.get(webhookID)
-      webhookID = json.loads(webhookID.text)
-      webhookID = webhookID['channel_id']
-      if eval(webhookID) == channel_id:
+      if webhookID != "Blank":
+        webhookID = requests.get(webhookID)
+        webhookID = json.loads(webhookID.text)
+        webhookID = webhookID['channel_id']
+      if webhookID != "Blank" and eval(webhookID) == channel_id:
         webhook = DiscordWebhook(url=jdata['webhook'],content=message)
         for orders in raw:
           if count > 0:
