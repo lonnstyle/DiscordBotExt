@@ -172,7 +172,7 @@ class wfm(Cog_Extension):
             if max_rank is not None:
               if orders['mod_rank'] != itemrank:
                 continue
-            if orders['order_type'] == order_type and user['status'] == 'ingame' and orders['platform'] == 'pc':
+            if orders['order_type'] == order_type and user['status'] == 'ingame' and orders['platform'] == 'pc' and orders['visible']:
               rank = orders.get("mod_rank","")
               if rank != "":
                 localRank = lang['wfm.rank'].format(rank=rank)
@@ -195,7 +195,7 @@ class wfm(Cog_Extension):
             if max_rank is not None:
               if orders['mod_rank'] != itemrank:
                 continue
-            if orders['order_type'] == order_type and user['status'] == 'ingame' and orders['platform'] == 'pc':
+            if orders['order_type'] == order_type and user['status'] == 'ingame' and orders['platform'] == 'pc' and orders['visible']:
               rank = orders.get("mod_rank","")
               if rank != "":
                 localRank = lang['wfm.rank'].format(rank=rank)
