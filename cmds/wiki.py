@@ -53,17 +53,11 @@ class wiki(Cog_Extension):
   async def wiki(self,ctx,*page):
     name = " ".join(page)
     with open("dict/zh_pages.txt","r") as zh_pages:
-      zhpage = []
-      for page in zh_pages.readlines():
-        zhpage.append(page)
+      zhpage = list(zh_pages.readlines())
     with open("dict/tc_pages.txt","r") as tc_pages:
-      tcpage = []
-      for page in tc_pages.readlines():
-        tcpage.append(page)
+      tcpage = list(tc_pages.readlines())
     with open("dict/en_pages.txt","r") as en_pages:
-      enpage = []
-      for page in en_pages.readlines():
-        enpage.append(page)
+      enpage = list(en_pages.readlines())
     title,ratio = process.extractOne(name,zhpage)
     if ratio>75:
       footer = lang['wiki.footer.huiji']
