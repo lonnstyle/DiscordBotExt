@@ -1,14 +1,15 @@
-import discord
-from discord.ext import commands
-from core.classes import Cog_Extension
-import os
-import requests
 import json
-from discord_webhook import DiscordWebhook, DiscordEmbed
-from language import language as lang
-from fuzzywuzzy import process
+import os
 
-lang = lang()
+import discord
+import requests
+from discord.ext import commands
+from discord_webhook import DiscordEmbed, DiscordWebhook
+from thefuzz import process
+
+from core.classes import Cog_Extension
+from localization import lang
+
 lang = lang.langpref()['rivenPrice']
 
 temp = {}
@@ -43,13 +44,13 @@ class rivenPrice(Cog_Extension):
         name = ' '.join(weapon)
         name = name.title()
         weapon, ratio = process.extractOne(name, localWeapons.keys())
-        if ratio<75:
-            weapon,ratio = process.extractOne(name,Weapons.keys())
-            if ratio<75:
-                embed=discord.Embed(title=lang['riven.error.title'],description=lang['riven.error.description'].format(self=jdata['self']),color=0xff0000)
-                for match,score in process.extractBests(name,localWeapons.keys()):
-                    if score>50:
-                        embed.add_field(name=match,value=score,inline=False)
+        if ratio < 75:
+            weapon, ratio = process.extractOne(name, Weapons.keys())
+            if ratio < 75:
+                embed = discord.Embed(title=lang['riven.error.title'], description=lang['riven.error.description'].format(self=jdata['self']), color=0xff0000)
+                for match, score in process.extractBests(name, localWeapons.keys()):
+                    if score > 50:
+                        embed.add_field(name=match, value=score, inline=False)
                 await ctx.send(embed=embed)
             else:
                 name = weapon
