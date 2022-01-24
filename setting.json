@@ -1,10 +1,10 @@
 {
     "TOKEN": "",
-    "command_prefix":"",
-    "webhook":"",
-    "user":"",
-    "self":"",
-    "watching":"",
-    "publish":,
-	"language":""
+    "command_prefix": "",
+    "webhook": "",
+    "user": "",
+    "self": "",
+    "watching": "",
+    "publish": ,
+    "language": ""
 }
