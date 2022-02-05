@@ -207,7 +207,11 @@ async def on_command_error(ctx, error):
     embed.add_field(name="Context", value=ctx.message.content)
     if type(ctx.channel) == discord.channel.TextChannel:
         embed.add_field(name="Channel", value=ctx.guild.name+'/'+ctx.channel.name)
-    await owner.send(embed=embed)
+    if ctx.command in bot.commands:
+        await owner.send(embed=embed)
+        logger.info(f"[command_error]message: {ctx.message.content}")
+        logger.info(f"[command_error]error: {error}")
+
 
 logger.info('[init] loading extensions')
 for filename in os.listdir('./cmds'):
