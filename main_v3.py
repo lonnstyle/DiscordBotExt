@@ -183,20 +183,6 @@ async def documentation(ctx):
     embed = discord.Embed(title=lang['documentation.embed.title'], description=lang['documentation.embed.description'], color=0x2980b9, url=lang['documentation.embed.url'])
     await ctx.send(embed=embed)
 
-for filename in os.listdir('./cmds'):
-    if filename.endswith('.py'):
-        bot.load_extension(f'cmds.{filename[:-3]}')
-
-commands = {}
-for extension in bot.extensions:
-    package = extension
-    name = extension[5:]
-    tags = getattr(__import__(package, fromlist=[name]), name)
-    try:
-        commands[name] = tags.tag
-    except:
-        pass
-
 
 @bot.listen()
 async def on_command_error(ctx, error):
@@ -204,12 +190,12 @@ async def on_command_error(ctx, error):
     owner = owner.owner
     embed = discord.Embed(title="Error", description=str(error))
     embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
-    embed.add_field(name="Context", value=ctx.message.content)
+    embed.add_field(name="Context", value=ctx.message.clean_content)
     if type(ctx.channel) == discord.channel.TextChannel:
         embed.add_field(name="Channel", value=ctx.guild.name+'/'+ctx.channel.name)
     if ctx.command in bot.commands:
         await owner.send(embed=embed)
-        logger.info(f"[command_error]message: {ctx.message.content}")
+        logger.info(f"[command_error]message: {ctx.message.clean_content}")
         logger.info(f"[command_error]error: {error}")
 
 
