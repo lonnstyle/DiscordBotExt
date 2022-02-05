@@ -54,7 +54,7 @@
         "status.embed.field.ping": "current ping",
         "status.embed.field.perms": "bot permissions",
         "status.embed.field.exts": "loaded extensions",
-        "status.embed.footer.time": "online time:{days}days{hours}:{minutes}:{seconds}\n",
+        "status.embed.uptime": "online time",
         "status.error.title": "Missing permission",
         "status.error.description": "this command is only available for bot owner\nThe bot owner is <@{owner}>",
         "sponsor.aliases": [

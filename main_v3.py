@@ -144,7 +144,7 @@ async def reload(ctx, extension):
 @bot.command(name='disconnect', aliases=lang['disconnect.aliases'], brief=lang['disconnect.brief'], description=lang['disconnect.description'].format(owner=bot.owner_id))
 async def turn_off_bot(ctx):
     if await bot.is_owner(ctx.author):
-        await ctx.send(lang['disconnect.disconnected'])  
+        await ctx.send(lang['disconnect.disconnected'])
         logger.info('[disconnect] bot is now closing')
         await bot.close()
     else:
@@ -165,11 +165,7 @@ async def status(ctx):
         for ext in bot.extensions:
             exts += ext.replace("cmds.", "")+'\n'
         embed.add_field(name=lang['status.embed.field.exts'], value=exts, inline=True)
-        uptime = datetime.now()-start_time
-        embed.set_footer(text=lang['status.embed.footer.time'].format(
-            days=uptime.days, hours=int(uptime.seconds / 3600),
-            minutes=int(uptime.seconds % 3600 / 60),
-            seconds=uptime.seconds % 3600 % 60) + version)
+        embed.add_field(name=lang['status.embed.uptime'], value=f">>> <t:{int(start_time.timestamp())}:R>\n{version}", inline=False)
         await ctx.send(embed=embed)
     else:
         await ctx.send(embed=discord.Embed(title=lang['status.error.title'], description=lang['status.error.description'].format(owner=bot.owner_id)))
@@ -215,7 +211,7 @@ async def on_command_error(ctx, error):
 
 logger.info('[init] loading extensions')
 for filename in os.listdir('./cmds'):
-    if filename.endswith('.py') and filename != 'droptables.py':
+    if filename.endswith('.py'):
         try:
             bot.load_extension(f'cmds.{filename[:-3]}')
             logger.debug(f'[init] loaded extension: {filename[:-3]}')
