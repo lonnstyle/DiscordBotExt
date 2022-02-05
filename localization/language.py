@@ -14,13 +14,13 @@ logger.addHandler(handler)
 
 class language():
     def init(self):
-        #     pass
-
-        # def init(self):
-        self.zh_hant = json.loads(requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotExt/main/localization/zh-hant.json").text)
-        self.zh_hans = json.loads(requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotExt/main/localization/zh-hans.json").text)
-        self.en = json.loads(requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotExt/main/localization/en.json").text)
-        logger.debug("[init] successfully pulled loc file from github")
+        try:
+            self.zh_hant = json.loads(requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotExt/main/localization/locales/zh-hant.json").text)
+            self.zh_hans = json.loads(requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotExt/main/localization/locales/zh-hans.json").text)
+            self.en = json.loads(requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotExt/main/localization/locales/en.json").text)
+            logger.debug("[init] successfully pulled loc file from github")
+        except Exception as exc:
+            logger.error(exc)
         self.pref = json.load(open("setting.json", 'r', encoding='utf8'))
         self.pref = self.pref.get("language", "zh-hant")
         logger.debug(f'[init] language preference set: {self.pref}')

@@ -42,15 +42,22 @@ def sync_to_en():
 
     for locale_file in locales['to_sync']:
         updated_locale_data = copy.deepcopy(en_locale)
+        unknown_cats = []
         unknown_keys = []
         with open(os.path.join('localization\locales', locale_file)) as _file:
-            for key, value in json.JSONDecoder(object_pairs_hook=OrderedDict).decode(_file.read()).items():
-                if key in en_locale:
-                    updated_locale_data[key] = value
+            for cat, key in json.JSONDecoder(object_pairs_hook=OrderedDict).decode(_file.read()).items():
+                if cat in en_locale:
+                    for key, value in key.items():
+                        if key in en_locale[cat]:
+                            updated_locale_data[cat][key] = value
+                        else:
+                            unknown_keys.append("_".join([cat, key]))
                 else:
-                    unknown_keys.append(key)
+                    unknown_cats.append(cat)
             if len(unknown_keys) > 0:
                 print(f'Locale: {locale_file}, unknown keys detected:\n{pformat(unknown_keys)}')
+            if len(unknown_cats) > 0:
+                print(f'Locale: {locale_file}, unknown keys detected:\n{pformat(unknown_cats)}')
 
         locale_dump = json.JSONEncoder(indent=4, ensure_ascii=False).encode(updated_locale_data)
         with open(os.path.join('localization\locales', locale_file), 'w', encoding="utf-8") as _file:
