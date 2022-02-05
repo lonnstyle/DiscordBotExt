@@ -42,6 +42,7 @@ intents = discord.Intents.all()
 with open('setting.json', 'r') as _jfile:
     jdata = json.load(_jfile)
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(jdata['command_prefix']), intents=intents)
+start_time = datetime.now()
 version = "v3.0.0alpha"
 logger.info(f"[init] Bot is now starting...")
 
@@ -107,6 +108,98 @@ async def help(ctx, command: str = "all", page: int = 1):
                 await ctx.send(embed=embed)
                 return
         await ctx.send(lang['help.not_found'].format(user=jdata['user']))
+
+
+@bot.command(name='load', aliases=lang['load.aliases'], brief=lang['load.brief'], description=lang['load.description'])
+async def load(ctx, extension):
+    if await bot.is_owner(ctx.author):
+        bot.load_extension(F'cmds.{extension}')
+        await ctx.send(lang['load.loaded'].format(extension=extension))
+        logger.debug(f'[load] loaded extension: {extension}')
+    else:
+        await ctx.send(embed=discord.Embed(title=lang['load.error.title'], description=lang['load.error.description'].format(owner=bot.owner_id), color=0xff0000))
+
+
+@bot.command(name='unload', aliases=lang['unload.aliases'], brief=lang['unload.brief'], description=lang['unload.description'])
+async def unload(ctx, extension):
+    if await bot.is_owner(ctx.author):
+        bot.unload_extension(F'cmds.{extension}')
+        await ctx.send(lang['unload.unloaded'].format(extension=extension))
+        logger.debug(f'[unload] unloaded extension: {extension}')
+    else:
+        await ctx.send(embed=discord.Embed(title=lang['unload.error.title'], description=lang['unload.error.description'].format(owner=bot.owner_id), color=0xff0000))
+
+
+@bot.command(name='reload', aliases=lang['reload.aliases'], brief=lang['reload.brief'], description=lang['reload.description'])
+async def reload(ctx, extension):
+    if await bot.is_owner(ctx.author):
+        bot.reload_extension(F'cmds.{extension}')
+        await ctx.send(lang['reload.reloaded'].format(extension=extension))
+        logger.debug(f'[reload] reloaded extension: {extension}')
+    else:
+        await ctx.send(embed=discord.Embed(title=lang['reload.error.title'], description=lang['reload.error.description'].format(owner=bot.owner_id), color=0xff0000))
+# 機器人關閉系統--------------------------------------------
+
+
+@bot.command(name='disconnect', aliases=lang['disconnect.aliases'], brief=lang['disconnect.brief'], description=lang['disconnect.description'].format(owner=bot.owner_id))
+async def turn_off_bot(ctx):
+    if await bot.is_owner(ctx.author):
+        await ctx.send(lang['disconnect.disconnected'])  
+        logger.info('[disconnect] bot is now closing')
+        await bot.close()
+    else:
+        await ctx.send(embed=discord.Embed(title=lang['disconnect.error.title'], description=lang['disconnect.error.description'].format(owner=bot.owner_id), color=0xff0000))
+
+
+@bot.command(name='status', aliases=lang['status.aliases'], brief=lang['status.brief'], description=lang['status.description'].format(owner=bot.owner_id))
+async def status(ctx):
+    if await bot.is_owner(ctx.message.author):
+        embed = discord.Embed(title=lang['status.embed.title'])
+        embed.add_field(name=lang['status.embed.field.ping'], value=f"{round(bot.latency*1000)}ms", inline=False)
+        perms = ">>> "
+        for name, value in ctx.channel.permissions_for(ctx.me):
+            if value == True:
+                perms += name + '\n'
+        embed.add_field(name=lang['status.embed.field.perms'], value=perms, inline=True)
+        exts = ">>> "
+        for ext in bot.extensions:
+            exts += ext.replace("cmds.", "")+'\n'
+        embed.add_field(name=lang['status.embed.field.exts'], value=exts, inline=True)
+        uptime = datetime.now()-start_time
+        embed.set_footer(text=lang['status.embed.footer.time'].format(
+            days=uptime.days, hours=int(uptime.seconds / 3600),
+            minutes=int(uptime.seconds % 3600 / 60),
+            seconds=uptime.seconds % 3600 % 60) + version)
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(embed=discord.Embed(title=lang['status.error.title'], description=lang['status.error.description'].format(owner=bot.owner_id)))
+
+
+@bot.command(name='sponsor', aliases=lang['sponsor.aliases'], description=lang['sponsor.description'])
+async def sponsor(ctx):
+    embed = discord.Embed(title=lang['sponsor.embed.title'], description=lang['sponsor.embed.description'], color=0xff424d, url="https://patreon.com/join/lonnstyle")
+    embed.set_thumbnail(url="https://i.imgur.com/CCYuxwH.png")
+    await ctx.send(embed=embed)
+
+
+@bot.command(name='documentation', aliases=lang['documentation.aliases'], description=lang['documentation.description'])
+async def documentation(ctx):
+    embed = discord.Embed(title=lang['documentation.embed.title'], description=lang['documentation.embed.description'], color=0x2980b9, url=lang['documentation.embed.url'])
+    await ctx.send(embed=embed)
+
+for filename in os.listdir('./cmds'):
+    if filename.endswith('.py'):
+        bot.load_extension(f'cmds.{filename[:-3]}')
+
+commands = {}
+for extension in bot.extensions:
+    package = extension
+    name = extension[5:]
+    tags = getattr(__import__(package, fromlist=[name]), name)
+    try:
+        commands[name] = tags.tag
+    except:
+        pass
 
 
 @bot.listen()
