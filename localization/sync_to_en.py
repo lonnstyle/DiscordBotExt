@@ -16,7 +16,7 @@ def sync_to_en():
         'en': None,
         'to_sync': []
     }
-    for _root, dirs, files in os.walk('localization\locales'):
+    for _root, dirs, files in os.walk('locales'):
         for locale_file in files:
             if '.json' not in locale_file:
                 continue
@@ -32,11 +32,11 @@ def sync_to_en():
 
     # Synchronize
     # Load en.json file
-    with open(os.path.join('localization\locales', locales['en'])) as _file:
+    with open(os.path.join('locales', locales['en'])) as _file:
         en_locale = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(_file.read())
 
     # Format en.json file
-    with open(os.path.join('localization\locales', locales['en']), 'w', encoding="utf-8") as _file:
+    with open(os.path.join('locales', locales['en']), 'w', encoding="utf-8") as _file:
         en_locale_dump = json.JSONEncoder(indent=4, ensure_ascii=False).encode(en_locale)
         _file.write(en_locale_dump)
 
@@ -44,7 +44,7 @@ def sync_to_en():
         updated_locale_data = copy.deepcopy(en_locale)
         unknown_cats = []
         unknown_keys = []
-        with open(os.path.join('localization\locales', locale_file)) as _file:
+        with open(os.path.join('locales', locale_file)) as _file:
             for cat, key in json.JSONDecoder(object_pairs_hook=OrderedDict).decode(_file.read()).items():
                 if cat in en_locale:
                     for key, value in key.items():
@@ -60,7 +60,7 @@ def sync_to_en():
                 print(f'Locale: {locale_file}, unknown keys detected:\n{pformat(unknown_cats)}')
 
         locale_dump = json.JSONEncoder(indent=4, ensure_ascii=False).encode(updated_locale_data)
-        with open(os.path.join('localization\locales', locale_file), 'w', encoding="utf-8") as _file:
+        with open(os.path.join('locales', locale_file), 'w', encoding="utf-8") as _file:
             _file.write(locale_dump)
 
 

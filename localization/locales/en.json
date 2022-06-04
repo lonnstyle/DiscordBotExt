@@ -211,7 +211,7 @@
         "wfm.error.API": "{self}thought...{user} might got something wrong",
         "wfm.ducats": "Ducats:{ducats}",
         "wfm.message.title": "5 {order} price listing of {items}:\n",
-        "wfm.embed.title": "Item:{itemName}\tQuantity:{quantity}\t{localRank}\n交易稅:{tax}\t{ducats}",
+        "wfm.embed.title": "Item:{itemName}\tQuantity:{quantity}\t{localRank}\nTax:{tax}\t{ducats}",
         "wfm.embed.description": "Price:{platinum}",
         "wfm.embed.field.cpMsg": "clipboard",
         "wfm.link.language": "en",
