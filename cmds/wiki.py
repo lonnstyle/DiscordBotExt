@@ -1,14 +1,16 @@
 import json
+import logging
 import os
 
 import discord
-from core.classes import Cog_Extension
 from discord.ext import commands
-from localization import lang
 # from discord_slash import SlashContext, cog_ext
 # from discord_slash.utils.manage_commands import create_choice, create_option
 from mwclient import Site
 from thefuzz import process
+
+from core.classes import Cog_Extension
+from localization import lang
 
 lang = lang.langpref()['wiki']
 
@@ -16,6 +18,12 @@ dirname = os.path.dirname(__file__)
 
 with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
+
+logger = logging.getLogger('wiki')
+logger.setLevel(-1)
+handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'), encoding='utf-8', mode='a')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 zhURL = 'warframe.huijiwiki.com'
 tcURL = 'warframe.fandom.com'

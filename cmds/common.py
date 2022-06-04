@@ -1,13 +1,16 @@
 import asyncio
 import json
+import logging
 import os
 import re
+from cgitb import handler
 from random import randint
 
 import discord
 import requests
-from core.classes import Cog_Extension
 from discord.ext import commands
+
+from core.classes import Cog_Extension
 from localization import lang
 
 # from discord_slash import SlashContext, cog_ext
@@ -24,6 +27,12 @@ with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfi
 emoji = requests.get("http://gist.githubusercontent.com/Vexs/629488c4bb4126ad2a9909309ed6bd71/raw/416403f7080d1b353d8517dfef5acec9aafda6c3/emoji_map.json").text
 emoji = json.loads(emoji)
 emoji = {x: y for y, x in emoji.items()}
+
+logger = logging.getLogger('common')
+logger.setLevel(-1)
+handler = logging.FileHandler(file=os.path.join(dirname, '../log/runtime.log'), encoding='utf-8', mode='a')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 
 class common(Cog_Extension):

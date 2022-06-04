@@ -1,13 +1,15 @@
 import json
+import logging
 import os
 
 import discord
 import requests
-from core.classes import Cog_Extension
 from discord.ext import commands
 from discord_webhook import DiscordEmbed, DiscordWebhook
-from localization import lang
 from thefuzz import process
+
+from core.classes import Cog_Extension
+from localization import lang
 
 lang = lang.langpref()['rivenPrice']
 
@@ -31,6 +33,12 @@ attrDict = attrDict['payload']['attributes']
 for attr in attrDict:
     temp[attr['url_name']] = attr['effect']
 attrDict = temp
+
+logger = logging.getLogger('rivenPrice')
+logger.setLevel(-1)
+handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'), encoding='utf-8', mode='a')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)

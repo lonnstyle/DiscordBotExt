@@ -1,14 +1,16 @@
 import asyncio
 import json
+import logging
 import os
 import re
 from datetime import datetime, timedelta
 
 import discord
 import requests
+from discord.ext import commands
+
 from core.classes import Cog_Extension
 from core.time import time_info
-from discord.ext import commands
 from localization import lang
 
 lang = lang.langpref()['event']
@@ -21,6 +23,12 @@ with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfi
 emojimap = requests.get("http://gist.githubusercontent.com/Vexs/629488c4bb4126ad2a9909309ed6bd71/raw/416403f7080d1b353d8517dfef5acec9aafda6c3/emoji_map.json").text
 emojimap = json.loads(emojimap)
 emojimap = {x: y for y, x in emojimap.items()}
+
+logger = logging.getLogger('event')
+logger.setLevel(-1)
+handler = logging.FileHandler(file=os.path.join(dirname, '../log/runtime.log'), encoding='utf-8', mode='a')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 
 class event(Cog_Extension):
