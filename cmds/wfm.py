@@ -1,19 +1,20 @@
 import json
+import os
 
 import discord
 import requests
+from core.classes import Cog_Extension
 from discord.ext import commands
 from discord_webhook import DiscordEmbed, DiscordWebhook
-
-from core.classes import Cog_Extension
 # from discord_slash.utils.manage_commands import create_option, create_choice
 # from discord_slash import SlashContext,cog_ext
 from localization import lang
 
 lang = lang.langpref()['wfm']
 
+dirname = os.path.dirname(__file__)
 
-with open('setting.json', 'r', encoding='utf8') as jfile:
+with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
 

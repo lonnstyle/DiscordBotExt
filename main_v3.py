@@ -5,28 +5,22 @@ import os
 from datetime import datetime, timedelta
 
 import discord
-import interactions
-import requests
 from discord import activity
 from discord.ext import commands
-from interactions.api.models.gw import Presence
-from interactions.api.models.message import Embed, EmbedAuthor, EmbedField
-from interactions.api.models.presence import PresenceActivity
 
-import keep_alive
 from localization import lang
 
 # from platformdirs import importlib
 
-
+dirname = os.path.dirname(__file__)
 # clear log records
-with open("log/runtime.log", "w") as log:
+with open(os.path.join(dirname, "log/runtime.log"), "w") as log:
     pass
 # setup logger
 logger = logging.getLogger('main')
 logger.setLevel(-1)
 # display all logging messages
-handler = logging.FileHandler(filename='log/runtime.log', encoding='utf-8', mode='a')
+handler = logging.FileHandler(filename=os.path.join(dirname, "log/runtime.log"), encoding='utf-8', mode='a')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
 logger.info('[init] Bot startup')
@@ -39,11 +33,11 @@ lang = lang.langpref()['main']
 intents = discord.Intents.all()
 
 # load settings and init
-with open('setting.json', 'r') as _jfile:
+with open(os.path.join(dirname, 'setting.json'), 'r') as _jfile:
     jdata = json.load(_jfile)
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(jdata['command_prefix']), intents=intents)
 start_time = datetime.now()
-version = "v3.0.0alpha"
+version = "v3.0.1alpha"
 logger.info(f"[init] Bot is now starting...")
 
 
@@ -54,9 +48,7 @@ async def on_ready():
     activity = discord.Activity(type=discord.ActivityType.watching, name=jdata['watching'])
     logger.info("[init] Bot activity set.")
     await bot.change_presence(activity=activity)
-    while(1):
-        await asyncio.sleep(60)
-        requests.get("http://127.0.0.1:8080/")
+
 
 bot.remove_command('help')
 logger.debug('[init] removed default help')
@@ -200,7 +192,7 @@ async def on_command_error(ctx, error):
 
 
 logger.info('[init] loading extensions')
-for filename in os.listdir('./cmds'):
+for filename in os.listdir(os.path.join(dirname, 'cmds')):
     if filename.endswith('.py'):
         try:
             bot.load_extension(f'cmds.{filename[:-3]}')
@@ -220,7 +212,6 @@ for extension in bot.extensions:
 
 
 if __name__ == "__main__":
-    keep_alive.keep_alive()
     try:
         bot.run(jdata['TOKEN'])
     except Exception as exc:

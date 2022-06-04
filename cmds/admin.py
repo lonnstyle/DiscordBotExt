@@ -1,16 +1,24 @@
 import json
+import logging
 import os
 
 import discord
-from discord.ext import commands
-
 from core.classes import Cog_Extension
+from discord.ext import commands
 from localization import lang
 
 lang = lang.langpref()['admin']
 
-with open('setting.json', 'r', encoding='utf8') as jfile:
+dirname = os.path.dirname(__file__)
+
+with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
+
+logger = logging.getLogger('admin')
+logger.setLevel(-1)
+handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'), encoding='utf-8', mode='a')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 
 class admin(Cog_Extension):
@@ -21,9 +29,9 @@ class admin(Cog_Extension):
     async def clear(self, ctx, num: int):
         if ctx.message.author.id == ctx.guild.owner_id:
             await ctx.channel.purge(limit=num+1)
-            print(str(ctx.message.author)+' ---ID '+str(ctx.message.author.id)+lang['clear.cleared'].format(channel=str(ctx.channel.name), num=str(int(num))))
+            logger.info(f"[clear]{str(ctx.message.author)} attempted to delete {num} messages in {ctx.channel.name}")
         else:
-            embed = discord.embed(title=lang['clear.error.title'], description=lang['clear.error.description'].format(owner=self.bot.owner_id))
+            embed = discord.embed(title=lang['clear.error.title'], description=lang['clear.error.description'].format(owner=ctx.guild.owner_id))
             await ctx.send(embed=embed)
 
 

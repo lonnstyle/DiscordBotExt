@@ -1,18 +1,20 @@
 import json
+import os
 
 import discord
+from core.classes import Cog_Extension
 from discord.ext import commands
+from localization import lang
 # from discord_slash import SlashContext, cog_ext
 # from discord_slash.utils.manage_commands import create_choice, create_option
 from mwclient import Site
 from thefuzz import process
 
-from core.classes import Cog_Extension
-from localization import lang
-
 lang = lang.langpref()['wiki']
 
-with open('setting.json', 'r', encoding='utf8') as jfile:
+dirname = os.path.dirname(__file__)
+
+with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
 zhURL = 'warframe.huijiwiki.com'

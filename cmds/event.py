@@ -6,15 +6,16 @@ from datetime import datetime, timedelta
 
 import discord
 import requests
-from discord.ext import commands
-
 from core.classes import Cog_Extension
 from core.time import time_info
+from discord.ext import commands
 from localization import lang
 
 lang = lang.langpref()['event']
 
-with open('setting.json', 'r', encoding='utf8') as jfile:
+dirname = os.path.dirname(__file__)
+
+with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
 emojimap = requests.get("http://gist.githubusercontent.com/Vexs/629488c4bb4126ad2a9909309ed6bd71/raw/416403f7080d1b353d8517dfef5acec9aafda6c3/emoji_map.json").text
@@ -78,6 +79,4 @@ class event(Cog_Extension):
 
 
 def setup(bot):
-    if not os.path.exists('log'):
-        os.mkdir('log')
     bot.add_cog(event(bot))

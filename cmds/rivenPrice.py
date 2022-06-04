@@ -3,14 +3,15 @@ import os
 
 import discord
 import requests
+from core.classes import Cog_Extension
 from discord.ext import commands
 from discord_webhook import DiscordEmbed, DiscordWebhook
+from localization import lang
 from thefuzz import process
 
-from core.classes import Cog_Extension
-from localization import lang
-
 lang = lang.langpref()['rivenPrice']
+
+dirname = os.path.dirname(__file__)
 
 temp = {}
 localWeapons = json.loads(requests.get("http://api.warframe.market/v1/riven/items", headers=lang['api.header']).text)
@@ -31,7 +32,7 @@ for attr in attrDict:
     temp[attr['url_name']] = attr['effect']
 attrDict = temp
 
-with open('setting.json', 'r', encoding='utf8') as jfile:
+with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
 

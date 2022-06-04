@@ -1,14 +1,13 @@
 import asyncio
 import json
-import random
+import os
 import re
 from random import randint
 
 import discord
 import requests
-from discord.ext import commands
-
 from core.classes import Cog_Extension
+from discord.ext import commands
 from localization import lang
 
 # from discord_slash import SlashContext, cog_ext
@@ -17,7 +16,9 @@ from localization import lang
 
 lang = lang.langpref()['common']
 
-with open('setting.json', 'r', encoding='utf8') as jfile:
+dirname = os.path.dirname(__file__)
+
+with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
 emoji = requests.get("http://gist.githubusercontent.com/Vexs/629488c4bb4126ad2a9909309ed6bd71/raw/416403f7080d1b353d8517dfef5acec9aafda6c3/emoji_map.json").text

@@ -1,12 +1,12 @@
 import asyncio
 import json
+import logging
 import os
 
 import discord
 import requests
-from discord.ext import commands
-
 from core.classes import Cog_Extension
+from discord.ext import commands
 # import chinese_converter
 from localization import lang
 
@@ -15,9 +15,17 @@ from localization import lang
 
 lang = lang.langpref()['baro']
 
+dirname = os.path.dirname(__file__)
+
 rawDict = requests.get(lang['rawDict.URL'])
 Dict = json.loads(rawDict.text)
 Dict = Dict['messages']
+
+logger = logging.getLogger('baro')
+logger.setLevel(-1)
+handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'), encoding='utf-8', mode='a')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 
 class baro(Cog_Extension):
@@ -32,6 +40,7 @@ class baro(Cog_Extension):
             location = html['location']
             # location = chinese_converter.to_traditional(location)
             stay = html['endString']
+            logger.info(f"[baro] Baro arrived, leaving in {stay}")
             stay = stay.replace("d", lang['baro.time.day'])
             stay = stay.replace("h", lang['baro.time.hour'])
             stay = stay.replace("m", lang['baro.time.minute'])
@@ -60,6 +69,7 @@ class baro(Cog_Extension):
             location = html['location']
             # location = chinese_converter.to_traditional(location)
             arrive = html['startString']
+            logger.info(f"[baro] Baro is arriving in {arrive}")
             arrive = arrive.replace("d", lang['baro.time.day'])
             arrive = arrive.replace("h", lang['baro.time.hour'])
             arrive = arrive.replace("m", lang['baro.time.minute'])
