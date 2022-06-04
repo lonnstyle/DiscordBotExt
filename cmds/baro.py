@@ -5,8 +5,9 @@ import os
 
 import discord
 import requests
-from core.classes import Cog_Extension
 from discord.ext import commands
+
+from core.classes import Cog_Extension
 # import chinese_converter
 from localization import lang
 
@@ -23,8 +24,8 @@ Dict = Dict['messages']
 
 logger = logging.getLogger('baro')
 logger.setLevel(-1)
-handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'), encoding='utf-8', mode='a')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'),  encoding='utf-8', mode='a')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
 logger.addHandler(handler)
 
 
@@ -33,13 +34,25 @@ class baro(Cog_Extension):
 
     @commands.command(name='baro', aliases=lang['baro.aliases'], brief=lang['baro.brief'], description=lang['baro.description'])
     async def baro(self, ctx):
+        logger.info(f'[baro] {ctx.message.author} requested for baro info')
         url = requests.get("https://api.warframestat.us/pc/tc/voidTrader", headers={'Accept-Language': 'zh', 'Cache-Control': 'no-cache'})
+        if url.status_code != 200:
+            logger.warning(f'[baro] failed to fetch baro info')
+            logger.warning(f'[baro] html status: {url.status_code} {url.reason}')
+            color = discord.Colour.from_rgb(r=255, g=0, b=0)
+            embed = discord.Embed(title=f"Error {url.status_code}", description={url.reason}, color=color)
+            # TODO: localize string
+            await ctx.send(embed=embed)
+        else:
+            logger.info('[baro] fetched baro info')
+        logger.info('[baro] parsing json...')
         html = json.loads(url.text)
         if html['active'] == True:
             message = "```"
             location = html['location']
             # location = chinese_converter.to_traditional(location)
             stay = html['endString']
+            # TODO: replace with UNIX timestamp
             logger.info(f"[baro] Baro arrived, leaving in {stay}")
             stay = stay.replace("d", lang['baro.time.day'])
             stay = stay.replace("h", lang['baro.time.hour'])
@@ -64,6 +77,7 @@ class baro(Cog_Extension):
                 message += lang['baro.item'].format(name=name, ducats=ducats, credits=credits)
             message += "```"
             embed = discord.Embed(title=lang['baro.arrived'].format(location=location, stay=stay), description=message, color=0x429990)
+            logger.info(f'[baro] data parsed, arrived at {location}, stay until {stay}')
             await ctx.send(embed=embed)
         if html['active'] == False:
             location = html['location']
@@ -75,6 +89,7 @@ class baro(Cog_Extension):
             arrive = arrive.replace("m", lang['baro.time.minute'])
             arrive = arrive.replace("s", lang['baro.time.second'])
             embed = discord.Embed(description=lang['baro.arrival'].format(arrive=arrive, location=location), color=0x429990)
+            logger.info(f'[baro] data parsed, will arrive {location} in {arrive}')
             await ctx.send(embed=embed)
 
     # @cog_ext.cog_slash(name="baro", description=lang['baro.description'])

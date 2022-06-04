@@ -19,7 +19,7 @@ lang = lang.langpref()['worldState']
 logger = logging.getLogger('worldState')
 logger.setLevel(-1)
 handler = logging.FileHandler(file=os.path.join(dirname, '../log/runtime.log'), encoding='utf-8', mode='a')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
 logger.addHandler(handler)
 
 

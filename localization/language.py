@@ -1,16 +1,15 @@
 import json
 import logging
 import os
-from asyncio.log import logger
 
 import requests
 
-logging.getLogger('language')
+logger = logging.getLogger('language')
 logger.setLevel(-1)
 # display all logging messages
 dirname = os.path.dirname(__file__)
 handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'), encoding='utf-8', mode='a')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
 logger.addHandler(handler)
 
 
