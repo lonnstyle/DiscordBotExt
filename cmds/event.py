@@ -38,8 +38,13 @@ class event(Cog_Extension):
     async def rr(self, ctx, message: int):
         with open("role/rr.txt", "a") as rr:
             rr.write(f"{message}\n")
+            logger.info(f'[rr] listening {message}')
             await ctx.message.add_reaction("✅")
-            await ctx.message.delete(delay=5)
+            try:
+                await ctx.message.delete(delay=5)
+                logger.info(f'[rr] deleted command message')
+            except Exception as e:
+                logger.error(f'[rr] cannot delete command message, cuz {e}')
 
     @commands.command(name='role', aliases=lang['role.aliases'], brief=lang['role.brief'], description=lang['role.description'])
     async def role(self, ctx, role: str, emoji):
@@ -47,11 +52,13 @@ class event(Cog_Extension):
         if (emojimap.get(emoji, None) != None or match) and ctx.author.guild_permissions.administrator == True:
             with open("role/roles.txt", "a") as roles:
                 roles.write(f"{emoji},{role}\n")
+                logger.info('[role] listening {emoji} as role:{role}')
             await ctx.message.add_reaction("✅")
             await ctx.message.delete(delay=5)
         else:
             await ctx.message.delete()
             await ctx.send(embed=discord.Embed(title=lang['role.error.title'], description=lang['role.error.description']))
+            logger.error(f'[role] failed to listen {emoji} as role:{role}, please check if {ctx.message.author} have administrator permission')
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
@@ -67,6 +74,7 @@ class event(Cog_Extension):
         for role in payload.member.guild.roles:
             if (role.name == roles.get(payload.emoji.name) or role.name == roles.get(f"<:{payload.emoji.name}:{payload.emoji.id}>")) and str(payload.message_id) in message:
                 await payload.member.add_roles(role)
+                logger.info(f'[on_raw_reaction_add] added {role.name} to {payload.member}')
 
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload):
@@ -84,6 +92,7 @@ class event(Cog_Extension):
         for role in member.roles:
             if (role.name == roles.get(payload.emoji.name) or role.name == roles.get(f"<:{payload.emoji.name}:{payload.emoji.id}>")) and str(payload.message_id) in message:
                 await member.remove_roles(role)
+                logger.info(f'[on_raw_reaction_remove] removed {role.name} to {payload.member}')
 
 
 def setup(bot):

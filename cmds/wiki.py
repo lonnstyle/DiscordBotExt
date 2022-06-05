@@ -98,6 +98,7 @@ class wiki(Cog_Extension):
                     URL = f"https://{enURL}/wiki/{title}"
                 else:
                     await ctx.send(lang['wiki.error.notFound'].format(self=jdata['self'], user=jdata['user']))
+                    logger.warning(f'[wiki] failed to search {title}')
                     return
         embed = discord.Embed(title=title, url=URL.replace(" ", "_"))
         embed.set_footer(text=footer)

@@ -69,6 +69,7 @@ class wfm(Cog_Extension):
             if translate == item:
                 message = lang['translate.error.noTrans'].format(self=jdata['self'])
                 await ctx.send(message)
+                logger.warning(f'[translate] failed to search translation for {item}')
                 return
             else:
                 language = lang['translate.language.local']
@@ -111,8 +112,10 @@ class wfm(Cog_Extension):
                 action = 'sell'
             else:
                 await ctx.send(lang['wfm.error.unknownOrder'].format(user=jdata['user']))
+                logger.warning(f'[market] failed to search orders for {args}')
         else:
             await ctx.send(lang['wfm.error.tooManyArgs'].format(user=jdata['user'], self=jdata['self']))
+            logger.warning(f'[market] too many arguments: {args}')
         count = 5
         items = ' '.join(word.capitalize() for word in (items.split()))
         item = localDict.get(items, items)
@@ -124,6 +127,7 @@ class wfm(Cog_Extension):
             itemsDetail = json.loads(requests.get("https://api.warframe.market/v1/items/" + item).text.encode(encoding="UTF-8"))["payload"]["item"]["items_in_set"]
         except:
             await ctx.send(lang["wfm.error.unknownItem"].format(self=jdata['self']))
+            logger.warning(f'[market] failed to search orders for {args}')
             return
         max_rank = None
         for itemDetail in itemsDetail:
@@ -133,11 +137,13 @@ class wfm(Cog_Extension):
                     itemrank = int(itemrank)
                     if itemrank > max_rank:
                         await ctx.send(lang["wfm.error.outOfRank"].format(user=jdata['user']))
+                        logger.warning(f"[market] {item}'s maxrank is {max_rank} while attempting to search rank{itemrank}")
                         return
         url = "https://api.warframe.market/v1/items/" + item + "/orders"
         raw = requests.get(url)
         if raw.status_code != 200:
             await ctx.send(lang["wfm.error.API"].format(self=jdata['self'], user=jdata['user']))
+            logger.warning(f'[market] failed to search item info, cuz {raw.status_code} {raw.reason}')
             return
         else:
             raw = json.loads(raw.text.encode(encoding='UTF-8'))

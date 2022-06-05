@@ -45,6 +45,7 @@ class common(Cog_Extension):
         green = 255-red
         color = discord.Colour.from_rgb(r=red, g=green, b=0)
         embed = discord.Embed(title=lang['ping.embed.title'], description=lang['ping.latency'].format(latency=latency), color=color)
+        logger.info(f'[ping] {ctx.message.author} ping, latency:{latency}ms')
         await ctx.send(embed=embed)
 
     # @cog_ext.cog_slash(name="ping", description=lang['ping.description'])
@@ -56,19 +57,26 @@ class common(Cog_Extension):
     async def sayd(self, ctx, *, msg):
         try:
             await ctx.message.delete()
-        except:
-            pass
+            logger.info('[sayd] deleted source message')
+        except Exception as e:
+            logger.error(f'[sayd] cannot delete source message, cuz {e}')
         embed = discord.Embed(description=msg, color=0x3C879C)
         for items in ctx.message.attachments:
-            print(items.url)
+            # print(items.url)
+            logger.info(f'[sayd] attachment found: {items.url}')
             embed.set_image(url=items.url)
         message = await ctx.send(embed=embed)
         if ctx.channel.id == jdata['publish']:
+            logger.info('[sayd] message published')
             await message.publish()
 
     @commands.command(name='poll', aliases=lang['poll.aliases'], brief=lang['poll.brief'], description=lang['poll.description'])
     async def poll(self, ctx, topic, option1, emoji1, option2, emoji2):
-        await ctx.message.delete()
+        try:
+            await ctx.message.delete()
+            logger.info('[poll] deleted source message')
+        except Exception as e:
+            logger.error(f'[poll] cannot delete source message, cuz {e}')
         match1 = re.match(r'<(a?):([a-zA-Z0-9\_]+):([0-9]+)>$', emoji1)
         match2 = re.match(r'<(a?):([a-zA-Z0-9\_]+):([0-9]+)>$', emoji2)
         if (emoji.get(emoji1, None) != None or match1) and (emoji.get(emoji2, None) != None or match2):

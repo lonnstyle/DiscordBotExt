@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 from datetime import datetime
 from operator import itemgetter
 
@@ -15,6 +16,8 @@ from localization import lang
 
 
 lang = lang.langpref()['worldState']
+
+dirname = os.path.dirname(__file__)
 
 logger = logging.getLogger('worldState')
 logger.setLevel(-1)

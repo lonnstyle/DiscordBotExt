@@ -57,9 +57,11 @@ class rivenPrice(Cog_Extension):
             weapon, ratio = process.extractOne(name, Weapons.keys())
             if ratio < 75:
                 embed = discord.Embed(title=lang['riven.error.title'], description=lang['riven.error.description'].format(self=jdata['self']), color=0xff0000)
+                logger.warning(f'[riven] failed to search weapon: {name}')
                 for match, score in process.extractBests(name, localWeapons.keys()):
                     if score > 50:
                         embed.add_field(name=match, value=score, inline=False)
+                        logger.info(f'[riven] suggested weapon name: {match}')
                 await ctx.send(embed=embed)
             else:
                 name = weapon
@@ -67,6 +69,7 @@ class rivenPrice(Cog_Extension):
         else:
             name = weapon
             weapon = localWeapons[weapon]
+        logger.info(f'[riven] searching weapon: {weapon}')
         url = 'https://api.warframe.market/v1/auctions/search?type=riven&weapon_url_name=' + weapon + '&sort_by=price_asc'
         html = requests.get(url)
         weapon = weapon.replace("_", " ")
@@ -74,6 +77,7 @@ class rivenPrice(Cog_Extension):
             await ctx.send(embed=discord.Embed(title=lang['riven.error.title'],
                                                description=lang['riven.error.description'].format(self=jdata['self']),
                                                color=0xff0000))
+            logger.error(f'[riven] failed to search {weapon}, status code: {html.status_code}, reason: {html.reason}')
             return ()
         else:
             rivenData = json.loads(html.text)
