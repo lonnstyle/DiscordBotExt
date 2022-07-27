@@ -47,8 +47,6 @@ price_order = lang['price_order']
 
 
 class wfm(Cog_Extension):
-    tag = "Warframe"
-
     @commands.command(name='translate', aliases=lang['translate.aliases'], brief=lang['translate.brief'], description=lang['translate.description'])
     async def translate(self, ctx, *item):
         item = ' '.join(word.capitalize() for word in (item))

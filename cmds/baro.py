@@ -29,8 +29,6 @@ logger.addHandler(handler)
 
 
 class baro(Cog_Extension):
-    tag = "Warframe"
-
     @commands.command(name='baro', aliases=lang['baro.aliases'], brief=lang['baro.brief'], description=lang['baro.description'])
     async def baro(self, ctx):
         logger.info(f'[baro] {ctx.message.author} requested for baro info')

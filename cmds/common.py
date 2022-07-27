@@ -34,8 +34,6 @@ logger.addHandler(handler)
 
 
 class common(Cog_Extension):
-    tag = "common"
-
     @commands.command(name='ping', aliases=lang['ping.aliases'], brief=lang['ping.brief'], description=lang['ping.description'])
     async def ping(self, ctx):
         latency = round(self.bot.latency*1000)
@@ -50,7 +48,6 @@ class common(Cog_Extension):
     # async def slash_ping(self, ctx: SlashContext):
     #     await self.ping(ctx)
 
-        # 說
     @commands.command(name='sayd', aliases=lang['sayd.aliases'], brief=lang['sayd.brief'], description=lang['sayd.description'])
     async def sayd(self, ctx, *, msg):
         try:

@@ -59,7 +59,7 @@ with open(os.path.join(dirname, 'setting.json'), 'r') as _jfile:
     jdata = json.load(_jfile)
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(jdata['command_prefix']), intents=intents)
 start_time = datetime.now()
-version = "v3.0.1alpha"
+version = "v3.0.2alpha"
 logger.info(f"[init] Bot is now starting...")
 
 
@@ -214,17 +214,6 @@ async def on_command_error(ctx, error):
         await owner.send(embed=embed)
         logger.info(f"[command_error]message: {ctx.message.clean_content}")
         logger.info(f"[command_error]error: {error}")
-
-
-commands = {}
-for extension in bot.extensions:
-    package = extension
-    name = extension[5:]
-    tags = getattr(__import__(package, fromlist=[name]), name)
-    try:
-        commands[name] = tags.tag
-    except Exception as exc:
-        logger.warning(exc)
 
 
 if __name__ == "__main__":

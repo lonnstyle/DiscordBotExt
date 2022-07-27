@@ -34,8 +34,6 @@ en = Site(enURL, path='/', scheme='http')
 
 
 class wiki(Cog_Extension):
-    tag = "Warframe"
-
     @commands.command(name='update_wiki', brief=lang['update_wiki.brief'], description=lang['update_wiki.description'])
     async def update_wiki(self, ctx, *wiki):
         name = " ".join(wiki)

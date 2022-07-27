@@ -31,8 +31,6 @@ logger.addHandler(handler)
 
 
 class event(Cog_Extension):
-    tag = "common"
-
     @commands.command(name="reactionRole", aliases=["rr"], brief="指定自動身份組訊息", description="指定可自動分發身份組的訊息")
     async def rr(self, ctx, message: int):
         with open("role/rr.txt", "a") as rr:

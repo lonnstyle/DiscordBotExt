@@ -26,8 +26,6 @@ logger.addHandler(handler)
 
 
 class worldState(Cog_Extension):
-    tag = "Warframe"
-
     def timeConv(self, expiry):
         h = int(expiry[11:13]) + 8
         if h >= 24:

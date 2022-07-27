@@ -44,8 +44,6 @@ with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfi
 
 
 class rivenPrice(Cog_Extension):
-    tag = "Warframe"
-
     @commands.command(name='riven', aliases=lang['riven.aliases'], brief=lang['riven.brief'],
                       description=lang['riven.description'])
     async def rivenPrice(self, ctx, *weapon):

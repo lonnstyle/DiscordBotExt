@@ -22,9 +22,6 @@ logger.addHandler(handler)
 
 
 class admin(Cog_Extension):
-    tag = "admin"
-    # 清除訊息
-
     @commands.command(name='clear', aliases=lang['clear.aliases'], brief=lang['clear.brief'], description=lang['clear.description'])
     async def clear(self, ctx, num: int):
         # if ctx.message.author.id == ctx.guild.owner_id:
