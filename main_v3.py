@@ -22,7 +22,8 @@ logger = logging.getLogger('main')
 logger.setLevel(-1)
 # display all logging messages
 handler = logging.FileHandler(filename=os.path.join(dirname, "log/runtime.log"), encoding='utf-8', mode='a')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
+formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+handler.setFormatter(formatter)
 logger.addHandler(handler)
 logger.info('[init] Bot startup')
 
@@ -218,6 +219,6 @@ async def on_command_error(ctx, error):
 
 if __name__ == "__main__":
     try:
-        bot.run(jdata['TOKEN'])
+        bot.run(jdata['TOKEN'], log_handler=handler, log_formatter=formatter)
     except Exception as exc:
         logger.critical(exc)
