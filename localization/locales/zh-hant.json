@@ -268,9 +268,9 @@
         ],
         "poe.brief": "查詢夜靈平原時間",
         "poe.description": "查詢夜靈平原目前日夜循環狀態和剩餘時間",
-        "poe.embed.description.day": "夜靈平原晚上將於<t:{expiry}:R>開始\n距離夜靈平原晚上還有：",
+        "poe.embed.description.day": "夜靈平原晚上將於<t:{expiry}:t>開始\n距離夜靈平原晚上還有：",
         "poe.embed.title.day": "夜靈平原-早上☀️",
-        "poe.embed.description.night": "夜靈平原早上將於<t:{expiry}:R>開始\n距離夜靈平原早上還有：",
+        "poe.embed.description.night": "夜靈平原早上將於<t:{expiry}:t>開始\n距離夜靈平原早上還有：",
         "poe.embed.title.night": "夜靈平原-晚上️🌙",
         "earth.aliases": [
             "地球時間"

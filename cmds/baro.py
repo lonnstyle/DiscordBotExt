@@ -2,6 +2,8 @@ import asyncio
 import json
 import logging
 import os
+import time
+from datetime import datetime
 
 import discord
 import requests
@@ -9,8 +11,6 @@ from core.classes import Cog_Extension
 from discord.ext import commands
 # import chinese_converter
 from localization import lang
-import time
-from datetime import datetime
 
 # from discord_slash import SlashContext, cog_ext
 
@@ -52,7 +52,7 @@ class baro(Cog_Extension):
             # location = chinese_converter.to_traditional(location)
             stay = html['expiry']
             logger.info(f"[baro] Baro arrived, leaving at {stay}")
-            stay = time.mktime(datetime.strptime(stay,"%Y-%m-%dT%H:%M:%S.000Z"))
+            stay = time.mktime(datetime.strptime(stay, "%Y-%m-%dT%H:%M:%S.%fZ").timetuple())
             # convert datetime string to UNIX timestamp
             for items in html['inventory']:
                 item = items['item']
@@ -79,7 +79,7 @@ class baro(Cog_Extension):
             location = html['location']
             # location = chinese_converter.to_traditional(location)
             arrive = html['startString']
-            arrive = time.mktime(datetime.strptime(arrive,"%Y-%m-%dT%H:%M:%S.000Z"))
+            arrive = time.mktime(datetime.strptime(arrive, "%Y-%m-%dT%H:%M:%S.000Z"))
             logger.info(f"[baro] Baro is arriving in {arrive}")
             embed = discord.Embed(description=lang['baro.arrival'].format(arrive=arrive, location=location), color=0x429990)
             logger.info(f'[baro] data parsed, will arrive {location} in {arrive}')

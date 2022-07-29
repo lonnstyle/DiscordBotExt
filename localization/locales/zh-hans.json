@@ -296,9 +296,9 @@
         ],
         "orb.brief": "查询奥布山谷时间",
         "orb.description": "查询奥布山谷目前日夜循环状态和剩余时间",
-        "orb.embed.description.cold": "奥布山谷温暖将于<t:{expiry}:R>开始\n距离奥布山谷温暖还有：",
+        "orb.embed.description.cold": "奥布山谷温暖将于<t:{expiry}:t>开始\n距离奥布山谷温暖还有：",
         "orb.embed.title.cold": "奥布山谷寒冷",
-        "orb.embed.description.warm": "奥布山谷寒冷将于<t:{expiry}:R>开始\n距离奥布山谷寒冷还有：",
+        "orb.embed.description.warm": "奥布山谷寒冷将于<t:{expiry}:t>开始\n距离奥布山谷寒冷还有：",
         "orb.embed.title.warm": "奥布山谷温暖",
         "arbitration.aliases": [
             "仲裁"
@@ -329,7 +329,7 @@
         "fissure.description": "查询当前虚空裂缝任务和剩余时间",
         "fissure.embed.title": "虚空裂缝",
         "fissure.embed.description": "当前进行中的虚空裂缝任务",
-        "fissure.embed.field": "阶级階級:{tier}\n任务:{missionType}\n剩余时间:<t:{eta}:R>",
+        "fissure.embed.field": "阶级階級:{tier}\n任务:{missionType}\n剩余时间:<t:{expiry}:R>",
         "fissure.tierList": {
             "1": "古纪",
             "2": "前纪",

@@ -28,7 +28,7 @@ logger.addHandler(handler)
 
 class worldState(Cog_Extension):
     def timeConv(self, expiry):
-        return time.mktime(datetime.strptime(expiry, "%Y-%m-%dT%H:%M:%S.000Z"))
+        return int(time.mktime(datetime.strptime(expiry, "%Y-%m-%dT%H:%M:%S.%fZ").timetuple()))
 
     @commands.command(name='POE', aliases=lang['poe.aliases'], brief=lang['poe.brief'], description=lang['poe.description'])
     async def eidolontime(self, ctx):
@@ -103,7 +103,7 @@ class worldState(Cog_Extension):
         raw = requests.get("https://api.warframestat.us/pc/tc/arbitration", headers={'Accept-Language': 'zh'})
         text = raw.text
         data = json.loads(text)
-        expiry = time.mktime(data['expiry'])
+        expiry = self.timeConv(data['expiry'])
         embed = discord.Embed(title=lang["arbitration.embed.title"], description=lang['arbitration.embed.description'].format(type=data['type']), color=0x302f36)
         embed.add_field(name=lang['arbitration.embed.field.name'].format(node=data['node']), value=lang["arbitration.embed.field.value"].format(enemy=data['enemy'], expiry=expiry))
         await ctx.send(embed=embed)
