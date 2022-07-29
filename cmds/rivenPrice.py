@@ -4,12 +4,11 @@ import os
 
 import discord
 import requests
+from core.classes import Cog_Extension
 from discord.ext import commands
 from discord_webhook import DiscordEmbed, DiscordWebhook
-from thefuzz import process
-
-from core.classes import Cog_Extension
 from localization import lang
+from thefuzz import process
 
 lang = lang.langpref()['rivenPrice']
 
@@ -157,5 +156,5 @@ class rivenPrice(Cog_Extension):
                 await ctx.send(message)
 
 
-def setup(bot):
-    bot.add_cog(rivenPrice(bot))
+async def setup(bot):
+    await bot.add_cog(rivenPrice(bot))

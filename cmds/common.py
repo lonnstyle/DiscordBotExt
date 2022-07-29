@@ -7,9 +7,8 @@ from random import randint
 
 import discord
 import requests
-from discord.ext import commands
-
 from core.classes import Cog_Extension
+from discord.ext import commands
 from localization import lang
 
 # from discord_slash import SlashContext, cog_ext
@@ -91,20 +90,6 @@ class common(Cog_Extension):
         else:
             await ctx.send(embed=discord.Embed(title=lang['poll.error.title'], description=lang['poll.error.description.emoji']))
 
-    # @cog_ext.cog_slash(name="poll", description=lang['poll.description'],
-    #                    options=[create_option(name="topic", description=lang['poll.options.topic'],
-    #                                           option_type=3, required=True),
-    #                             create_option(name="option1", description=lang['poll.options.option1'],
-    #                                           option_type=3, required=True),
-    #                             create_option(name="emoji1", description=lang['poll.options.emoji1'],
-    #                                           option_type=3, required=True),
-    #                             create_option(name="option2", description=lang['poll.options.option2'],
-    #                                           option_type=3, required=True),
-    #                             create_option(name="emoji2", description=lang['poll.options.emoji2'],
-    #                                           option_type=3, required=True)])
-    # async def slash_poll(self, ctx, topic, option1, emoji1, option2, emoji2):
-    #     await self.poll(ctx, topic, option1, emoji1, option2, emoji2)
 
-
-def setup(bot):
-    bot.add_cog(common(bot))
+async def setup(bot):
+    await bot.add_cog(common(bot))

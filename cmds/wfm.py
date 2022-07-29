@@ -4,10 +4,9 @@ import os
 
 import discord
 import requests
+from core.classes import Cog_Extension
 from discord.ext import commands
 from discord_webhook import DiscordEmbed, DiscordWebhook
-
-from core.classes import Cog_Extension
 # from discord_slash.utils.manage_commands import create_option, create_choice
 # from discord_slash import SlashContext,cog_ext
 from localization import lang
@@ -80,7 +79,7 @@ class wfm(Cog_Extension):
     # async def slash_translate(self,ctx,item):
     #   await self.translate(ctx,item)
 
-    @commands.command(name='wfm', aliases=lang['wfm.aliases'], brief=lang['wfm.brief'], description=lang['wfm.description'])
+    @commands.command(name='WFM', aliases=lang['wfm.aliases'], brief=lang['wfm.brief'], description=lang['wfm.description'])
     async def market(self, ctx, *args):
         if str(ctx.channel.type) != 'private':
             channel_id = ctx.channel.id
@@ -230,5 +229,5 @@ class wfm(Cog_Extension):
                 await ctx.send(message)
 
 
-def setup(bot):
-    bot.add_cog(wfm(bot))
+async def setup(bot):
+    await bot.add_cog(wfm(bot))

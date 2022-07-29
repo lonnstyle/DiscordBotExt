@@ -3,14 +3,13 @@ import logging
 import os
 
 import discord
+from core.classes import Cog_Extension
 from discord.ext import commands
+from localization import lang
 # from discord_slash import SlashContext, cog_ext
 # from discord_slash.utils.manage_commands import create_choice, create_option
 from mwclient import Site
 from thefuzz import process
-
-from core.classes import Cog_Extension
-from localization import lang
 
 lang = lang.langpref()['wiki']
 
@@ -110,5 +109,5 @@ class wiki(Cog_Extension):
     #     await self.wiki(ctx, page)
 
 
-def setup(bot):
-    bot.add_cog(wiki(bot))
+async def setup(bot):
+    await bot.add_cog(wiki(bot))

@@ -7,10 +7,9 @@ from datetime import datetime, timedelta
 
 import discord
 import requests
-from discord.ext import commands
-
 from core.classes import Cog_Extension
 from core.time import time_info
+from discord.ext import commands
 from localization import lang
 
 lang = lang.langpref()['event']
@@ -95,5 +94,5 @@ class event(Cog_Extension):
                 logger.info(f'[on_raw_reaction_remove] removed {role.name} to {payload.member}')
 
 
-def setup(bot):
-    bot.add_cog(event(bot))
+async def setup(bot):
+    await bot.add_cog(event(bot))

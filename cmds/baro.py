@@ -5,9 +5,8 @@ import os
 
 import discord
 import requests
-from discord.ext import commands
-
 from core.classes import Cog_Extension
+from discord.ext import commands
 # import chinese_converter
 from localization import lang
 
@@ -97,5 +96,5 @@ class baro(Cog_Extension):
     #     await self.baro(ctx)
 
 
-def setup(bot):
-    bot.add_cog(baro(bot))
+async def setup(bot):
+    await bot.add_cog(baro(bot))

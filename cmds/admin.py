@@ -3,9 +3,8 @@ import logging
 import os
 
 import discord
-from discord.ext import commands
-
 from core.classes import Cog_Extension
+from discord.ext import commands
 from localization import lang
 
 lang = lang.langpref()['admin']
@@ -39,5 +38,5 @@ class admin(Cog_Extension):
             logger.info(f"[clear] {str(ctx.message.author)} do failed to delete {num} messages in {ctx.channel.name} cuz lack of permission")
 
 
-def setup(bot):
-    bot.add_cog(admin(bot))
+async def setup(bot):
+    await bot.add_cog(admin(bot))
