@@ -13,6 +13,7 @@
         "help.not_found": "找不到{user}要问的呢",
         "help.options.command": "需要查询的指令",
         "help.options.page": "需要查询的页数",
+        "help.menu.fields": 9,
         "load.aliases": [
             "载入",
             "载入模组",
