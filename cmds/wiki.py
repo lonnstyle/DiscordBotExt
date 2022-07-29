@@ -42,16 +42,19 @@ class wiki(Cog_Extension):
             with open("dict/zh_pages.txt", "w") as zh_pages:
                 for page in allpages:
                     print(page.name, file=zh_pages)
+                logger.info('[update_wiki] updated zh wiki links')
         if name == "tc" or "all":
             allpages = tc.allpages()
             with open("dict/tc_pages.txt", "w") as tc_pages:
                 for page in allpages:
                     print(page.name, file=tc_pages)
+                logger.info('[update_wiki] updated tc wiki links')
         if name == "en" or "all":
             allpages = en.allpages()
             with open("dict/en_pages.txt", "w") as en_pages:
                 for page in allpages:
                     print(page.name, file=en_pages)
+                logger.info('[update_wiki] updated en wiki links')
 
     # @cog_ext.cog_slash(name="update_wiki", description=lang['update_wiki.description'],
     #                    options=[
@@ -83,19 +86,22 @@ class wiki(Cog_Extension):
         if ratio > 75:
             footer = lang['wiki.footer.huiji']
             URL = f"https://{zhURL}/wiki/{title}"
+            logger.info(f'[wiki] found {name} as {title} from zh wiki')
         else:
             title, ratio = process.extractOne(name, tcpage)
             if ratio > 75:
                 footer = lang['wiki.footer.tc']
                 URL = f"https://{tcURL}/zh-tw/wiki/{title}"
+                logger.info(f'[wiki] found {name} as {title} from tc wiki')
             else:
                 title, ratio = process.extractOne(name, enpage)
                 if ratio > 75:
                     footer = lang['wiki.footer.en']
                     URL = f"https://{enURL}/wiki/{title}"
+                    logger.info(f'[wiki] found {name} as {title} from en wiki')
                 else:
                     await ctx.send(lang['wiki.error.notFound'].format(self=jdata['self'], user=jdata['user']))
-                    logger.warning(f'[wiki] failed to search {title}')
+                    logger.warning(f'[wiki] failed to search {name}, most similar: {title}')
                     return
         embed = discord.Embed(title=title, url=URL.replace(" ", "_"))
         embed.set_footer(text=footer)

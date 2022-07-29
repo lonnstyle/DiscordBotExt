@@ -150,7 +150,9 @@ class rivenPrice(Cog_Extension):
                         webhook.add_embed(embed)
             if eval(webhookID) == channel_id:
                 response = webhook.execute()
+                logger.info(f"[rivenPrice] sent riven price data of {weapon} to channel {channel_id} as webhook")
             else:
+                logger.info(f"[rivenPrice] sent riven price data of {weapon} to channel {channel_id}")
                 await ctx.send(message)
 
 

@@ -62,6 +62,7 @@ bot = commands.Bot(command_prefix=commands.when_mentioned_or(jdata['command_pref
 start_time = datetime.now()
 version = "v3.0.2alpha"
 logger.info(f"[init] Bot is now starting...")
+HELP_MENU_FIELDS = lang["help.menu.fields"]
 
 
 class MenuView(View):
@@ -70,19 +71,19 @@ class MenuView(View):
         self.commands = commands
         self.page = 1
         self.commands_len = len(self.commands)
-        self.ttl_page = math.ceil(self.commands_len/9)
+        self.ttl_page = math.ceil(self.commands_len/HELP_MENU_FIELDS)
 
     @button(label='◀️', custom_id='previous_page')
     async def previous_page(self, interaction: Interaction, button: Button):
         if self.page - 1 >= 1:
             self.page -= 1
-        await interaction.response.edit_message(content=self.commands, embed=gen_help_menu(self.commands, self.page), view=self)
+        await interaction.response.edit_message(embed=gen_help_menu(self.commands, self.page), view=self)
 
     @button(label='▶️', custom_id='next_page')
     async def next_page(self, interaction: Interaction, button: Button):
         if self.page + 1 <= self.ttl_page:
             self.page += 1
-        await interaction.response.edit_message(content=self.commands, embed=gen_help_menu(self.commands, self.page), view=self)
+        await interaction.response.edit_message(embed=gen_help_menu(self.commands, self.page), view=self)
 
 
 @bot.event
@@ -109,13 +110,13 @@ def gen_help_menu(commands, page=1):
     embed.set_author(name="Patreon", url="https://patreon.com/join/lonnstyle", icon_url="https://i.imgur.com/CCYuxwH.png")
     if type(commands) != discord.ext.commands.Command:
         fields = 0
-        start = (page-1)*9
-        end = min(len(commands), page*9-1)
+        start = (page-1)*HELP_MENU_FIELDS
+        end = min(len(commands), page*HELP_MENU_FIELDS-1)
         for command in list(commands)[start:end]:
             if command.brief != None:
                 embed.add_field(name=f"{jdata['command_prefix']}{command.name}", value=command.brief, inline=True)
             fields += 1
-            embed.set_footer(text=lang['help.embed.footer'].format(command_prefix=jdata['command_prefix'], page=page, total=math.ceil(len(commands)/9)))
+            embed.set_footer(text=lang['help.embed.footer'].format(command_prefix=jdata['command_prefix'], page=page, total=math.ceil(len(commands)/HELP_MENU_FIELDS)))
         return embed
     else:
         aliases = commands.name

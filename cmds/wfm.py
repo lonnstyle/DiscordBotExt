@@ -71,6 +71,7 @@ class wfm(Cog_Extension):
             else:
                 language = lang['translate.language.local']
         message = lang['translate.translate.message'].format(item=item, language=language, translate=translate)
+        logger.info(f'[translate] traslated {item} as {translate}, language = {language}')
         await ctx.send(message)
 
     # @cog_ext.cog_slash(name="translate",description=lang['translate.description'],options=[create_option(name="item",description=lang["translate.options.item"],option_type=3,required=True)],guild_ids=[815462037840330762])
@@ -206,6 +207,7 @@ class wfm(Cog_Extension):
                             webhook.add_embed(embed)
                             count -= 1
                 response = webhook.execute()
+                logger.info(f'[market] sent price data of {itemName} via webhook')
             else:
                 for orders in raw:
                     if count > 0:
@@ -225,6 +227,7 @@ class wfm(Cog_Extension):
                             message += lang['wfm.message.cpMsg']+f"/w {user['ingame_name']} Hi! I want to {action}: {itemName} {rank}for {int(orders['platinum'])} platinum. (warframe.market)```\n"
                             count -= 1
                 await ctx.send(message)
+                logger.info(f'[market] sent price data of {itemName}')
 
 
 async def setup(bot):

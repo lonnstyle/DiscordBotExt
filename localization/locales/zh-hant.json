@@ -105,13 +105,9 @@
         ],
         "baro.brief": "虛空商人信息",
         "baro.description": "查詢虛空商人Baro Ki'Teer目前狀態\t如已經抵達中繼站則會顯示所攜帶商品列表",
-        "baro.time.day": "天",
-        "baro.time.hour": "小時",
-        "baro.time.minute": "分鐘",
-        "baro.time.second": "秒",
         "baro.item": "物品:{name}\n杜卡德金幣:{ducats}\t現金:{credits}\n",
-        "baro.arrived": "Baro Ki'Teer 已經到達{location},停留時間為{stay}\t帶來的商品如下:",
-        "baro.arrival": "Baro Ki'Teer會在{arrive}後抵達{location}"
+        "baro.arrived": "Baro Ki'Teer 已經到達{location},將於<t:{stay}:R>離開\t帶來的商品如下:",
+        "baro.arrival": "Baro Ki'Teer會在<t:{arrive}:R>抵達{location}"
     },
     "common": {
         "ping.aliases": [
@@ -271,27 +267,27 @@
         ],
         "poe.brief": "查詢夜靈平原時間",
         "poe.description": "查詢夜靈平原目前日夜循環狀態和剩餘時間",
-        "poe.embed.description.day": "夜靈平原晚上將於{expiry}開始\n距離夜靈平原晚上還有：",
+        "poe.embed.description.day": "夜靈平原晚上將於<t:{expiry}:R>開始\n距離夜靈平原晚上還有：",
         "poe.embed.title.day": "夜靈平原-早上☀️",
-        "poe.embed.description.night": "夜靈平原早上將於{expiry}開始\n距離夜靈平原早上還有：",
+        "poe.embed.description.night": "夜靈平原早上將於<t:{expiry}:R>開始\n距離夜靈平原早上還有：",
         "poe.embed.title.night": "夜靈平原-晚上️🌙",
         "earth.aliases": [
             "地球時間"
         ],
         "earth.brief": "查詢地球時間",
         "earth.description": "查詢地球目前日夜循環狀態和剩餘時間",
-        "earth.embed.description.day": "地球晚上將於{expiry}開始\n距離地球晚上還有：",
+        "earth.embed.description.day": "地球晚上將於<t:{expiry}:t>開始\n距離地球晚上還有：",
         "earth.embed.title.day": "地球-早上☀️",
-        "earth.embed.description.night": "地球早上將於{expiry}開始\n距離地球早上還有：",
+        "earth.embed.description.night": "地球早上將於<t:{expiry}:t>開始\n距離地球早上還有：",
         "earth.embed.title.night": "地球-晚上️🌙",
         "cambion.aliases": [
             "魔裔禁地時間"
         ],
         "cambion.brief": "查詢魔裔禁地時間",
         "cambion.description": "查詢魔裔禁地目前日夜循環狀態和剩餘時間",
-        "cambion.embed.description.fass": "魔裔禁地Vome將於{expiry}開始\n距離魔裔禁地Vome還有：",
+        "cambion.embed.description.fass": "魔裔禁地Vome將於<t:{expiry}:t>開始\n距離魔裔禁地Vome還有：",
         "cambion.embed.title.fass": "魔裔禁地Fass",
-        "cambion.embed.description.vome": "魔裔禁地Fass將於{expiry}開始\n距離魔裔禁地Fass還有：",
+        "cambion.embed.description.vome": "魔裔禁地Fass將於<t:{expiry}:t>開始\n距離魔裔禁地Fass還有：",
         "cambion.embed.title.vome": "魔裔禁地Vome",
         "orb.aliases": [
             "奧布山谷時間",
@@ -299,9 +295,9 @@
         ],
         "orb.brief": "查詢奧布山谷時間",
         "orb.description": "查詢奧布山谷目前日夜循環狀態和剩餘時間",
-        "orb.embed.description.cold": "奧布山谷溫暖將於{expiry}開始\n距離奧布山谷溫暖還有：",
+        "orb.embed.description.cold": "奧布山谷溫暖將於<t:{expiry}:t>開始\n距離奧布山谷溫暖還有：",
         "orb.embed.title.cold": "奧布山谷寒冷",
-        "orb.embed.description.warm": "奧布山谷寒冷將於{expiry}開始\n距離奧布山谷寒冷還有：",
+        "orb.embed.description.warm": "奧布山谷寒冷將於<t:{expiry}:t>開始\n距離奧布山谷寒冷還有：",
         "orb.embed.title.warm": "奧布山谷溫暖",
         "arbitration.aliases": [
             "仲裁"
@@ -311,14 +307,14 @@
         "arbitration.embed.title": "仲裁",
         "arbitration.embed.description": "任務:{type}",
         "arbitration.embed.field.name": "節點:{node}",
-        "arbitration.embed.field.value": "敵人:{enemy}\n剩餘時間:{minutes}分鐘{seconds}秒",
+        "arbitration.embed.field.value": "敵人:{enemy}\n剩餘時間:<t:{expiry}:R>",
         "sortie.aliases": [
             "突擊",
             "sortie"
         ],
         "sortie.brief": "查詢突擊任務",
         "sortie.description": "查詢目前突擊任務和剩餘時間",
-        "sortie.embed.title": "突擊剩餘時間：{eta}",
+        "sortie.embed.title": "突擊剩餘時間：<t:{expiry}:R>",
         "sortie.embed.description": "{boss}的部隊，{faction}陣營",
         "sortie.embed.field.name": "突擊{count}:\n節點:{node} 等級{lower}-{upper}",
         "sortie.embed.field.value": "任務:{missionType}\n狀態:{modifier}",
@@ -332,7 +328,7 @@
         "fissure.description": "查詢當前虛空裂縫任務和剩餘時間",
         "fissure.embed.title": "虛空裂縫",
         "fissure.embed.description": "目前進行中的虛空裂縫任務",
-        "fissure.embed.field": "階級:{tier}\n任務:{missionType}\n剩餘時間:{eta}",
+        "fissure.embed.field": "階級:{tier}\n任務:{missionType}\n剩餘時間:<t:{expiry}:R>",
         "fissure.tierList": {
             "1": "古紀",
             "2": "前紀",

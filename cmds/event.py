@@ -31,7 +31,7 @@ logger.addHandler(handler)
 
 
 class event(Cog_Extension):
-    @commands.command(name="reactionRole", aliases=["rr"], brief="指定自動身份組訊息", description="指定可自動分發身份組的訊息")
+    @commands.command(name="reactionRole", aliases=lang['reactionRole.aliases'], brief=lang['reactionRole.brief'], description=lang['reactionRole.description'])
     async def rr(self, ctx, message: int):
         with open(os.path.join(dirname, "../role/rr.txt"), "a") as rr:
             rr.write(f"{message}\n")
@@ -63,6 +63,7 @@ class event(Cog_Extension):
             message.append(line.replace("\n", ""))
         for role in payload.member.guild.roles:
             if (role.name == roles.get(payload.emoji.name) or role.name == roles.get(f"<:{payload.emoji.name}:{payload.emoji.id}>")) and str(payload.message_id) in message:
+                logger.info(f'[reactionRole] Add role {role.name} to user {payload.member.name}#{payload.member.discriminator}')
                 await payload.member.add_roles(role)
 
     @commands.Cog.listener()
@@ -80,6 +81,7 @@ class event(Cog_Extension):
         member = await guild.fetch_member(payload.user_id)
         for role in member.roles:
             if (role.name == roles.get(payload.emoji.name) or role.name == roles.get(f"<:{payload.emoji.name}:{payload.emoji.id}>")) and str(payload.message_id) in message:
+                logger.info(f'[reactionRole] Removed role {role.name} to user {payload.member.name}#{payload.member.discriminator}')
                 await member.remove_roles(role)
 
 

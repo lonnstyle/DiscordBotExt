@@ -9,6 +9,8 @@ from core.classes import Cog_Extension
 from discord.ext import commands
 # import chinese_converter
 from localization import lang
+import time
+from datetime import datetime
 
 # from discord_slash import SlashContext, cog_ext
 
@@ -48,13 +50,10 @@ class baro(Cog_Extension):
             message = "```"
             location = html['location']
             # location = chinese_converter.to_traditional(location)
-            stay = html['endString']
-            # TODO: replace with UNIX timestamp
-            logger.info(f"[baro] Baro arrived, leaving in {stay}")
-            stay = stay.replace("d", lang['baro.time.day'])
-            stay = stay.replace("h", lang['baro.time.hour'])
-            stay = stay.replace("m", lang['baro.time.minute'])
-            stay = stay.replace("s", lang['baro.time.second'])
+            stay = html['expiry']
+            logger.info(f"[baro] Baro arrived, leaving at {stay}")
+            stay = time.mktime(datetime.strptime(stay,"%Y-%m-%dT%H:%M:%S.000Z"))
+            # convert datetime string to UNIX timestamp
             for items in html['inventory']:
                 item = items['item']
                 item = item.lower()
@@ -80,11 +79,8 @@ class baro(Cog_Extension):
             location = html['location']
             # location = chinese_converter.to_traditional(location)
             arrive = html['startString']
+            arrive = time.mktime(datetime.strptime(arrive,"%Y-%m-%dT%H:%M:%S.000Z"))
             logger.info(f"[baro] Baro is arriving in {arrive}")
-            arrive = arrive.replace("d", lang['baro.time.day'])
-            arrive = arrive.replace("h", lang['baro.time.hour'])
-            arrive = arrive.replace("m", lang['baro.time.minute'])
-            arrive = arrive.replace("s", lang['baro.time.second'])
             embed = discord.Embed(description=lang['baro.arrival'].format(arrive=arrive, location=location), color=0x429990)
             logger.info(f'[baro] data parsed, will arrive {location} in {arrive}')
             await ctx.send(embed=embed)

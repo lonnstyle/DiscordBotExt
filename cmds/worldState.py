@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import time
 from datetime import datetime
 from operator import itemgetter
 
@@ -27,25 +28,18 @@ logger.addHandler(handler)
 
 class worldState(Cog_Extension):
     def timeConv(self, expiry):
-        h = int(expiry[11:13]) + 8
-        if h >= 24:
-            h -= 24
-        m = expiry[14:16]
-        m = ("0" if len(m) == 1 else "") + m
-        s = expiry[17:19]
-        s = ("0" if len(s) == 1 else "") + s
-        return(str(h)+":"+m)
+        return time.mktime(datetime.strptime(expiry, "%Y-%m-%dT%H:%M:%S.000Z"))
 
     @commands.command(name='POE', aliases=lang['poe.aliases'], brief=lang['poe.brief'], description=lang['poe.description'])
     async def eidolontime(self, ctx):
         html = requests.get('https://api.warframestat.us/pc/cetusCycle').text
         data = json.loads(html)
         if (data["state"] == "day"):
-            desc = lang['poe.embed.description.day'].format(expiry=self.timeConv(data['expiry'])) + data["timeLeft"]
+            desc = lang['poe.embed.description.day'].format(expiry=self.timeConv(data['expiry'])) + f"<t:{self.timeConv(data['expiry'])}:R>"
             embed = discord.Embed(title=lang['poe.embed.title.day'], description=desc, color=0xbfdaf3)
             await ctx.send(embed=embed)
         elif (data["state"] == "night"):
-            desc = lang['poe.embed.description.night'].format(expiry=self.timeConv(data['expiry'])) + data["timeLeft"]
+            desc = lang['poe.embed.description.night'].format(expiry=self.timeConv(data['expiry'])) + f"<t:{self.timeConv(data['expiry'])}:R>"
             embed = discord.Embed(title=lang['poe.embed.title.night'], description=desc, color=0xaca9ca)
             await ctx.send(embed=embed)
 
@@ -58,11 +52,11 @@ class worldState(Cog_Extension):
         html = requests.get('https://api.warframestat.us/pc/tc/earthCycle').text
         data = json.loads(html)
         if (data["state"] == "day"):
-            desc = lang['earth.embed.description.day'].format(expiry=self.timeConv(data['expiry'])) + data["timeLeft"]
+            desc = lang['earth.embed.description.day'].format(expiry=self.timeConv(data['expiry'])) + f"<t:{self.timeConv(data['expiry'])}:R>"
             embed = discord.Embed(title=lang['earth.embed.title.day'], description=desc, color=0xbfdaf3)
             await ctx.send(embed=embed)
         elif (data["state"] == "night"):
-            desc = lang['earth.embed.description.night'].format(expiry=self.timeConv(data['expiry'])) + data["timeLeft"]
+            desc = lang['earth.embed.description.night'].format(expiry=self.timeConv(data['expiry'])) + f"<t:{self.timeConv(data['expiry'])}:R>"
             embed = discord.Embed(title=lang['earth.embed.title.night'], description=desc, color=0xaca9ca)
             await ctx.send(embed=embed)
 
@@ -75,11 +69,11 @@ class worldState(Cog_Extension):
         html = requests.get('https://api.warframestat.us/pc/cetusCycle').text
         data = json.loads(html)
         if (data["state"] == "day"):
-            desc = lang["cambion.embed.description.fass"].format(expiry=self.timeConv(data['expiry'])) + data["timeLeft"]
+            desc = lang["cambion.embed.description.fass"].format(expiry=self.timeConv(data['expiry'])) + f"<t:{self.timeConv(data['expiry'])}:R>"
             embed = discord.Embed(title=lang['cambion.embed.title.fass'], description=desc, color=0xda6d34)
             await ctx.send(embed=embed)
         elif (data["state"] == "night"):
-            desc = lang['cambion.embed.description.vome'].format(expiry=self.timeConv(data['expiry'])) + data["timeLeft"]
+            desc = lang['cambion.embed.description.vome'].format(expiry=self.timeConv(data['expiry'])) + f"<t:{self.timeConv(data['expiry'])}:R>"
             embed = discord.Embed(title=lang['cambion.embed.title.vome'], description=desc, color=0x458691)
             await ctx.send(embed=embed)
 
@@ -92,11 +86,11 @@ class worldState(Cog_Extension):
         html = requests.get('https://api.warframestat.us/pc/vallisCycle', headers={'Accept-Language': 'tc', 'Cache-Control': 'no-cache'}).text
         data = json.loads(html)
         if(data['state'] == 'cold'):
-            desc = lang["orb.embed.description.cold"].format(expiry=self.timeConv(data['expiry'])) + data["timeLeft"]
+            desc = lang["orb.embed.description.cold"].format(expiry=self.timeConv(data['expiry'])) + f"<t:{self.timeConv(data['expiry'])}:R>"
             embed = discord.Embed(title=lang["orb.embed.title.cold"], description=desc, color=0x6ea7cd)
             await ctx.send(embed=embed)
         elif(data['state'] == 'warm'):
-            desc = lang["orb.embed.description.warm"].format(expiry=self.timeConv(data['expiry'])) + data["timeLeft"]
+            desc = lang["orb.embed.description.warm"].format(expiry=self.timeConv(data['expiry'])) + f"<t:{self.timeConv(data['expiry'])}:R>"
             embed = discord.Embed(title=lang["orb.embed.title.warm"], description=desc, color=0xd9b4a1)
             await ctx.send(embed=embed)
 
@@ -109,14 +103,9 @@ class worldState(Cog_Extension):
         raw = requests.get("https://api.warframestat.us/pc/tc/arbitration", headers={'Accept-Language': 'zh'})
         text = raw.text
         data = json.loads(text)
-        expiry = data['expiry']
-        timeLeft = datetime.strptime(expiry, '%Y-%m-%dT%X.000Z')
-        now = datetime.now()
-        timeLeft = timeLeft-now
-        minutes = int((timeLeft.seconds - timeLeft.seconds % 60)/60)
-        seconds = timeLeft.seconds % 60
+        expiry = time.mktime(data['expiry'])
         embed = discord.Embed(title=lang["arbitration.embed.title"], description=lang['arbitration.embed.description'].format(type=data['type']), color=0x302f36)
-        embed.add_field(name=lang['arbitration.embed.field.name'].format(node=data['node']), value=lang["arbitration.embed.field.value"].format(enemy=data['enemy'], minutes=minutes, seconds=seconds))
+        embed.add_field(name=lang['arbitration.embed.field.name'].format(node=data['node']), value=lang["arbitration.embed.field.value"].format(enemy=data['enemy'], expiry=expiry))
         await ctx.send(embed=embed)
 
     # @cog_ext.cog_slash(name="Arbitration", description=lang['arbitration.description'])
@@ -129,7 +118,8 @@ class worldState(Cog_Extension):
         raw = requests.get('https://api.warframestat.us/pc/zh/sortie', headers={'Accept-Language': 'tc'})
         text = raw.text
         data = json.loads(text)
-        embed = discord.Embed(title=lang["sortie.embed.title"].format(eta=data['eta']), description=lang['sortie.embed.description'].format(boss=data['boss'], faction=data['faction']), color=0xff9500)
+        embed = discord.Embed(title=lang["sortie.embed.title"].format(expiry=self.timeConv(data['expiry'])),
+                              description=lang['sortie.embed.description'].format(boss=data['boss'], faction=data['faction']), color=0xff9500)
         for missions in data['variants']:
             node = missions['node']
             missionType = missions['missionType']
@@ -163,8 +153,8 @@ class worldState(Cog_Extension):
                         node = node.replace(planet, trans)
                 missionType = mission[fissure['missionType']]
                 missionTier = tierList[str(fissure['tierNum'])]
-                eta = fissure['eta']
-                description = lang['fissure.embed.field'].format(tier=missionTier, missionType=missionType, eta=eta)
+                expiry = self.timeConv(fissure['expiry'])
+                description = lang['fissure.embed.field'].format(tier=missionTier, missionType=missionType, expiry=expiry)
                 print(fissure['expired'] != True and fissure['isStorm'] != True)
                 embed.add_field(name=node, value=description, inline=False)
         await ctx.send(embed=embed)

@@ -57,7 +57,6 @@ class common(Cog_Extension):
             logger.error(f'[sayd] cannot delete source message, cuz {e}')
         embed = discord.Embed(description=msg, color=0x3C879C)
         for items in ctx.message.attachments:
-            # print(items.url)
             logger.info(f'[sayd] attachment found: {items.url}')
             embed.set_image(url=items.url)
         message = await ctx.send(embed=embed)
