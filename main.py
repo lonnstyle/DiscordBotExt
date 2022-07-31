@@ -60,7 +60,7 @@ with open(os.path.join(dirname, 'setting.json'), 'r') as _jfile:
     jdata = json.load(_jfile)
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(jdata['command_prefix']), intents=intents)
 start_time = datetime.now()
-version = "v3.0.2alpha"
+version = "v3.0.0"
 logger.info(f"[init] Bot is now starting...")
 HELP_MENU_FIELDS = lang["help.menu.fields"]
 
