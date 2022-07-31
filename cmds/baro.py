@@ -52,7 +52,7 @@ class baro(Cog_Extension):
             # location = chinese_converter.to_traditional(location)
             stay = html['expiry']
             logger.info(f"[baro] Baro arrived, leaving at {stay}")
-            stay = time.mktime(datetime.strptime(stay, "%Y-%m-%dT%H:%M:%S.%fZ").timetuple())
+            stay = int(time.mktime(datetime.strptime(stay, "%Y-%m-%dT%H:%M:%S.%fZ").timetuple()))
             # convert datetime string to UNIX timestamp
             for items in html['inventory']:
                 item = items['item']

@@ -1,0 +1,7 @@
+-U git+https://github.com/Rapptz/discord.py
+asyncio
+datetime
+requests
+thefuzz
+mwclient
+discord-webhook
