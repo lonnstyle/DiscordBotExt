@@ -86,4 +86,7 @@ class event(Cog_Extension):
 
 
 async def setup(bot):
+    dir = os.path.join(dirname, "../role")
+    if not os.path.exists(dir):
+        os.makedirs(dir)
     await bot.add_cog(event(bot))

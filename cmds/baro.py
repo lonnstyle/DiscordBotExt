@@ -78,7 +78,7 @@ class baro(Cog_Extension):
         if html['active'] == False:
             location = html['location']
             # location = chinese_converter.to_traditional(location)
-            arrive = html['startString']
+            arrive = html['activation']
             arrive = time.mktime(datetime.strptime(arrive, "%Y-%m-%dT%H:%M:%S.000Z"))
             logger.info(f"[baro] Baro is arriving in {arrive}")
             embed = discord.Embed(description=lang['baro.arrival'].format(arrive=arrive, location=location), color=0x429990)

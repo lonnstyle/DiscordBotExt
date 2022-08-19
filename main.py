@@ -14,6 +14,10 @@ from localization import lang
 # from platformdirs import importlib
 
 dirname = os.path.dirname(__file__)
+# check if log dir exists
+dir = os.path.join(dirname, 'log')
+if not os.path.exists(dir):
+    os.makedirs(dir)
 # clear log records
 with open(os.path.join(dirname, "log/runtime.log"), "w") as log:
     pass
