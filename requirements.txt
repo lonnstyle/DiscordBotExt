@@ -1,0 +1,7 @@
+discord.py
+asyncio
+datetime
+requests
+thefuzz
+mwclient
+discord-webhook

@@ -1,15 +1,18 @@
-import discord
-from discord.ext import commands
-from core.classes import Cog_Extension
-import os
-import requests
 import json
-from discord_webhook import DiscordWebhook, DiscordEmbed
-from language import language as lang
-from fuzzywuzzy import process
+import logging
+import os
 
-lang = lang()
+import discord
+import requests
+from core.classes import Cog_Extension
+from discord.ext import commands
+from discord_webhook import DiscordEmbed, DiscordWebhook
+from localization import lang
+from thefuzz import process
+
 lang = lang.langpref()['rivenPrice']
+
+dirname = os.path.dirname(__file__)
 
 temp = {}
 localWeapons = json.loads(requests.get("http://api.warframe.market/v1/riven/items", headers=lang['api.header']).text)
@@ -30,26 +33,32 @@ for attr in attrDict:
     temp[attr['url_name']] = attr['effect']
 attrDict = temp
 
-with open('setting.json', 'r', encoding='utf8') as jfile:
+logger = logging.getLogger('rivenPrice')
+logger.setLevel(-1)
+handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'),  encoding='utf-8', mode='a')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
+logger.addHandler(handler)
+
+with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
 
 class rivenPrice(Cog_Extension):
-    tag = "Warframe"
-
     @commands.command(name='riven', aliases=lang['riven.aliases'], brief=lang['riven.brief'],
                       description=lang['riven.description'])
     async def rivenPrice(self, ctx, *weapon):
         name = ' '.join(weapon)
         name = name.title()
         weapon, ratio = process.extractOne(name, localWeapons.keys())
-        if ratio<75:
-            weapon,ratio = process.extractOne(name,Weapons.keys())
-            if ratio<75:
-                embed=discord.Embed(title=lang['riven.error.title'],description=lang['riven.error.description'].format(self=jdata['self']),color=0xff0000)
-                for match,score in process.extractBests(name,localWeapons.keys()):
-                    if score>50:
-                        embed.add_field(name=match,value=score,inline=False)
+        if ratio < 75:
+            weapon, ratio = process.extractOne(name, Weapons.keys())
+            if ratio < 75:
+                embed = discord.Embed(title=lang['riven.error.title'], description=lang['riven.error.description'].format(self=jdata['self']), color=0xff0000)
+                logger.warning(f'[riven] failed to search weapon: {name}')
+                for match, score in process.extractBests(name, localWeapons.keys()):
+                    if score > 50:
+                        embed.add_field(name=match, value=score, inline=False)
+                        logger.info(f'[riven] suggested weapon name: {match}')
                 await ctx.send(embed=embed)
             else:
                 name = weapon
@@ -57,6 +66,7 @@ class rivenPrice(Cog_Extension):
         else:
             name = weapon
             weapon = localWeapons[weapon]
+        logger.info(f'[riven] searching weapon: {weapon}')
         url = 'https://api.warframe.market/v1/auctions/search?type=riven&weapon_url_name=' + weapon + '&sort_by=price_asc'
         html = requests.get(url)
         weapon = weapon.replace("_", " ")
@@ -64,6 +74,7 @@ class rivenPrice(Cog_Extension):
             await ctx.send(embed=discord.Embed(title=lang['riven.error.title'],
                                                description=lang['riven.error.description'].format(self=jdata['self']),
                                                color=0xff0000))
+            logger.error(f'[riven] failed to search {weapon}, status code: {html.status_code}, reason: {html.reason}')
             return ()
         else:
             rivenData = json.loads(html.text)
@@ -139,9 +150,11 @@ class rivenPrice(Cog_Extension):
                         webhook.add_embed(embed)
             if eval(webhookID) == channel_id:
                 response = webhook.execute()
+                logger.info(f"[rivenPrice] sent riven price data of {weapon} to channel {channel_id} as webhook")
             else:
+                logger.info(f"[rivenPrice] sent riven price data of {weapon} to channel {channel_id}")
                 await ctx.send(message)
 
 
-def setup(bot):
-    bot.add_cog(rivenPrice(bot))
+async def setup(bot):
+    await bot.add_cog(rivenPrice(bot))
