@@ -16,9 +16,9 @@ logger.addHandler(handler)
 class language():
     def init(self):
         try:
-            self.zh_hant = json.loads(requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotExt/v3.0/localization/locales/zh-hant.json").text)
-            self.zh_hans = json.loads(requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotExt/v3.0/localization/locales/zh-hans.json").text)
-            self.en = json.loads(requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotExt/v3.0/localization/locales/en.json").text)
+            self.zh_hant = json.loads(requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotExt-loc/master/locales/zh-hant.json").text)
+            self.zh_hans = json.loads(requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotExt-loc/master/locales/zh-hans.json").text)
+            self.en = json.loads(requests.get("https://raw.githubusercontent.com/lonnstyle/DiscordBotExt-loc/master/locales/en.json").text)
             logger.debug("[init] successfully pulled loc file from github")
         except Exception as exc:
             logger.error(exc)
