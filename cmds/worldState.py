@@ -129,9 +129,25 @@ class worldState(Cog_Extension):
         for missions in data['variants']:
             node = missions['node']
             missionType = missions['missionType']
-            modifier = missions['modifier']
             embed.add_field(name=lang['sortie.embed.field.name'].format(count=count, node=node, lower=35+15*count, upper=40+20*count),
                             value=lang['sortie.embed.field.value'].format(missionType=missionType, modifier=modifier), inline=False)
+            count += 1
+        await ctx.send(embed=embed)
+
+    @commands.command(name='Archon',aliases=lang['archon.aliases'],brief=lang['archon.brief'],description=lang['archon.description'])
+    async def archon(self,ctx):
+        count = 1
+        raw = requests.get('https://api.warframestat.us/pc/zh/archonHunt', headers={'Accept-Language': 'tc'})
+        text = raw.text
+        data = json.loads(text)
+        embed = discord.Embed(title=lang["archon.embed.title"].format(expiry=self.timeConv(data['expiry'])),
+                              description=lang['archon.embed.description'].format(boss=data['boss'], faction=data['faction']), color=0xff9500)
+        for missions in data['missions']:
+            node = missions['node']
+            missionType = missions['missionType']
+            modifier = missions['modifier']
+            embed.add_field(name=lang['archon.embed.field.name'].format(count=count, node=node, lower=35+15*count, upper=40+20*count),
+                            value=lang['archon.embed.field.value'].format(missionType=missionType), inline=False)
             count += 1
         await ctx.send(embed=embed)
 
