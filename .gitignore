@@ -154,3 +154,5 @@ setting.json
 localization/locales/
 localization/sync_to_en.py
 localization/.gitignore
+manifests/
+*.zip

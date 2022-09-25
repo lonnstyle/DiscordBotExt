@@ -11,6 +11,7 @@ from discord.ext import commands
 
 from core.classes import Cog_Extension, Hybirdcmd_Aliases
 from localization import lang
+from cmds.parsers.world_state import WorldStateParser
 
 # from discord_slash import SlashContext, cog_ext
 # from discord_slash.utils.manage_commands import create_choice, create_option

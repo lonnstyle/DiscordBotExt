@@ -10,7 +10,6 @@ import discord
 from discord import Interaction, activity
 from discord.ext import commands
 from discord.ui import Button, View, button
-
 from localization import lang
 from log import logger
 
