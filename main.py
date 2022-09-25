@@ -105,12 +105,13 @@ async def on_ready():
     bot.help_command = CustomHelpCommand()
     logger.debug('[init] Replaced default help command')
 
+
 @bot.command(name='sync', aliases=[], brief='Bot synced!', description='The bot has been fully synchronized!')
 async def sync_command(ctx):
     await bot.tree.sync()
     await ctx.send('Bot is fully synchronized!')
     logger.debug(f'extentions are synced to the command tree')
-    
+
 
 def gen_help_menu(commands, page=1):
     embed = discord.Embed(title=lang['help.embed.title'], color=0xccab2b)

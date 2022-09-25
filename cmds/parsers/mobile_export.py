@@ -144,7 +144,7 @@ class MobileExportParser():
         self.manifest_data = {}
         self.nodes = {}
         self.nightwave = {'challenges': {}}
-        categories = ['ExportRelicArcane', 'ExportResources', 'ExportWeapons', 'ExportWarframes','ExportCustoms']
+        categories = ['ExportRelicArcane', 'ExportResources', 'ExportWeapons', 'ExportWarframes', 'ExportCustoms']
         for language in AVAILABLE_LANGUAGES:
             _items = []
             _locations = []
