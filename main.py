@@ -9,7 +9,6 @@ import discord
 from discord import Interaction, activity
 from discord.ext import commands
 from discord.ui import Button, View, button
-from localization import lang
 
 # from platformdirs import importlib
 
@@ -18,6 +17,9 @@ dirname = os.path.dirname(__file__)
 dir = os.path.join(dirname, 'log')
 if not os.path.exists(dir):
     os.makedirs(dir)
+#
+from localization import lang
+
 # clear log records
 with open(os.path.join(dirname, "log/runtime.log"), "w") as log:
     pass
@@ -92,6 +94,7 @@ class MenuView(View):
 
 @bot.event
 async def on_ready():
+    await bot.wait_until_ready()
     logger.info(f'[init] current version: {version}')
     logger.info('[init] Bot is now started')
     activity = discord.Activity(type=discord.ActivityType.watching, name=jdata['watching'])
