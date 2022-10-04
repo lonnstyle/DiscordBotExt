@@ -47,7 +47,7 @@ H_A = Hybirdcmd_Aliases(lang, *cmds)
 
 class rivenPrice(Cog_Extension):
     @H_A.hyb_cmd
-    async def rivenPrice(self, ctx, *weapon):
+    async def rivenPrice(self, ctx, weapon):
         name = ' '.join(weapon)
         name = name.title()
         weapon, ratio = process.extractOne(name, localWeapons.keys())

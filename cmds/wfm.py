@@ -51,7 +51,7 @@ H_A = Hybirdcmd_Aliases(lang, *cmds)
 
 class wfm(Cog_Extension):
     @H_A.hyb_cmd
-    async def translate(self, ctx, *item):
+    async def translate(self, ctx, item):
         item = ' '.join(word.capitalize() for word in (item))
         url_name = enDict.get(item, item)
         language = ''
@@ -82,7 +82,7 @@ class wfm(Cog_Extension):
     #   await self.translate(ctx,item)
 
     @H_A.hyb_cmd
-    async def market(self, ctx, *args):
+    async def market(self, ctx, args):
         if str(ctx.channel.type) != 'private':
             channel_id = ctx.channel.id
         else:

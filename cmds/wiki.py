@@ -33,11 +33,11 @@ tc = Site(tcURL, path='/zh-tw/', scheme='http')
 en = Site(enURL, path='/', scheme='http')
 
 cmds = ['update_wiki','wiki']
-H_A = Hybirdcmd_Aliases(lang, *cmds)
+H_A = Hybirdcmd_Aliases(lang, cmds)
 
 class wiki(Cog_Extension):
     @H_A.hyb_cmd
-    async def update_wiki(self, ctx, *wiki):
+    async def update_wiki(self, ctx, wiki):
         name = " ".join(wiki)
         if name == "zh" or "all":
             allpages = zh.allpages()
@@ -76,7 +76,7 @@ class wiki(Cog_Extension):
     #     await self.update_wiki(ctx, wiki)
 
     @H_A.hyb_cmd
-    async def wiki(self, ctx, *page):
+    async def wiki(self, ctx, page):
         name = " ".join(page)
         with open("dict/zh_pages.txt", "r") as zh_pages:
             zhpage = list(zh_pages.readlines())
