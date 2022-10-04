@@ -3,13 +3,14 @@ import logging
 import os
 
 import discord
-from core.classes import Cog_Extension,Hybirdcmd_Aliases
 from discord.ext import commands
-from localization import lang
 # from discord_slash import SlashContext, cog_ext
 # from discord_slash.utils.manage_commands import create_choice, create_option
 from mwclient import Site
 from thefuzz import process
+
+from core.classes import Cog_Extension, Hybirdcmd_Aliases
+from localization import lang
 
 lang = lang.langpref()['wiki']
 
@@ -32,8 +33,9 @@ zh = Site(zhURL, scheme='http')
 tc = Site(tcURL, path='/zh-tw/', scheme='http')
 en = Site(enURL, path='/', scheme='http')
 
-cmds = ['update_wiki','wiki']
-H_A = Hybirdcmd_Aliases(lang, cmds)
+cmds = ['update_wiki', 'wiki']
+H_A = Hybirdcmd_Aliases(lang, *cmds)
+
 
 class wiki(Cog_Extension):
     @H_A.hyb_cmd
