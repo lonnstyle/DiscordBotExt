@@ -11,6 +11,8 @@ from discord import Interaction, activity
 from discord.ext import commands
 from discord.ui import Button, View, button
 
+from localization import lang
+
 # from platformdirs import importlib
 
 dirname = os.path.dirname(__file__)
@@ -18,8 +20,7 @@ dirname = os.path.dirname(__file__)
 dir = os.path.join(dirname, 'log')
 if not os.path.exists(dir):
     os.makedirs(dir)
-else:
-    from localization import lang
+
 
 # clear log records
 with open(os.path.join(dirname, "log/runtime.log"), "w") as log:
@@ -95,14 +96,13 @@ class MenuView(View):
 
 @bot.event
 async def on_ready():
-    await bot.wait_until_ready()
     logger.info(f'[init] current version: {version}')
     logger.info('[init] Bot is now started')
     activity = discord.Activity(type=discord.ActivityType.watching, name=jdata['watching'])
     logger.info("[init] Bot activity set.")
     await bot.change_presence(activity=activity)
     logger.debug('[init] loading extensions')
-    
+
     with open(os.path.join(dirname, 'cmds/noload.json'), 'r') as _jfile:
         noload = json.load(_jfile)
 
@@ -120,13 +120,13 @@ async def on_ready():
     bot.help_command = CustomHelpCommand()
     logger.debug('[init] Replaced default help command')
     await bot.tree.sync()
-    logger.debug(f'extentions is synced to the command tree')
+    logger.debug(f'extentions are synced to the command tree')
 
 
 def gen_help_menu(commands, page=1):
     embed = discord.Embed(title=lang['help.embed.title'], color=0xccab2b)
     embed.set_author(name="Patreon", url="https://patreon.com/join/lonnstyle", icon_url="https://i.imgur.com/CCYuxwH.png")
-    command_types = [discord.ext.commands.Command,discord.ext.commands.HybridCommand]
+    command_types = [discord.ext.commands.Command, discord.ext.commands.HybridCommand]
     if type(commands) not in command_types:
         fields = 0
         start = (page-1)*HELP_MENU_FIELDS
@@ -148,8 +148,6 @@ def gen_help_menu(commands, page=1):
         embed.add_field(name="cog", value=commands.cog_name)
         return embed
 
-        
-
 
 @ bot.command(name='load', aliases=lang['load.aliases'], brief=lang['load.brief'], description=lang['load.description'])
 async def load(ctx, extension):
@@ -157,9 +155,9 @@ async def load(ctx, extension):
         await bot.load_extension(F'cmds.{extension}')
         await ctx.send(lang['load.loaded'].format(extension=extension))
         logger.debug(f'[load] loaded extension: {extension}')
-        logger.debug('[init] Replaced default help command')
+
         await bot.tree.sync()
-        logger.debug('Command tree synced')
+        logger.debug('[load] Command tree synced')
     else:
         await ctx.send(embed=discord.Embed(title=lang['load.error.title'], description=lang['load.error.description'].format(owner=bot.owner_id), color=0xff0000))
 
@@ -172,7 +170,7 @@ async def unload(ctx, extension):
         logger.debug(f'[unload] unloaded extension: {extension}')
         logger.debug('[init] Replaced default help command')
         await bot.tree.sync()
-        logger.debug('Command tree synced')
+        logger.debug('[unload] Command tree synced')
     else:
         await ctx.send(embed=discord.Embed(title=lang['unload.error.title'], description=lang['unload.error.description'].format(owner=bot.owner_id), color=0xff0000))
 
@@ -185,7 +183,7 @@ async def reload(ctx, extension):
         logger.debug(f'[reload] reloaded extension: {extension}')
         logger.debug('[init] Replaced default help command')
         await bot.tree.sync()
-        logger.debug('Command tree synced')
+        logger.debug('[reload] Command tree synced')
     else:
         await ctx.send(embed=discord.Embed(title=lang['reload.error.title'], description=lang['reload.error.description'].format(owner=bot.owner_id), color=0xff0000))
 

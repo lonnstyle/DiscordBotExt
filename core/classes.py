@@ -1,4 +1,3 @@
-from logging import Logger
 
 import discord
 from discord.ext import commands
@@ -41,27 +40,19 @@ class Hybirdcmd_Aliases():
         if self.point == self.count:
             self.point = 0
 
-    def c_name(self, index=-1):
-        if index != -1:
-            self.point = index
+    def get_cmd_name(self):
         return self.cmd_names[self.point].lower()
 
-    def c_aliases(self, index=-1):
-        if index != -1:
-            self.point = index
+    def get_cmd_aliases(self):
         cmd_name = self.cmd_names[self.point]
         self.next()
         return self.aliases[cmd_name]
 
-    def c_description(self, index=-1):
-        if index != -1:
-            self.point = index
+    def get_cmd_description(self):
         cmd_name = self.cmd_names[self.point]
         return str(self.description[cmd_name])[:99]
 
-    def c_brief(self, index=-1):
-        if index != -1:
-            self.point = index
+    def get_cmd_brief(self):
         cmd_name = self.cmd_names[self.point]
         return self.brief[cmd_name]
 
@@ -69,10 +60,10 @@ class Hybirdcmd_Aliases():
         if index != -1:
             self.point = index
 
-        name = self.c_name()
-        brief = self.c_brief()
-        description = self.c_description()
-        aliases = self.c_aliases()
+        name = self.get_cmd_name()
+        brief = self.get_cmd_brief()
+        description = self.get_cmd_description()
+        aliases = self.get_cmd_aliases()
 
         with_app_command: bool = True
         # @commands.hybrid_command(name=name,  aliases=aliases, brief=brief, description=description)
