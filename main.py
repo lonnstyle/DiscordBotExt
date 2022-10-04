@@ -126,7 +126,8 @@ async def on_ready():
 def gen_help_menu(commands, page=1):
     embed = discord.Embed(title=lang['help.embed.title'], color=0xccab2b)
     embed.set_author(name="Patreon", url="https://patreon.com/join/lonnstyle", icon_url="https://i.imgur.com/CCYuxwH.png")
-    if type(commands) != discord.ext.commands.Command:
+    command_types = [discord.ext.commands.Command,discord.ext.commands.HybridCommand]
+    if type(commands) not in command_types:
         fields = 0
         start = (page-1)*HELP_MENU_FIELDS
         end = min(len(commands), page*HELP_MENU_FIELDS-1)
@@ -146,6 +147,8 @@ def gen_help_menu(commands, page=1):
         embed.add_field(name=f"{jdata['command_prefix']}[{aliases}]{params}", value=commands.description)
         embed.add_field(name="cog", value=commands.cog_name)
         return embed
+
+        
 
 
 @ bot.command(name='load', aliases=lang['load.aliases'], brief=lang['load.brief'], description=lang['load.description'])
