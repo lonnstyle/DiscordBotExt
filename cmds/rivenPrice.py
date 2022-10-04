@@ -4,7 +4,7 @@ import os
 
 import discord
 import requests
-from core.classes import Cog_Extension
+from core.classes import Cog_Extension,Hybirdcmd_Aliases
 from discord.ext import commands
 from discord_webhook import DiscordEmbed, DiscordWebhook
 from localization import lang
@@ -42,10 +42,11 @@ logger.addHandler(handler)
 with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
+cmds = ['riven']
+H_A = Hybirdcmd_Aliases(lang, *cmds)
 
 class rivenPrice(Cog_Extension):
-    @commands.command(name='riven', aliases=lang['riven.aliases'], brief=lang['riven.brief'],
-                      description=lang['riven.description'])
+    @H_A.hyb_cmd
     async def rivenPrice(self, ctx, *weapon):
         name = ' '.join(weapon)
         name = name.title()

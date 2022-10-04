@@ -1,3 +1,4 @@
+
 import asyncio
 import json
 import logging
@@ -10,8 +11,6 @@ from discord import Interaction, activity
 from discord.ext import commands
 from discord.ui import Button, View, button
 
-from localization import lang
-
 # from platformdirs import importlib
 
 dirname = os.path.dirname(__file__)
@@ -19,7 +18,8 @@ dirname = os.path.dirname(__file__)
 dir = os.path.join(dirname, 'log')
 if not os.path.exists(dir):
     os.makedirs(dir)
-#
+else:
+    from localization import lang
 
 # clear log records
 with open(os.path.join(dirname, "log/runtime.log"), "w") as log:
@@ -102,17 +102,25 @@ async def on_ready():
     logger.info("[init] Bot activity set.")
     await bot.change_presence(activity=activity)
     logger.debug('[init] loading extensions')
+    
+    with open(os.path.join(dirname, 'cmds/noload.json'), 'r') as _jfile:
+        noload = json.load(_jfile)
+
     for filename in os.listdir(os.path.join(dirname, 'cmds')):
         if filename.endswith('.py'):
-            try:
-                await bot.load_extension(f'cmds.{filename[:-3]}')
-                logger.debug(f'[init] loaded extension: {filename[:-3]}')
-            except Exception as exc:
-                logger.error(f'[init] {exc}')
+            extname = filename[:-3]
+            if filename not in noload:
+                try:
+                    await bot.load_extension(f'cmds.{extname}')
+                    logger.debug(f'[init] loaded extension: {extname}')
+                except Exception as exc:
+                    logger.error(f'[init] {exc}')
+            else:
+                logger.debug(f'extension: {extname} is not loaded,its in "cmds/noload.json"')
     bot.help_command = CustomHelpCommand()
     logger.debug('[init] Replaced default help command')
     await bot.tree.sync()
-    logger.debug('Command tree synced')
+    logger.debug(f'extentions is synced to the command tree')
 
 
 def gen_help_menu(commands, page=1):

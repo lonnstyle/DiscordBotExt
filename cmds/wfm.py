@@ -4,7 +4,7 @@ import os
 
 import discord
 import requests
-from core.classes import Cog_Extension
+from core.classes import Cog_Extension,Hybirdcmd_Aliases
 from discord.ext import commands
 from discord_webhook import DiscordEmbed, DiscordWebhook
 # from discord_slash.utils.manage_commands import create_option, create_choice
@@ -46,8 +46,11 @@ local_order_type = lang['local_order_type']
 price_order = lang['price_order']
 
 
+cmds = ['translate','wfm']
+H_A = Hybirdcmd_Aliases(lang, *cmds)
+
 class wfm(Cog_Extension):
-    @commands.command(name='translate', aliases=lang['translate.aliases'], brief=lang['translate.brief'], description=lang['translate.description'])
+    @H_A.hyb_cmd
     async def translate(self, ctx, *item):
         item = ' '.join(word.capitalize() for word in (item))
         url_name = enDict.get(item, item)
@@ -78,7 +81,7 @@ class wfm(Cog_Extension):
     # async def slash_translate(self,ctx,item):
     #   await self.translate(ctx,item)
 
-    @commands.command(name='WFM', aliases=lang['wfm.aliases'], brief=lang['wfm.brief'], description=lang['wfm.description'])
+    @H_A.hyb_cmd
     async def market(self, ctx, *args):
         if str(ctx.channel.type) != 'private':
             channel_id = ctx.channel.id

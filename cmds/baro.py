@@ -7,8 +7,9 @@ from datetime import datetime
 
 import discord
 import requests
-from core.classes import Cog_Extension
 from discord.ext import commands
+
+from core.classes import Cog_Extension, Hybirdcmd_Aliases
 # import chinese_converter
 from localization import lang
 
@@ -30,8 +31,12 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lin
 logger.addHandler(handler)
 
 
+cmds = ['baro']
+H_A = Hybirdcmd_Aliases(lang, *cmds)
+
+
 class baro(Cog_Extension):
-    @commands.command(name='baro', aliases=lang['baro.aliases'], brief=lang['baro.brief'], description=lang['baro.description'])
+    @H_A.hyb_cmd
     async def baro(self, ctx):
         logger.info(f'[baro] {ctx.message.author} requested for baro info')
         url = requests.get("https://api.warframestat.us/pc/tc/voidTrader", headers={'Accept-Language': 'zh', 'Cache-Control': 'no-cache'})
@@ -92,3 +97,4 @@ class baro(Cog_Extension):
 
 async def setup(bot):
     await bot.add_cog(baro(bot))
+    logger.debug('cmds.baro s descripiton is always too long for some reason, so its replace by "no_discripion" in classes.py')
