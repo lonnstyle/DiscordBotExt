@@ -7,8 +7,9 @@ from operator import itemgetter
 
 import discord
 import requests
-from core.classes import Cog_Extension
 from discord.ext import commands
+
+from core.classes import Cog_Extension, Hybirdcmd_Aliases
 from localization import lang
 
 # from discord_slash import SlashContext, cog_ext
@@ -26,11 +27,15 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lin
 logger.addHandler(handler)
 
 
+cmds = ['poe', 'earth', 'cambion', 'orb', 'arbitration', 'sortie', 'fissure']
+H_A = Hybirdcmd_Aliases(lang, *cmds)
+
+
 class worldState(Cog_Extension):
     def timeConv(self, expiry):
         return int(time.mktime(datetime.strptime(expiry, "%Y-%m-%dT%H:%M:%S.%fZ").timetuple()))
 
-    @commands.command(name='POE', aliases=lang['poe.aliases'], brief=lang['poe.brief'], description=lang['poe.description'])
+    @commands.hybrid_command(name=H_A.c_name(), aliases=H_A.c_aliases(), brief=lang['poe.brief'], description=lang['poe.description'])
     async def eidolontime(self, ctx):
         html = requests.get('https://api.warframestat.us/pc/cetusCycle').text
         data = json.loads(html)
@@ -47,7 +52,7 @@ class worldState(Cog_Extension):
     # async def slash_POE(self, ctx: SlashContext):
     #     await self.eidolontime(ctx)
 
-    @commands.command(name='Earth', aliases=lang['earth.aliases'], brief=lang['earth.brief'], description=lang['earth.description'])
+    @commands.hybrid_command(name=H_A.c_name(), aliases=H_A.c_aliases(), brief=lang['earth.brief'], description=lang['earth.description'])
     async def earthtime(self, ctx):
         html = requests.get('https://api.warframestat.us/pc/tc/earthCycle').text
         data = json.loads(html)
@@ -64,7 +69,7 @@ class worldState(Cog_Extension):
     # async def slash_Earth(self, ctx: SlashContext):
     #     await self.earthtime(ctx)
 
-    @commands.command(name='Cambion', aliases=lang['cambion.aliases'], brief=lang['cambion.brief'], description=lang['cambion.description'])
+    @commands.hybrid_command(name=H_A.c_name(), aliases=H_A.c_aliases(), brief=lang['cambion.brief'], description=lang['cambion.description'])
     async def cambiontime(self, ctx):
         html = requests.get('https://api.warframestat.us/pc/cetusCycle').text
         data = json.loads(html)
@@ -81,15 +86,15 @@ class worldState(Cog_Extension):
     # async def slash_Cambion(self, ctx: SlashContext):
     #     await self.cambiontime(ctx)
 
-    @commands.command(name='Orb', aliases=lang["orb.aliases"], brief=lang['orb.brief'], description=lang['orb.description'])
+    @commands.hybrid_command(name=H_A.c_name(), aliases=H_A.c_aliases(), brief=lang['orb.brief'], description=lang['orb.description'])
     async def orbtime(self, ctx):
         html = requests.get('https://api.warframestat.us/pc/vallisCycle', headers={'Accept-Language': 'tc', 'Cache-Control': 'no-cache'}).text
         data = json.loads(html)
-        if(data['state'] == 'cold'):
+        if (data['state'] == 'cold'):
             desc = lang["orb.embed.description.cold"].format(expiry=self.timeConv(data['expiry'])) + f"<t:{self.timeConv(data['expiry'])}:R>"
             embed = discord.Embed(title=lang["orb.embed.title.cold"], description=desc, color=0x6ea7cd)
             await ctx.send(embed=embed)
-        elif(data['state'] == 'warm'):
+        elif (data['state'] == 'warm'):
             desc = lang["orb.embed.description.warm"].format(expiry=self.timeConv(data['expiry'])) + f"<t:{self.timeConv(data['expiry'])}:R>"
             embed = discord.Embed(title=lang["orb.embed.title.warm"], description=desc, color=0xd9b4a1)
             await ctx.send(embed=embed)
@@ -98,7 +103,7 @@ class worldState(Cog_Extension):
     # async def slash_Orb(self, ctx: SlashContext):
     #     await self.orbtime(ctx)
 
-    @commands.command(name="Arbitration", aliases=lang["arbitration.aliases"], brief=lang['arbitration.brief'], description=lang['arbitration.description'])
+    @commands.hybrid_command(name=H_A.c_name(), aliases=H_A.c_aliases(), brief=lang['arbitration.brief'], description=lang['arbitration.description'][:99])
     async def arbitration(self, ctx):
         raw = requests.get("https://api.warframestat.us/pc/tc/arbitration", headers={'Accept-Language': 'zh'})
         text = raw.text
@@ -112,7 +117,7 @@ class worldState(Cog_Extension):
     # async def slash_Arbitration(self, ctx: SlashContext):
     #     await self.arbitration(ctx)
 
-    @commands.command(name='Sortie', aliases=lang['sortie.aliases'], brief=lang['sortie.brief'], description=lang['sortie.description'])
+    @commands.hybrid_command(name=H_A.c_name(), aliases=H_A.c_aliases(), brief=lang['sortie.brief'], description=lang['sortie.description'])
     async def sortie(self, ctx):
         count = 1
         raw = requests.get('https://api.warframestat.us/pc/zh/sortie', headers={'Accept-Language': 'tc'})
@@ -133,8 +138,9 @@ class worldState(Cog_Extension):
     # async def slash_Sortie(self, ctx: SlashContext):
     #     await self.sortie(ctx)
 
-    @commands.command(name="Fissure", aliases=lang['fissure.aliases'], brief=lang['fissure.brief'], description=lang['fissure.description'])
-    async def fissure(self, ctx, tier="all", isStorm="False"):
+    @commands.hybrid_command(name=H_A.c_name(), aliases=H_A.c_aliases(), brief=lang['fissure.brief'], description=lang['fissure.description'])
+    async def fissure(self, ctx, tier="all", is_storm="False"):
+
         payload = requests.get('https://api.warframestat.us/pc/fissures', headers={'Accept-Language': 'en', 'Cache-Control': 'no-cache'})
         payload = json.loads(payload.text)
         tierList = lang['fissure.tierList']
@@ -144,12 +150,15 @@ class worldState(Cog_Extension):
         fissures = sorted(payload, key=itemgetter('tierNum'))
         embed = discord.Embed(title=lang['fissure.embed.title'], description=lang['fissure.embed.description'], color=0x725D33)
         for fissure in fissures:
-            if fissure['expired'] != True and (str(fissure['isStorm']) == isStorm or isStorm == 'all') and (fissure['tierNum'] == tierOption.get(tier, tier) or tier == 'all'):
+            if fissure['expired'] != True and (str(fissure['isStorm']) == is_storm or is_storm == 'all') and (fissure['tierNum'] == tierOption.get(tier, tier) or tier == 'all'):
                 node = fissure['node']
                 for planet, trans in planets.items():
                     if planet in node:
-                        if fissure['isStorm'] == True:
-                            trans += lang['fissure.proxima']
+                        try:
+                            if fissure['isStorm'] == True:
+                                trans += lang['fissure.proxima']
+                        except Exception as e:
+                            logger.error(f'{e}')
                         node = node.replace(planet, trans)
                 missionType = mission[fissure['missionType']]
                 missionTier = tierList[str(fissure['tierNum'])]
@@ -162,3 +171,5 @@ class worldState(Cog_Extension):
 
 async def setup(bot):
     await bot.add_cog(worldState(bot))
+    # await bot.tree.sync()
+    # logger.debug('Command tree synced')

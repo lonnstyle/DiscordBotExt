@@ -10,6 +10,8 @@ from discord import Interaction, activity
 from discord.ext import commands
 from discord.ui import Button, View, button
 
+from localization import lang
+
 # from platformdirs import importlib
 
 dirname = os.path.dirname(__file__)
@@ -18,7 +20,6 @@ dir = os.path.join(dirname, 'log')
 if not os.path.exists(dir):
     os.makedirs(dir)
 #
-from localization import lang
 
 # clear log records
 with open(os.path.join(dirname, "log/runtime.log"), "w") as log:
@@ -110,6 +111,8 @@ async def on_ready():
                 logger.error(f'[init] {exc}')
     bot.help_command = CustomHelpCommand()
     logger.debug('[init] Replaced default help command')
+    await bot.tree.sync()
+    logger.debug('Command tree synced')
 
 
 def gen_help_menu(commands, page=1):
@@ -143,6 +146,9 @@ async def load(ctx, extension):
         await bot.load_extension(F'cmds.{extension}')
         await ctx.send(lang['load.loaded'].format(extension=extension))
         logger.debug(f'[load] loaded extension: {extension}')
+        logger.debug('[init] Replaced default help command')
+        await bot.tree.sync()
+        logger.debug('Command tree synced')
     else:
         await ctx.send(embed=discord.Embed(title=lang['load.error.title'], description=lang['load.error.description'].format(owner=bot.owner_id), color=0xff0000))
 
@@ -153,6 +159,9 @@ async def unload(ctx, extension):
         await bot.unload_extension(F'cmds.{extension}')
         await ctx.send(lang['unload.unloaded'].format(extension=extension))
         logger.debug(f'[unload] unloaded extension: {extension}')
+        logger.debug('[init] Replaced default help command')
+        await bot.tree.sync()
+        logger.debug('Command tree synced')
     else:
         await ctx.send(embed=discord.Embed(title=lang['unload.error.title'], description=lang['unload.error.description'].format(owner=bot.owner_id), color=0xff0000))
 
@@ -163,6 +172,9 @@ async def reload(ctx, extension):
         await bot.reload_extension(F'cmds.{extension}')
         await ctx.send(lang['reload.reloaded'].format(extension=extension))
         logger.debug(f'[reload] reloaded extension: {extension}')
+        logger.debug('[init] Replaced default help command')
+        await bot.tree.sync()
+        logger.debug('Command tree synced')
     else:
         await ctx.send(embed=discord.Embed(title=lang['reload.error.title'], description=lang['reload.error.description'].format(owner=bot.owner_id), color=0xff0000))
 
