@@ -1,6 +1,17 @@
 
+import logging
+import os
+
 import discord
 from discord.ext import commands
+
+logger = logging.getLogger('classes')
+logger.setLevel(-1)
+# display all logging messages
+dirname = os.path.dirname(__file__)
+handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'), encoding='utf-8', mode='a')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
+logger.addHandler(handler)
 
 
 class Cog_Extension(commands.Cog):
@@ -25,10 +36,7 @@ class Hybirdcmd_Aliases():
                     aliases.append(alias)
             self.aliases[cmd_name] = aliases
 
-            self.description[cmd_name] = lang.get(cmd_name+'.description', 'no_description')
-            # baro's descripiton is always too long for somereason
-            if cmd_name == 'baro':
-                self.description[cmd_name] = 'no_description'
+            self.description[cmd_name] = lang.get(cmd_name + '.description', 'no_description')
 
             self.brief[cmd_name] = lang.get(cmd_name+'.brief', 'no_brief')
 
@@ -50,7 +58,10 @@ class Hybirdcmd_Aliases():
 
     def get_cmd_description(self):
         cmd_name = self.cmd_names[self.point]
-        return str(self.description[cmd_name])[:99]
+        description = self.description[cmd_name][:99]
+        if len(description) > 99:
+            logging.debug(f"descripiton of command : [{cmd_name}] is too long ,its cropped to fit the size(1 - 100 charaters)")
+        return description
 
     def get_cmd_brief(self):
         cmd_name = self.cmd_names[self.point]
