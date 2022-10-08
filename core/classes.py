@@ -60,7 +60,7 @@ class Hybirdcmd_Aliases():
         cmd_name = self.cmd_names[self.point]
         description = self.description[cmd_name][:99]
         if len(self.description[cmd_name]) > 99:
-            logging.debug(f"descripiton of command : [{cmd_name}] is too long ,its cropped to fit the size(1 - 100 charaters)")
+            logger.debug(f"descripiton of command : [{cmd_name}] is too long ,its cropped to fit the size(1 - 100 charaters)")
         return description
 
     def get_cmd_brief(self):
