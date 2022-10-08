@@ -97,4 +97,3 @@ class baro(Cog_Extension):
 
 async def setup(bot):
     await bot.add_cog(baro(bot))
-    logger.debug('cmds.baro s descripiton is always too long for some reason, so its replace by "no_discripion" in classes.py')
