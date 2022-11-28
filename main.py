@@ -1,3 +1,4 @@
+
 import asyncio
 import json
 import logging
@@ -9,6 +10,7 @@ import discord
 from discord import Interaction, activity
 from discord.ext import commands
 from discord.ui import Button, View, button
+
 from localization import lang
 
 # from platformdirs import importlib
@@ -18,6 +20,8 @@ dirname = os.path.dirname(__file__)
 dir = os.path.join(dirname, 'log')
 if not os.path.exists(dir):
     os.makedirs(dir)
+
+
 # clear log records
 with open(os.path.join(dirname, "log/runtime.log"), "w") as log:
     pass
@@ -98,21 +102,32 @@ async def on_ready():
     logger.info("[init] Bot activity set.")
     await bot.change_presence(activity=activity)
     logger.debug('[init] loading extensions')
+
+    with open(os.path.join(dirname, 'cmds/noload.json'), 'r') as _jfile:
+        noload = json.load(_jfile)
+
     for filename in os.listdir(os.path.join(dirname, 'cmds')):
         if filename.endswith('.py'):
-            try:
-                await bot.load_extension(f'cmds.{filename[:-3]}')
-                logger.debug(f'[init] loaded extension: {filename[:-3]}')
-            except Exception as exc:
-                logger.error(f'[init] {exc}')
+            extname = filename[:-3]
+            if filename not in noload:
+                try:
+                    await bot.load_extension(f'cmds.{extname}')
+                    logger.debug(f'[init] loaded extension: {extname}')
+                except Exception as exc:
+                    logger.error(f'[init] {exc}')
+            else:
+                logger.debug(f'extension: {extname} is not loaded,its in "cmds/noload.json"')
     bot.help_command = CustomHelpCommand()
     logger.debug('[init] Replaced default help command')
+    await bot.tree.sync()
+    logger.debug(f'extentions are synced to the command tree')
 
 
 def gen_help_menu(commands, page=1):
     embed = discord.Embed(title=lang['help.embed.title'], color=0xccab2b)
     embed.set_author(name="Patreon", url="https://patreon.com/join/lonnstyle", icon_url="https://i.imgur.com/CCYuxwH.png")
-    if type(commands) != discord.ext.commands.Command:
+    command_types = [discord.ext.commands.Command, discord.ext.commands.HybridCommand]
+    if type(commands) not in command_types:
         fields = 0
         start = (page-1)*HELP_MENU_FIELDS
         end = min(len(commands), page*HELP_MENU_FIELDS-1)
@@ -140,6 +155,9 @@ async def load(ctx, extension):
         await bot.load_extension(F'cmds.{extension}')
         await ctx.send(lang['load.loaded'].format(extension=extension))
         logger.debug(f'[load] loaded extension: {extension}')
+
+        await bot.tree.sync()
+        logger.debug('[load] Command tree synced')
     else:
         await ctx.send(embed=discord.Embed(title=lang['load.error.title'], description=lang['load.error.description'].format(owner=bot.owner_id), color=0xff0000))
 
@@ -150,6 +168,9 @@ async def unload(ctx, extension):
         await bot.unload_extension(F'cmds.{extension}')
         await ctx.send(lang['unload.unloaded'].format(extension=extension))
         logger.debug(f'[unload] unloaded extension: {extension}')
+        logger.debug('[init] Replaced default help command')
+        await bot.tree.sync()
+        logger.debug('[unload] Command tree synced')
     else:
         await ctx.send(embed=discord.Embed(title=lang['unload.error.title'], description=lang['unload.error.description'].format(owner=bot.owner_id), color=0xff0000))
 
@@ -160,6 +181,9 @@ async def reload(ctx, extension):
         await bot.reload_extension(F'cmds.{extension}')
         await ctx.send(lang['reload.reloaded'].format(extension=extension))
         logger.debug(f'[reload] reloaded extension: {extension}')
+        logger.debug('[init] Replaced default help command')
+        await bot.tree.sync()
+        logger.debug('[reload] Command tree synced')
     else:
         await ctx.send(embed=discord.Embed(title=lang['reload.error.title'], description=lang['reload.error.description'].format(owner=bot.owner_id), color=0xff0000))
 

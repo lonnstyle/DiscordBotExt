@@ -7,8 +7,9 @@ from random import randint
 
 import discord
 import requests
-from core.classes import Cog_Extension
 from discord.ext import commands
+
+from core.classes import Cog_Extension, Hybirdcmd_Aliases
 from localization import lang
 
 # from discord_slash import SlashContext, cog_ext
@@ -33,8 +34,13 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lin
 logger.addHandler(handler)
 
 
+cmds = ['ping', 'sayd', 'poll']
+H_A = Hybirdcmd_Aliases(lang, *cmds)
+
+
 class common(Cog_Extension):
-    @commands.command(name='ping', aliases=lang['ping.aliases'], brief=lang['ping.brief'], description=lang['ping.description'])
+
+    @H_A.hyb_cmd
     async def ping(self, ctx):
         latency = round(self.bot.latency*1000)
         red = max(0, min(int(255*(latency-50)/1000), 255))
@@ -48,7 +54,7 @@ class common(Cog_Extension):
     # async def slash_ping(self, ctx: SlashContext):
     #     await self.ping(ctx)
 
-    @commands.command(name='sayd', aliases=lang['sayd.aliases'], brief=lang['sayd.brief'], description=lang['sayd.description'])
+    @H_A.hyb_cmd
     async def sayd(self, ctx, *, msg):
         try:
             await ctx.message.delete()
@@ -64,7 +70,7 @@ class common(Cog_Extension):
             logger.info('[sayd] message published')
             await message.publish()
 
-    @commands.command(name='poll', aliases=lang['poll.aliases'], brief=lang['poll.brief'], description=lang['poll.description'])
+    @H_A.hyb_cmd
     async def poll(self, ctx, topic, option1, emoji1, option2, emoji2):
         try:
             await ctx.message.delete()

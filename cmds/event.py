@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 import discord
 import requests
-from core.classes import Cog_Extension
+from core.classes import Cog_Extension,Hybirdcmd_Aliases
 from core.time import time_info
 from discord.ext import commands
 from localization import lang
@@ -29,16 +29,20 @@ handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
 logger.addHandler(handler)
 
+cmds = ['reactionrole','role']
+H_A = Hybirdcmd_Aliases(lang, *cmds)
 
 class event(Cog_Extension):
-    @commands.command(name="reactionRole", aliases=lang['reactionRole.aliases'], brief=lang['reactionRole.brief'], description=lang['reactionRole.description'])
+    #@commands.command(name="reactionRole", aliases=lang['reactionRole.aliases'], brief=lang['reactionRole.brief'], description=lang['reactionRole.description'])
+    @H_A.hyb_cmd
     async def rr(self, ctx, message: int):
         with open(os.path.join(dirname, "../role/rr.txt"), "a") as rr:
             rr.write(f"{message}\n")
             await ctx.message.add_reaction("✅")
             await ctx.message.delete(delay=5)
 
-    @commands.command(name='role', aliases=lang['role.aliases'], brief=lang['role.brief'], description=lang['role.description'])
+    #@commands.command(name='role', aliases=lang['role.aliases'], brief=lang['role.brief'], description=lang['role.description'])
+    @H_A.hyb_cmd
     async def role(self, ctx, role: str, emoji):
         match = re.match(r'<(a?):([a-zA-Z0-9\_]+):([0-9]+)>$', emoji)
         if (emojimap.get(emoji, None) != None or match) and ctx.author.guild_permissions.administrator == True:

@@ -3,8 +3,9 @@ import logging
 import os
 
 import discord
-from core.classes import Cog_Extension
 from discord.ext import commands
+
+from core.classes import Cog_Extension, Hybirdcmd_Aliases
 from localization import lang
 
 lang = lang.langpref()['admin']
@@ -20,9 +21,13 @@ handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
 logger.addHandler(handler)
 
+cmds = ['clear']
+H_A = Hybirdcmd_Aliases(lang, *cmds)
+
 
 class admin(Cog_Extension):
-    @commands.command(name='clear', aliases=lang['clear.aliases'], brief=lang['clear.brief'], description=lang['clear.description'])
+
+    @H_A.hyb_cmd
     async def clear(self, ctx, num: int):
         # if ctx.message.author.id == ctx.guild.owner_id:
         if ctx.message.channel.permissions_for(ctx.message.author).manage_messages:

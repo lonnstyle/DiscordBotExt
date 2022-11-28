@@ -3,13 +3,14 @@ import logging
 import os
 
 import discord
-from core.classes import Cog_Extension
 from discord.ext import commands
-from localization import lang
 # from discord_slash import SlashContext, cog_ext
 # from discord_slash.utils.manage_commands import create_choice, create_option
 from mwclient import Site
 from thefuzz import process
+
+from core.classes import Cog_Extension, Hybirdcmd_Aliases
+from localization import lang
 
 lang = lang.langpref()['wiki']
 
@@ -32,10 +33,13 @@ zh = Site(zhURL, scheme='http')
 tc = Site(tcURL, path='/zh-tw/', scheme='http')
 en = Site(enURL, path='/', scheme='http')
 
+cmds = ['update_wiki', 'wiki']
+H_A = Hybirdcmd_Aliases(lang, *cmds)
+
 
 class wiki(Cog_Extension):
-    @commands.command(name='update_wiki', brief=lang['update_wiki.brief'], description=lang['update_wiki.description'])
-    async def update_wiki(self, ctx, *wiki):
+    @H_A.hyb_cmd
+    async def update_wiki(self, ctx, wiki):
         name = " ".join(wiki)
         if name == "zh" or "all":
             allpages = zh.allpages()
@@ -73,8 +77,8 @@ class wiki(Cog_Extension):
     #     await ctx.defer()
     #     await self.update_wiki(ctx, wiki)
 
-    @commands.command(name='wiki', aliases=lang['wiki.aliases'], brief=lang['wiki.brief'], description=lang['wiki.description'])
-    async def wiki(self, ctx, *page):
+    @H_A.hyb_cmd
+    async def wiki(self, ctx, page):
         name = " ".join(page)
         with open("dict/zh_pages.txt", "r") as zh_pages:
             zhpage = list(zh_pages.readlines())
