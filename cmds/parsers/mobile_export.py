@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import re
+from pprint import pprint
 
 import requests
 from const import AVAILABLE_LANGUAGES
@@ -47,6 +48,40 @@ glyphs = [
 
 doublespace_remover = re.compile(r'\s{2,}')
 
+factions = {
+    0: 'Grineer',
+    1: 'Corpus',
+    2: 'Infested',
+    3: 'Corrupted'
+}
+
+mission = {
+    0: 'Assassination',
+    1: 'Exterminate',
+    2: 'Survival',
+    3: 'Rescue',
+    4: 'Sabotage',
+    5: 'Capture',
+    7: 'Spy',
+    8: 'Defense',
+    9: 'Mobile Defense',
+    13: 'Interception',
+    14: 'Hijack',
+    15: 'Hive Sabotage',
+    17: 'Excavation',
+    21: 'Infested Salvage',
+    22: 'Rathuum',
+    24: 'Pursuit',
+    25: 'Rush',
+    26: 'Assault',
+    27: 'Defection',
+    28: 'Landscape',
+    32: 'Disruption',
+    33: 'Void Flood',
+    34: 'Void Cascade',
+    35: 'Void Armageddon'
+}
+
 
 class MobileExportParser():
     manifests_dir = os.path.join(dirname, "../../manifests")
@@ -54,10 +89,12 @@ class MobileExportParser():
     def __init__(self):
         self.index_url = "https://origin.warframe.com/PublicExport/index_{language_code}.txt.lzma"
         self.manifest_url = "http://content.warframe.com/PublicExport/Manifest/{file_name}"
-        if os.path.exists(os.path.join(self.manifests_dir, 'items.json')):
+        if os.path.exists(os.path.join(self.manifests_dir, 'items.json')) and os.path.exists(os.path.join(self.manifests_dir, 'nodes.json')):
             logger.debug('[init] local manifests found, loading into RAM')
             with open(os.path.join(self.manifests_dir, 'items.json'), 'r', encoding='utf-8') as _manifests:
                 self.manifest_data = json.load(_manifests)
+            with open(os.path.join(self.manifests_dir, 'nodes.json'), 'r', encoding='utf-8') as _nodes:
+                self.nodes = json.load(_nodes)
         else:
             logger.debug('[init] local manifests not found, start to update manifests')
             self.update()
@@ -102,9 +139,11 @@ class MobileExportParser():
         for language in AVAILABLE_LANGUAGES:
             self.download_manifests(language)
         self.manifest_data = {}
+        self.nodes = {}
         categories = ['ExportRelicArcane', 'ExportResources', 'ExportWeapons', 'ExportWarframes']
         for language in AVAILABLE_LANGUAGES:
             _items = []
+            _locations = []
             logger.debug(f'[update] Updating {language} manifests data')
             dir_language_manifests = os.path.join(self.manifests_dir, language)
 
@@ -115,6 +154,8 @@ class MobileExportParser():
                 with open(os.path.join(dir_language_manifests, manifest), 'r', encoding='utf-8') as _file:
                     _json = json.load(_file)
                     for _cat, data in _json.items():
+                        if _cat == 'ExportRegions':
+                            _locations += data
                         if _cat not in categories:
                             continue
                         _items += data
@@ -124,11 +165,18 @@ class MobileExportParser():
                     continue
                 # do sth to add into memory storage then dump
                 self.__add_item(language, item)
+
+            for location in _locations:
+                if 'name' not in location or 'uniqueName' not in location:
+                    continue
+                self.__add_node(language, location)
         print()
         print('Finished Update')
 
         with open(os.path.join(self.manifests_dir, 'items.json'), 'w', encoding='utf-8') as _file:
             _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.manifest_data))
+        with open(os.path.join(self.manifests_dir, 'nodes.json'), 'w', encoding='utf-8') as _file:
+            _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.nodes))
         logger.debug('[update] Dumped manifests data')
 
     def __add_item(self, lang, item):
@@ -162,6 +210,41 @@ class MobileExportParser():
         print('', end='\x1b[2K\r')
         print(f"\033[92madded item\033[0m: {item['en']['item_name']}", end='\r', flush=True)
 
+    def __add_node(self, lang, node):
+        """
+        lang (string): language
+        node (dict): raw node data
+        """
+
+        uniq_name = node['uniqueName']
+
+        name = self.clear_text_from_manifest(node['name'])
+        system = self.clear_text_from_manifest(node['systemName'])
+
+        if uniq_name not in self.nodes:
+            self.nodes[uniq_name] = {
+                'faction': factions.get(node.get('factionIndex')),
+                'mission': mission.get(node.get('missionIndex')),
+                'minEnemyLevel': node.get('minEnemyLevel'),
+                'maxEnemyLevel': node.get('maxEnemyLevel')
+            }
+
+        node = self.nodes[uniq_name]
+
+        # Set locale values
+        node[lang] = {
+            'name': name,
+            'system': system
+        }
+
+        # check if all lang fields were defined
+        for _lang in AVAILABLE_LANGUAGES:
+            if _lang not in node:
+                return
+
+        print('', end='\x1b[2K\r')
+        print(f"\033[92madded item\033[0m: {node['en']['name']}", end='\r', flush=True)
+
     def clear_text_from_manifest(self, name):
         """
         Remove special glyphs that used in manifests
@@ -176,3 +259,4 @@ class MobileExportParser():
 if __name__ == '__main__':
     Parser = MobileExportParser()
     Parser.update()
+    pprint(Parser.manifest_data[list(Parser.manifest_data)[0]])
