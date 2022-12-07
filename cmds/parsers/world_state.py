@@ -86,27 +86,92 @@ class WorldStateParser():
         return start, end, items
 
     def get_sortie(self):
-        #TODO
-        pass
+        if self.data == {}:
+            self.__get_data()
+        self.sortie = self.data['Sorties'][0]
+        start = self.__get_timestamp(self.sortie['Activation'])
+        end = self.__get_timestamp(self.sortie['Expiry'])
+        boss = self.sortie['Boss']
+        missions = self.sortie['Variants']
+        for mission in missions:
+            mission['node'] = self.manifests.nodes.get(mission['node'], mission['node'])
+        return start, end, boss, missions
 
     def get_archon(self):
-        #TODO LiteSorties
-        pass
+        if self.data == {}:
+            self.__get_data()
+        self.archon = self.data['LiteSorties'][0]
+        start = self.__get_timestamp(self.archon['Activation'])
+        end = self.__get_timestamp(self.archon['Expiry'])
+        boss = self.archon['Boss']
+        missions = self.archon['Missions']
+        for mission in missions:
+            mission['node'] = self.manifests.nodes.get(mission['node'], mission['node'])
+        return start, end, boss, missions
 
     def get_fissure(self):
-        #TODO
-        pass
+        self.__get_data()
+        # always ask for new data cuz fissures are dynamically updated
+        self.fissure = self.data['ActiveMissions']
+        for mission in self.fissure:
+            mission['Activation'] = self.__get_timestamp(mission['Activation'])
+            mission['Expiry'] = self.__get_timestamp(mission['Expiry'])
+            mission['Node'] = self.manifests.nodes.get(mission['Node'], mission['Node'])
+            del mission['_id']
+            del mission['Region']
+            del mission['Seed']
+        return self.fissure
 
     def get_voidstorms(self):
-        #TODO
-        pass
+        self.__get_data()
+        # always ask for new data cuz voidstorms are dynamically updated
+        self.voidstorm = self.data['VoidStorms']
+        for mission in self.voidstorm:
+            mission['Activation'] = self.__get_timestamp(mission['Activation'])
+            mission['Expiry'] = self.__get_timestamp(mission['Expiry'])
+            mission['Node'] = self.manifests.nodes.get(mission['Node'], mission['Node'])
+            del mission['_id']
+            del mission['Region']
+            del mission['Seed']
+        return self.voidstorm
 
     def get_daily_deals(self):
-        #TODO
-        pass
+        self.__get_data()
+        # always ask for new data cuz amountSold is dynamically updated
+        self.daily_deals = self.data['DailyDeals']
+        self.daily_deals['Activation'] = self.__get_timestamp(self.daily_deals['Activation'])
+        self.daily_deals['Expiry'] = self.__get_timestamp(self.daily_deals['Expiry'])
+        return self.daily_deals
 
-    
+    def get_nightwave(self):
+        if self.data == {}:
+            self.__get_data()
+        if 'SeasonInfo' not in self.data:
+            return None
+        self.nightwave = self.data['SeasonInfo']
+        self.nightwave['Activation'] = self.__get_timestamp(self.nightwave['Activation'])
+        self.nightwave['Expiry'] = self.__get_timestamp(self.nightwave['Expiry']
+                                                        )
+        if 'affiliationTag' not in self.manifests.nightwave or self.manifests.nightwave['affiliationTag'] != self.nightwave['AffiliationTag']:
+            self.manifests.update()
+        for challenge in self.nightwave['ActiveChallenges']:
+            del challenge['_id']
+            challenge['Activation'] = self.__get_timestamp(challenge['Activation'])
+            challenge['Expiry'] = self.__get_timestamp(challenge['Expiry'])
+            challenge_info = self.manifests.nightwave['challenges'].get(challenge['Challenge'])
+            if challenge_info is None:
+                challenge['name'] = 'Unknown'
+                challenge['standing'] = 'Unknown'
+            else:
+                challenge['name'] = challenge_info[self.language]['name']
+                challenge['standing'] = challenge_info['standing']
+        del self.nightwave['Params']
+        del self.nightwave['Phase']
+        del self.nightwave['Season']
+        return self.nightwave
+
 
 if __name__ == '__main__':
     parser = WorldStateParser()
-    pprint(parser.get_baro())
+    parser.manifests.update()
+    pprint(parser.get_nightwave())

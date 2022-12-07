@@ -89,12 +89,17 @@ class MobileExportParser():
     def __init__(self):
         self.index_url = "https://origin.warframe.com/PublicExport/index_{language_code}.txt.lzma"
         self.manifest_url = "http://content.warframe.com/PublicExport/Manifest/{file_name}"
-        if os.path.exists(os.path.join(self.manifests_dir, 'items.json')) and os.path.exists(os.path.join(self.manifests_dir, 'nodes.json')):
+        if os.path.exists(
+                os.path.join(self.manifests_dir, 'items.json')) and os.path.exists(
+                os.path.join(self.manifests_dir, 'nodes.json')) and os.path.exists(
+                os.path.join(self.manifests_dir, 'nightwave.json')):
             logger.debug('[init] local manifests found, loading into RAM')
             with open(os.path.join(self.manifests_dir, 'items.json'), 'r', encoding='utf-8') as _manifests:
                 self.manifest_data = json.load(_manifests)
             with open(os.path.join(self.manifests_dir, 'nodes.json'), 'r', encoding='utf-8') as _nodes:
                 self.nodes = json.load(_nodes)
+            with open(os.path.join(self.manifests_dir, 'nightwave.json'), 'r', encoding='utf-8') as _nightwave:
+                self.nightwave = json.load(_nightwave)
         else:
             logger.debug('[init] local manifests not found, start to update manifests')
             self.update()
@@ -140,10 +145,12 @@ class MobileExportParser():
             self.download_manifests(language)
         self.manifest_data = {}
         self.nodes = {}
+        self.nightwave = {'challenges': {}}
         categories = ['ExportRelicArcane', 'ExportResources', 'ExportWeapons', 'ExportWarframes']
         for language in AVAILABLE_LANGUAGES:
             _items = []
             _locations = []
+            _challenges = []
             logger.debug(f'[update] Updating {language} manifests data')
             dir_language_manifests = os.path.join(self.manifests_dir, language)
 
@@ -156,6 +163,9 @@ class MobileExportParser():
                     for _cat, data in _json.items():
                         if _cat == 'ExportRegions':
                             _locations += data
+                        if _cat == 'ExportNightwave':
+                            _challenges = data['challenges']
+                            self.nightwave['affiliationTag'] = data['affiliationTag']
                         if _cat not in categories:
                             continue
                         _items += data
@@ -170,6 +180,11 @@ class MobileExportParser():
                 if 'name' not in location or 'uniqueName' not in location:
                     continue
                 self.__add_node(language, location)
+
+            for challenge in _challenges:
+                if 'name' not in challenge or 'uniqueName' not in challenge:
+                    continue
+                self.__add_challenge(language, challenge)
         print()
         print('Finished Update')
 
@@ -178,6 +193,9 @@ class MobileExportParser():
         with open(os.path.join(self.manifests_dir, 'nodes.json'), 'w', encoding='utf-8') as _file:
             _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.nodes))
         logger.debug('[update] Dumped manifests data')
+        with open(os.path.join(self.manifests_dir, 'nightwave.json'), 'w', encoding='utf-8') as _file:
+            _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.nightwave))
+        logger.debug('[update] Dumped nightwave data')
 
     def __add_item(self, lang, item):
         """
@@ -243,7 +261,38 @@ class MobileExportParser():
                 return
 
         print('', end='\x1b[2K\r')
-        print(f"\033[92madded item\033[0m: {node['en']['name']}", end='\r', flush=True)
+        print(f"\033[92madded node\033[0m: {node['en']['name']}", end='\r', flush=True)
+
+    def __add_challenge(self, lang, challenge):
+        """
+        lang      (string): language
+        challenge (dict): raw challenge data
+        add nightwave challenges to manifest
+        """
+
+        uniq_name = challenge['uniqueName']
+
+        name = self.clear_text_from_manifest(challenge['name'])
+        description = self.clear_text_from_manifest(challenge['description'].replace('|COUNT|', str(challenge['required'])))
+
+        if uniq_name not in self.nightwave['challenges']:
+            self.nightwave['challenges'][uniq_name] = {
+                'standing': challenge['standing']
+            }
+
+        challenge = self.nightwave['challenges'][uniq_name]
+
+        challenge[lang] = {
+            'name': name,
+            'description': description
+        }
+
+        for _lang in AVAILABLE_LANGUAGES:
+            if _lang not in challenge:
+                return
+
+        print('', end='\x1b[2K\r')
+        print(f"\033[92madded challenge\033[0m: {challenge['en']['name']}", end='\r', flush=True)
 
     def clear_text_from_manifest(self, name):
         """
