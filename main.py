@@ -149,7 +149,7 @@ def gen_help_menu(commands, page=1):
         return embed
 
 
-@ bot.command(name='load', aliases=lang['load.aliases'], brief=lang['load.brief'], description=lang['load.description'])
+@bot.command(name='load', aliases=lang['load.aliases'], brief=lang['load.brief'], description=lang['load.description'])
 async def load(ctx, extension):
     if await bot.is_owner(ctx.author):
         await bot.load_extension(F'cmds.{extension}')
@@ -162,7 +162,7 @@ async def load(ctx, extension):
         await ctx.send(embed=discord.Embed(title=lang['load.error.title'], description=lang['load.error.description'].format(owner=bot.owner_id), color=0xff0000))
 
 
-@ bot.command(name='unload', aliases=lang['unload.aliases'], brief=lang['unload.brief'], description=lang['unload.description'])
+@bot.command(name='unload', aliases=lang['unload.aliases'], brief=lang['unload.brief'], description=lang['unload.description'])
 async def unload(ctx, extension):
     if await bot.is_owner(ctx.author):
         await bot.unload_extension(F'cmds.{extension}')
@@ -175,7 +175,7 @@ async def unload(ctx, extension):
         await ctx.send(embed=discord.Embed(title=lang['unload.error.title'], description=lang['unload.error.description'].format(owner=bot.owner_id), color=0xff0000))
 
 
-@ bot.command(name='reload', aliases=lang['reload.aliases'], brief=lang['reload.brief'], description=lang['reload.description'])
+@bot.command(name='reload', aliases=lang['reload.aliases'], brief=lang['reload.brief'], description=lang['reload.description'])
 async def reload(ctx, extension):
     if await bot.is_owner(ctx.author):
         await bot.reload_extension(F'cmds.{extension}')
@@ -188,7 +188,7 @@ async def reload(ctx, extension):
         await ctx.send(embed=discord.Embed(title=lang['reload.error.title'], description=lang['reload.error.description'].format(owner=bot.owner_id), color=0xff0000))
 
 
-@ bot.command(name='disconnect', aliases=lang['disconnect.aliases'], brief=lang['disconnect.brief'], description=lang['disconnect.description'].format(owner=bot.owner_id))
+@bot.command(name='disconnect', aliases=lang['disconnect.aliases'], brief=lang['disconnect.brief'], description=lang['disconnect.description'].format(owner=bot.owner_id))
 async def turn_off_bot(ctx):
     if await bot.is_owner(ctx.author):
         await ctx.send(lang['disconnect.disconnected'])
@@ -198,7 +198,7 @@ async def turn_off_bot(ctx):
         await ctx.send(embed=discord.Embed(title=lang['disconnect.error.title'], description=lang['disconnect.error.description'].format(owner=bot.owner_id), color=0xff0000))
 
 
-@ bot.command(name='status', aliases=lang['status.aliases'], brief=lang['status.brief'], description=lang['status.description'].format(owner=bot.owner_id))
+@bot.command(name='status', aliases=lang['status.aliases'], brief=lang['status.brief'], description=lang['status.description'].format(owner=bot.owner_id))
 async def status(ctx):
     if await bot.is_owner(ctx.message.author):
         embed = discord.Embed(title=lang['status.embed.title'])
@@ -218,20 +218,20 @@ async def status(ctx):
         await ctx.send(embed=discord.Embed(title=lang['status.error.title'], description=lang['status.error.description'].format(owner=bot.owner_id)))
 
 
-@ bot.command(name='sponsor', aliases=lang['sponsor.aliases'], description=lang['sponsor.description'])
+@bot.command(name='sponsor', aliases=lang['sponsor.aliases'], description=lang['sponsor.description'])
 async def sponsor(ctx):
     embed = discord.Embed(title=lang['sponsor.embed.title'], description=lang['sponsor.embed.description'], color=0xff424d, url="https://patreon.com/join/lonnstyle")
     embed.set_thumbnail(url="https://i.imgur.com/CCYuxwH.png")
     await ctx.send(embed=embed)
 
 
-@ bot.command(name='documentation', aliases=lang['documentation.aliases'], description=lang['documentation.description'])
+@bot.command(name='documentation', aliases=lang['documentation.aliases'], description=lang['documentation.description'])
 async def documentation(ctx):
     embed = discord.Embed(title=lang['documentation.embed.title'], description=lang['documentation.embed.description'], color=0x2980b9, url=lang['documentation.embed.url'])
     await ctx.send(embed=embed)
 
 
-@ bot.listen()
+@bot.listen()
 async def on_command_error(ctx, error):
     owner = await bot.application_info()
     owner = owner.owner

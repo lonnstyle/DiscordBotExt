@@ -22,12 +22,12 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lin
 logger.addHandler(handler)
 
 cmds = ['clear']
-H_A = Hybirdcmd_Aliases(lang, *cmds)
+hybirdAliases = Hybirdcmd_Aliases(lang, *cmds)
 
 
 class admin(Cog_Extension):
 
-    @H_A.hyb_cmd
+    @hybirdAliases.hyb_cmd
     async def clear(self, ctx, num: int):
         # if ctx.message.author.id == ctx.guild.owner_id:
         if ctx.message.channel.permissions_for(ctx.message.author).manage_messages:

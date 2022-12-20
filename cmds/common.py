@@ -35,12 +35,12 @@ logger.addHandler(handler)
 
 
 cmds = ['ping', 'sayd', 'poll']
-H_A = Hybirdcmd_Aliases(lang, *cmds)
+hybirdAliases = Hybirdcmd_Aliases(lang, *cmds)
 
 
 class common(Cog_Extension):
 
-    @H_A.hyb_cmd
+    @hybirdAliases.hyb_cmd
     async def ping(self, ctx):
         latency = round(self.bot.latency*1000)
         red = max(0, min(int(255*(latency-50)/1000), 255))
@@ -54,7 +54,7 @@ class common(Cog_Extension):
     # async def slash_ping(self, ctx: SlashContext):
     #     await self.ping(ctx)
 
-    @H_A.hyb_cmd
+    @hybirdAliases.hyb_cmd
     async def sayd(self, ctx, *, msg):
         try:
             await ctx.message.delete()
@@ -70,7 +70,7 @@ class common(Cog_Extension):
             logger.info('[sayd] message published')
             await message.publish()
 
-    @H_A.hyb_cmd
+    @hybirdAliases.hyb_cmd
     async def poll(self, ctx, topic, option1, emoji1, option2, emoji2):
         try:
             await ctx.message.delete()
