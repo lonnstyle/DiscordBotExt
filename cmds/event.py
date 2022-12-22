@@ -30,11 +30,11 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lin
 logger.addHandler(handler)
 
 cmds = ['reactionrole','role']
-H_A = Hybirdcmd_Aliases(lang, *cmds)
+hybirdAliases = Hybirdcmd_Aliases(lang, *cmds)
 
 class event(Cog_Extension):
     #@commands.command(name="reactionRole", aliases=lang['reactionRole.aliases'], brief=lang['reactionRole.brief'], description=lang['reactionRole.description'])
-    @H_A.hyb_cmd
+    @hybirdAliases.hyb_cmd
     async def rr(self, ctx, message: int):
         with open(os.path.join(dirname, "../role/rr.txt"), "a") as rr:
             rr.write(f"{message}\n")
@@ -42,7 +42,7 @@ class event(Cog_Extension):
             await ctx.message.delete(delay=5)
 
     #@commands.command(name='role', aliases=lang['role.aliases'], brief=lang['role.brief'], description=lang['role.description'])
-    @H_A.hyb_cmd
+    @hybirdAliases.hyb_cmd
     async def role(self, ctx, role: str, emoji):
         match = re.match(r'<(a?):([a-zA-Z0-9\_]+):([0-9]+)>$', emoji)
         if (emojimap.get(emoji, None) != None or match) and ctx.author.guild_permissions.administrator == True:

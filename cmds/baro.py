@@ -32,11 +32,11 @@ logger.addHandler(handler)
 
 
 cmds = ['baro']
-H_A = Hybirdcmd_Aliases(lang, *cmds)
+hybirdAliases = Hybirdcmd_Aliases(lang, *cmds)
 
 
 class baro(Cog_Extension):
-    @H_A.hyb_cmd
+    @hybirdAliases.hyb_cmd
     async def baro(self, ctx):
         logger.info(f'[baro] {ctx.message.author} requested for baro info')
         url = requests.get("https://api.warframestat.us/pc/tc/voidTrader", headers={'Accept-Language': 'zh', 'Cache-Control': 'no-cache'})

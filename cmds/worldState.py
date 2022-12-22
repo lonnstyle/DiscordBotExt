@@ -28,15 +28,15 @@ logger.addHandler(handler)
 
 
 cmds = ['poe', 'earth', 'cambion', 'orb', 'arbitration', 'sortie', 'fissure']
-H_A = Hybirdcmd_Aliases(lang, *cmds)
+hybirdAliases = Hybirdcmd_Aliases(lang, *cmds)
 
 
 class worldState(Cog_Extension):
     def timeConv(self, expiry):
         return int(time.mktime(datetime.strptime(expiry, "%Y-%m-%dT%H:%M:%S.%fZ").timetuple()))
 
-    # @commands.hybrid_command(name=H_A.c_name(), aliases=H_A.c_aliases(), brief=lang['poe.brief'], description=lang['poe.description'])
-    @H_A.hyb_cmd
+    # @commands.hybrid_command(name=hybirdAliases.c_name(), aliases=hybirdAliases.c_aliases(), brief=lang['poe.brief'], description=lang['poe.description'])
+    @hybirdAliases.hyb_cmd
     async def eidolontime(self, ctx):
         html = requests.get('https://api.warframestat.us/pc/cetusCycle').text
         data = json.loads(html)
@@ -53,8 +53,8 @@ class worldState(Cog_Extension):
     # async def slash_POE(self, ctx: SlashContext):
     #     await self.eidolontime(ctx)
 
-    # @commands.hybrid_command(name=H_A.c_name(), aliases=H_A.c_aliases(), brief=lang['earth.brief'], description=lang['earth.description'])
-    @H_A.hyb_cmd
+    # @commands.hybrid_command(name=hybirdAliases.c_name(), aliases=hybirdAliases.c_aliases(), brief=lang['earth.brief'], description=lang['earth.description'])
+    @hybirdAliases.hyb_cmd
     async def earthtime(self, ctx):
         html = requests.get('https://api.warframestat.us/pc/tc/earthCycle').text
         data = json.loads(html)
@@ -71,8 +71,8 @@ class worldState(Cog_Extension):
     # async def slash_Earth(self, ctx: SlashContext):
     #     await self.earthtime(ctx)
 
-    # @commands.hybrid_command(name=H_A.c_name(), aliases=H_A.c_aliases(), brief=lang['cambion.brief'], description=lang['cambion.description'])
-    @H_A.hyb_cmd
+    # @commands.hybrid_command(name=hybirdAliases.c_name(), aliases=hybirdAliases.c_aliases(), brief=lang['cambion.brief'], description=lang['cambion.description'])
+    @hybirdAliases.hyb_cmd
     async def cambiontime(self, ctx):
         html = requests.get('https://api.warframestat.us/pc/cetusCycle').text
         data = json.loads(html)
@@ -89,8 +89,8 @@ class worldState(Cog_Extension):
     # async def slash_Cambion(self, ctx: SlashContext):
     #     await self.cambiontime(ctx)
 
-    # @commands.hybrid_command(name=H_A.c_name(), aliases=H_A.c_aliases(), brief=lang['orb.brief'], description=lang['orb.description'])
-    @H_A.hyb_cmd
+    # @commands.hybrid_command(name=hybirdAliases.c_name(), aliases=hybirdAliases.c_aliases(), brief=lang['orb.brief'], description=lang['orb.description'])
+    @hybirdAliases.hyb_cmd
     async def orbtime(self, ctx):
         html = requests.get('https://api.warframestat.us/pc/vallisCycle', headers={'Accept-Language': 'tc', 'Cache-Control': 'no-cache'}).text
         data = json.loads(html)
@@ -107,8 +107,8 @@ class worldState(Cog_Extension):
     # async def slash_Orb(self, ctx: SlashContext):
     #     await self.orbtime(ctx)
 
-    # @commands.hybrid_command(name=H_A.c_name(), aliases=H_A.c_aliases(), brief=lang['arbitration.brief'], description=lang['arbitration.description'][:99])
-    @H_A.hyb_cmd
+    # @commands.hybrid_command(name=hybirdAliases.c_name(), aliases=hybirdAliases.c_aliases(), brief=lang['arbitration.brief'], description=lang['arbitration.description'][:99])
+    @hybirdAliases.hyb_cmd
     async def arbitration(self, ctx):
         raw = requests.get("https://api.warframestat.us/pc/tc/arbitration", headers={'Accept-Language': 'zh'})
         text = raw.text
@@ -122,15 +122,15 @@ class worldState(Cog_Extension):
     # async def slash_Arbitration(self, ctx: SlashContext):
     #     await self.arbitration(ctx)
 
-    # @commands.hybrid_command(name=H_A.c_name(), aliases=H_A.c_aliases(), brief=lang['sortie.brief'], description=lang['sortie.description'])
-    @H_A.hyb_cmd
+    # @commands.hybrid_command(name=hybirdAliases.c_name(), aliases=hybirdAliases.c_aliases(), brief=lang['sortie.brief'], description=lang['sortie.description'])
+    @hybirdAliases.hyb_cmd
     async def sortie(self, ctx):
         count = 1
         raw = requests.get('https://api.warframestat.us/pc/zh/sortie', headers={'Accept-Language': 'tc'})
         text = raw.text
         data = json.loads(text)
         embed = discord.Embed(title=lang["sortie.embed.title"].format(expiry=self.timeConv(data['expiry'])),
-                              description=lang['sortie.embed.description'].format(boss=data['boss'], faction=data['faction']), color=0xff9500)
+                            description=lang['sortie.embed.description'].format(boss=data['boss'], faction=data['faction']), color=0xff9500)
         for missions in data['variants']:
             node = missions['node']
             missionType = missions['missionType']
@@ -144,8 +144,8 @@ class worldState(Cog_Extension):
     # async def slash_Sortie(self, ctx: SlashContext):
     #     await self.sortie(ctx)
 
-    # @commands.hybrid_command(name=H_A.c_name(), aliases=H_A.c_aliases(), brief=lang['fissure.brief'], description=lang['fissure.description'])
-    @H_A.hyb_cmd
+    # @commands.hybrid_command(name=hybirdAliases.c_name(), aliases=hybirdAliases.c_aliases(), brief=lang['fissure.brief'], description=lang['fissure.description'])
+    @hybirdAliases.hyb_cmd
     async def fissure(self, ctx, tier="all", is_storm="False"):
 
         payload = requests.get('https://api.warframestat.us/pc/fissures', headers={'Accept-Language': 'en', 'Cache-Control': 'no-cache'})

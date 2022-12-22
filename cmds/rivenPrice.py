@@ -43,10 +43,10 @@ with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfi
     jdata = json.load(jfile)
 
 cmds = ['riven']
-H_A = Hybirdcmd_Aliases(lang, *cmds)
+hybirdAliases = Hybirdcmd_Aliases(lang, *cmds)
 
 class rivenPrice(Cog_Extension):
-    @H_A.hyb_cmd
+    @hybirdAliases.hyb_cmd
     async def rivenPrice(self, ctx, weapon):
         name = ' '.join(weapon)
         name = name.title()
