@@ -4,23 +4,23 @@ import os
 
 import discord
 import requests
-from core.classes import Cog_Extension,Hybirdcmd_Aliases
 from discord.ext import commands
 from discord_webhook import DiscordEmbed, DiscordWebhook
+
+from core.classes import Cog_Extension, Hybirdcmd_Aliases
 # from discord_slash.utils.manage_commands import create_option, create_choice
 # from discord_slash import SlashContext,cog_ext
 from localization import lang
 
 lang = lang.langpref()['wfm']
 
-dirname = os.path.dirname(__file__)
 
-with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfile:
+with open( 'setting.json', 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
 logger = logging.getLogger('wfm')
 logger.setLevel(-1)
-handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'),  encoding='utf-8', mode='a')
+handler = logging.FileHandler(filename= 'log/runtime.log',  encoding='utf-8', mode='a')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
 logger.addHandler(handler)
 

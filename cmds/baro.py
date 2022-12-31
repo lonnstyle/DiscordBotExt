@@ -18,7 +18,6 @@ from localization import lang
 
 lang = lang.langpref()['baro']
 
-dirname = os.path.dirname(__file__)
 
 rawDict = requests.get(lang['rawDict.URL'])
 Dict = json.loads(rawDict.text)
@@ -26,7 +25,7 @@ Dict = Dict['messages']
 
 logger = logging.getLogger('baro')
 logger.setLevel(-1)
-handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'),  encoding='utf-8', mode='a')
+handler = logging.FileHandler(filename='log/runtime.log',  encoding='utf-8', mode='a')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
 logger.addHandler(handler)
 

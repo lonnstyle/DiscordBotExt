@@ -1,4 +1,3 @@
-
 import asyncio
 import json
 import logging
@@ -15,21 +14,17 @@ from localization import lang
 
 # from platformdirs import importlib
 
-dirname = os.path.dirname(__file__)
-# check if log dir exists
-dir = os.path.join(dirname, 'log')
-if not os.path.exists(dir):
-    os.makedirs(dir)
+
 
 
 # clear log records
-with open(os.path.join(dirname, "log/runtime.log"), "w") as log:
+with open("log/runtime.log", "w") as log:
     pass
 # setup logger
 logger = logging.getLogger('main')
 logger.setLevel(-1)
 # display all logging messages
-handler = logging.FileHandler(filename=os.path.join(dirname, "log/runtime.log"), encoding='utf-8', mode='a')
+handler = logging.FileHandler(filename="log/runtime.log", encoding='utf-8', mode='a')
 formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
@@ -64,7 +59,7 @@ class CustomHelpCommand(commands.HelpCommand):
 
 
 # load settings and init
-with open(os.path.join(dirname, 'setting.json'), 'r') as _jfile:
+with open('setting.json', 'r') as _jfile:
     jdata = json.load(_jfile)
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(jdata['command_prefix']), intents=intents)
 start_time = datetime.now()
@@ -103,10 +98,10 @@ async def on_ready():
     await bot.change_presence(activity=activity)
     logger.debug('[init] loading extensions')
 
-    with open(os.path.join(dirname, 'cmds/noload.json'), 'r') as _jfile:
+    with open('cmds/noload.json', 'r') as _jfile:
         noload = json.load(_jfile)
 
-    for filename in os.listdir(os.path.join(dirname, 'cmds')):
+    for filename in os.listdir('cmds'):
         if filename.endswith('.py'):
             extname = filename[:-3]
             if filename not in noload:

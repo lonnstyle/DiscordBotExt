@@ -18,9 +18,8 @@ from localization import lang
 
 lang = lang.langpref()['common']
 
-dirname = os.path.dirname(__file__)
 
-with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfile:
+with open('setting.json', 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
 emoji = requests.get("http://gist.githubusercontent.com/Vexs/629488c4bb4126ad2a9909309ed6bd71/raw/416403f7080d1b353d8517dfef5acec9aafda6c3/emoji_map.json").text
@@ -29,7 +28,7 @@ emoji = {x: y for y, x in emoji.items()}
 
 logger = logging.getLogger('common')
 logger.setLevel(-1)
-handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'), encoding='utf-8', mode='a')
+handler = logging.FileHandler(filename='log/runtime.log', encoding='utf-8', mode='a')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d,%H:%M:%S'))
 logger.addHandler(handler)
 

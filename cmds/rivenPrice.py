@@ -4,15 +4,15 @@ import os
 
 import discord
 import requests
-from core.classes import Cog_Extension,Hybirdcmd_Aliases
 from discord.ext import commands
 from discord_webhook import DiscordEmbed, DiscordWebhook
-from localization import lang
 from thefuzz import process
+
+from core.classes import Cog_Extension, Hybirdcmd_Aliases
+from localization import lang
 
 lang = lang.langpref()['rivenPrice']
 
-dirname = os.path.dirname(__file__)
 
 temp = {}
 localWeapons = json.loads(requests.get("http://api.warframe.market/v1/riven/items", headers=lang['api.header']).text)
@@ -35,11 +35,11 @@ attrDict = temp
 
 logger = logging.getLogger('rivenPrice')
 logger.setLevel(-1)
-handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'),  encoding='utf-8', mode='a')
+handler = logging.FileHandler('log/runtime.log',  encoding='utf-8', mode='a')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
 logger.addHandler(handler)
 
-with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfile:
+with open('setting.json', 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
 cmds = ['riven']
@@ -150,7 +150,8 @@ class rivenPrice(Cog_Extension):
                         message += '```'
                         webhook.add_embed(embed)
             if eval(webhookID) == channel_id:
-                response = webhook.execute()
+                # response = webhook.execute()
+                webhook.execute()
                 logger.info(f"[rivenPrice] sent riven price data of {weapon} to channel {channel_id} as webhook")
             else:
                 logger.info(f"[rivenPrice] sent riven price data of {weapon} to channel {channel_id}")
