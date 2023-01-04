@@ -10,7 +10,7 @@ logger.setLevel(-1)
 # check if log dir exists
 if not os.path.exists('log'):
     os.makedirs('log')
-handler = logging.FileHandler(filename='../log/runtime.log', encoding='utf-8', mode='a')
+handler = logging.FileHandler(filename='log/runtime.log', encoding='utf-8', mode='a')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
 logger.addHandler(handler)
 
