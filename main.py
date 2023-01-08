@@ -119,9 +119,13 @@ async def on_ready():
                 logger.debug(f'extension: {extname} is not loaded,its in "cmds/noload.json"')
     bot.help_command = CustomHelpCommand()
     logger.debug('[init] Replaced default help command')
-    await bot.tree.sync()
-    logger.debug(f'extentions are synced to the command tree')
 
+@bot.command(name='sync', aliases=[], brief='Bot synced!', description='The bot has been fully synchronized!')
+async def sync_command(ctx);
+    await bot.tree.sync()
+    await ctx.send('Bot is fully synchronized!')
+    logger.debug(f'extentions are synced to the command tree')
+    
 
 def gen_help_menu(commands, page=1):
     embed = discord.Embed(title=lang['help.embed.title'], color=0xccab2b)
