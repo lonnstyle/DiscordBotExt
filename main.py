@@ -121,7 +121,7 @@ async def on_ready():
     logger.debug('[init] Replaced default help command')
 
 @bot.command(name='sync', aliases=[], brief='Bot synced!', description='The bot has been fully synchronized!')
-async def sync_command(ctx);
+async def sync_command(ctx):
     await bot.tree.sync()
     await ctx.send('Bot is fully synchronized!')
     logger.debug(f'extentions are synced to the command tree')
