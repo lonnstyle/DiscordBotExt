@@ -1,6 +1,6 @@
 import asyncio
 import json
-import logging
+from log import logger
 import os
 import re
 from datetime import datetime, timedelta
@@ -14,20 +14,15 @@ from localization import lang
 
 lang = lang.langpref()['event']
 
-dirname = os.path.dirname(__file__)
 
-with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfile:
+with open('setting.json', 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
 emojimap = requests.get("http://gist.githubusercontent.com/Vexs/629488c4bb4126ad2a9909309ed6bd71/raw/416403f7080d1b353d8517dfef5acec9aafda6c3/emoji_map.json").text
 emojimap = json.loads(emojimap)
 emojimap = {x: y for y, x in emojimap.items()}
 
-logger = logging.getLogger('event')
-logger.setLevel(-1)
-handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'), encoding='utf-8', mode='a')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
-logger.addHandler(handler)
+logger = logger.getLogger('event')
 
 cmds = ['reactionrole','role']
 hybirdAliases = Hybirdcmd_Aliases(lang, *cmds)
@@ -36,7 +31,7 @@ class event(Cog_Extension):
     #@commands.command(name="reactionRole", aliases=lang['reactionRole.aliases'], brief=lang['reactionRole.brief'], description=lang['reactionRole.description'])
     @hybirdAliases.hyb_cmd
     async def rr(self, ctx, message: int):
-        with open(os.path.join(dirname, "../role/rr.txt"), "a") as rr:
+        with open("role/rr.txt", "a") as rr:
             rr.write(f"{message}\n")
             await ctx.message.add_reaction("✅")
             await ctx.message.delete(delay=5)
@@ -46,7 +41,7 @@ class event(Cog_Extension):
     async def role(self, ctx, role: str, emoji):
         match = re.match(r'<(a?):([a-zA-Z0-9\_]+):([0-9]+)>$', emoji)
         if (emojimap.get(emoji, None) != None or match) and ctx.author.guild_permissions.administrator == True:
-            with open(os.path.join(dirname, "../role/roles.txt"), "a") as roles:
+            with open("role/roles.txt", "a") as roles:
                 roles.write(f"{emoji},{role}\n")
             await ctx.message.add_reaction("✅")
             await ctx.message.delete(delay=5)
@@ -58,8 +53,8 @@ class event(Cog_Extension):
     async def on_raw_reaction_add(self, payload):
         roles = {}
         message = []
-        raw = open(os.path.join(dirname, "../role/roles.txt"), "r")
-        rr = open(os.path.join(dirname, "../role/rr.txt"), "r")
+        raw = open("role/roles.txt", "r")
+        rr = open("role/rr.txt", "r")
         for line in raw.readlines():
             emoji, role = line.split(",")
             roles[emoji] = role.replace("\n", "")
@@ -74,8 +69,8 @@ class event(Cog_Extension):
     async def on_raw_reaction_remove(self, payload):
         roles = {}
         message = []
-        raw = open(os.path.join(dirname, "../role/roles.txt"), "r")
-        rr = open(os.path.join(dirname, "../role/rr.txt"), "r")
+        raw = open("role/roles.txt", "r")
+        rr = open("/role/rr.txt", "r")
         for line in raw.readlines():
             emoji, role = line.split(",")
             roles[emoji] = role.replace("\n", "")
@@ -90,7 +85,7 @@ class event(Cog_Extension):
 
 
 async def setup(bot):
-    dir = os.path.join(dirname, "../role")
+    dir = "role"
     if not os.path.exists(dir):
         os.makedirs(dir)
     await bot.add_cog(event(bot))

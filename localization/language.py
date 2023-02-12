@@ -1,18 +1,10 @@
 import json
-import logging
+from log import logger
 import os
 
 import requests
 
-logger = logging.getLogger('language')
-logger.setLevel(-1)
-# display all logging messages
-dirname = os.path.dirname(__file__)
-handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'), encoding='utf-8', mode='a')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
-logger.addHandler(handler)
-
-
+logger = logger.getLogger('language')
 class language():
     def init(self):
         try:
@@ -22,7 +14,7 @@ class language():
             logger.debug("[init] successfully pulled loc file from github")
         except Exception as exc:
             logger.error(exc)
-        self.pref = json.load(open(os.path.join(dirname, "../setting.json"), 'r', encoding='utf8'))
+        self.pref = json.load(open("setting.json", 'r', encoding='utf8'))
         self.pref = self.pref.get("language", "zh-hant")
         logger.debug(f'[init] language preference set: {self.pref}')
 

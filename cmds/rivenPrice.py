@@ -1,5 +1,5 @@
 import json
-import logging
+from log import logger
 import os
 
 import discord
@@ -12,7 +12,6 @@ from thefuzz import process
 
 lang = lang.langpref()['rivenPrice']
 
-dirname = os.path.dirname(__file__)
 
 temp = {}
 localWeapons = json.loads(requests.get("http://api.warframe.market/v1/riven/items", headers=lang['api.header']).text)
@@ -33,13 +32,10 @@ for attr in attrDict:
     temp[attr['url_name']] = attr['effect']
 attrDict = temp
 
-logger = logging.getLogger('rivenPrice')
-logger.setLevel(-1)
-handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'),  encoding='utf-8', mode='a')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
-logger.addHandler(handler)
+logger = logger.getLogger('rivenPrice')
 
-with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfile:
+
+with open('setting.json', 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
 cmds = ['riven']

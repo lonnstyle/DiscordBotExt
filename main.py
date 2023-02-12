@@ -12,27 +12,14 @@ from discord.ext import commands
 from discord.ui import Button, View, button
 
 from localization import lang
+from log import logger
 
-# from platformdirs import importlib
+
 
 dirname = os.path.dirname(__file__)
-# check if log dir exists
-dir = os.path.join(dirname, 'log')
-if not os.path.exists(dir):
-    os.makedirs(dir)
 
 
-# clear log records
-with open(os.path.join(dirname, "log/runtime.log"), "w") as log:
-    pass
-# setup logger
-logger = logging.getLogger('main')
-logger.setLevel(-1)
-# display all logging messages
-handler = logging.FileHandler(filename=os.path.join(dirname, "log/runtime.log"), encoding='utf-8', mode='a')
-formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
+logger = logger.getLogger('main')
 logger.info('[init] Bot startup')
 
 logger.debug("[language] requesting language")
@@ -252,6 +239,7 @@ async def on_command_error(ctx, error):
 
 if __name__ == "__main__":
     try:
-        bot.run(jdata['TOKEN'], log_handler=handler, log_formatter=formatter)
+        file_handler = logging.FileHandler(filename='runtime.log', encoding='utf-8', mode='a')
+        bot.run(jdata['TOKEN'], log_handler=file_handler, log_formatter=logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
     except Exception as exc:
         logger.critical(exc)
