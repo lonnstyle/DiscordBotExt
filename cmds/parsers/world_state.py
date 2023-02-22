@@ -25,26 +25,54 @@ handler.setFormatter(
 logger.addHandler(handler)
 
 class Sortie:
+    start = 1
+    end = 1
+    boss = None
+    missions = []
+    data = {}
+
+class Archon(Sortie):
     def __init__(self):
-        self.start = None
-        self.end = None
-        self.boss = None
-        self.missions = []
-        self.data = {}
+        super().__init__()
+
+class Baro():
+    data = {}
+    start = 1
+    end = 1
+    node = {"name":"","system":""}
+    items = {}
+
+class Varzia(Baro):
+    def __init__(self) -> None:
+        super().__init__()
+        # delattr(self,'node')
+
+class Nightwave():
+    data = {}
+    start = 1
+    end = 1
+
 
 class WorldStateParser:
+    url = "https://content.warframe.com/dynamic/worldState.php"
+    data = {}
+    manifests = MobileExportParser()
+    manifests_dir = MobileExportParser.manifests_dir
+    sortie = Sortie()
+    archon = Archon()
+    baro = Baro()
+    last_update = 1
+    varzia = Varzia()
+    nightwave = Nightwave()
+
     def __init__(self,language=None):
-        self.url = "https://content.warframe.com/dynamic/worldState.php"
-        self.data = {}
         if language:
             self.language = language
         else:
             with open("setting.json", "r") as _jfile:
                 jdata = json.load(_jfile)
             self.language = jdata["language"]
-        self.manifests = MobileExportParser()
-        self.manifests_dir = MobileExportParser.manifests_dir
-        self.sortie = Sortie()
+    
 
     def __get_timestamp(self, timestamp):
         """
@@ -58,40 +86,42 @@ class WorldStateParser:
         return int(timestamp["$date"]["$numberLong"]) // 1000
         # return timestamp in second. DE provided them as ms
 
-    def __get_data(self):
-        resp = requests.get(self.url)
-        resp.raise_for_status()
-        self.data = json.loads(resp.text)
+    def __get_data(self,force=False):
+        if force or self.last_update + 300 <= datetime.now().timestamp():
+        # timeout 
+            resp = requests.get(self.url)
+            resp.raise_for_status()
+            self.data = json.loads(resp.text)
+            self.last_update = self.__now()
 
     def __now(self):
         return int(datetime.now().timestamp())
 
     def __expired(self,obj):
-        print(self.__now() >= obj.end if obj.end is not None else True)
-        return  self.__now() >= obj.end if obj.end is not None else True
+        return  self.__now() >= obj.end if hasattr(obj,'end') else True
 
     def get_baro(self):
-        if self.data == {}:
+        if self.data == {} or self.__expired(self.baro):
             self.__get_data()
-        self.baro = self.data["VoidTraders"][0]
-        node = self.baro["Node"]
-        node = self.manifests.nodes.get(node, node)
-        if type(node) is not str:
-            node_name = node[self.language]["name"]
-            system = node[self.language]["system"]
-        else:
-            node_name = node
-            system = "Unknown"
-        arrive = self.__get_timestamp(self.baro["Activation"])
-        expiry = self.__get_timestamp(self.baro["Expiry"])
-        items = {}
-        for item in self.baro.get("Manifest", {}):
-            _item = self.manifests.manifest_data.get(item["ItemType"], item["ItemType"])
-            items[_item] = {
-                "PrimePrice": item.get("PrimePrice", 0),
-                "RegularPrice": item.get("RegularPrice", 0),
-            }
-        return arrive, expiry, node_name, system, items
+            self.baro.data = self.data["VoidTraders"][0]
+            node = self.baro.data["Node"]
+            node = self.manifests.nodes.get(node, node)
+            if type(node) is not str:
+                self.baro.node['name'] = node[self.language]["name"]
+                self.baro.node['system'] = node[self.language]["system"]
+            else:
+                node_name = self.baro.node
+                system = "Unknown"
+            self.baro.start = self.__get_timestamp(self.baro.data["Activation"])
+            self.baro.end = self.__get_timestamp(self.baro.data["Expiry"])
+            self.baro.items = {}
+            for item in self.baro.data.get("Manifest", {}):
+                _item = self.manifests.manifest_data.get(item["ItemType"], item["ItemType"])
+                self.baro.items[_item] = {
+                    "PrimePrice": item.get("PrimePrice", 0),
+                    "RegularPrice": item.get("RegularPrice", 0),
+                }
+        return self.baro.start, self.baro.end, self.baro.node['name'], self.baro.node['system'], self.baro.items
 
     def get_varzia(self):
         """
@@ -100,53 +130,47 @@ class WorldStateParser:
         :returns end: timestamp of current Prime Resurgence end
         :returns item: list of offering items, with item name and Price
         """
-        now = int(datetime.now().timestamp())
-        if self.data == {} or (
-            hasattr(self, "varzia")
-            and now >= self.__get_timestamp(self.varzia["Expiry"])
-        ):
+        if self.data == {} or self.__expired(self.varzia):
             self.__get_data()
-        self.varzia = self.data["PrimeVaultTraders"][0]
-        start = self.__get_timestamp(self.varzia["Activation"])
-        end = self.__get_timestamp(self.varzia["Expiry"])
-        _items = self.varzia["Manifest"]
-        items = {}
-        for item in _items:
-            game_ref = item["ItemType"].replace("/StoreItems/", "/")
-            _item = self.manifests.manifest_data.get(game_ref, None)
-            if _item is None:
-                continue
-            items[_item[self.language]["item_name"]] = {
-                "PrimePrice": item.get("PrimePrice", 0),
-                "RegularPrice": item.get("RegularPrice", 0),
-            }
-        return start, end, items
+            self.varzia.data = self.data["PrimeVaultTraders"][0]
+            self.varzia.start = self.__get_timestamp(self.varzia.data["Activation"])
+            self.varzia.end = self.__get_timestamp(self.varzia.data["Expiry"])
+            _items = self.varzia.data["Manifest"]
+            self.varzia.items = {}
+            for item in _items:
+                game_ref = item["ItemType"].replace("/StoreItems/", "/")
+                _item = self.manifests.manifest_data.get(game_ref, None)
+                if _item is None:
+                    continue
+                self.varzia.items[_item[self.language]["item_name"]] = {
+                    "PrimePrice": item.get("PrimePrice", 0),
+                    "RegularPrice": item.get("RegularPrice", 0),
+                }
+        return self.varzia.start, self.varzia.end, self.varzia.items
 
     def get_sortie(self):
-        now = int(datetime.now().timestamp())
-        if not (self.data == {} or self.__expired(self.sortie)):
-            return self.sortie.start, self.sortie.end, self.sortie.boss, self.sortie.missions
-        self.__get_data()
-        self.sortie.data = self.data["Sorties"][0]
-        self.sortie.start = self.__get_timestamp(self.sortie.data["Activation"])
-        self.sortie.end = self.__get_timestamp(self.sortie.data["Expiry"])
-        self.sortie.boss = self.sortie.data["Boss"]
-        self.sortie.missions = self.sortie.data["Variants"]
-        for mission in self.sortie.missions:
-            mission["node"] = self.manifests.nodes.get(mission["node"], mission["node"])
+        if self.data == {} or self.__expired(self.sortie):
+            self.__get_data()
+            self.sortie.data = self.data["Sorties"][0]
+            self.sortie.start = self.__get_timestamp(self.sortie.data["Activation"])
+            self.sortie.end = self.__get_timestamp(self.sortie.data["Expiry"])
+            self.sortie.boss = self.sortie.data["Boss"]
+            self.sortie.missions = self.sortie.data["Variants"]
+            for mission in self.sortie.missions:
+                mission["node"] = self.manifests.nodes.get(mission["node"], mission["node"])
         return self.sortie.start, self.sortie.end, self.sortie.boss, self.sortie.missions
 
     def get_archon(self):
-        if self.data == {}:
+        if self.data == {} or self.__expired(self.archon):
             self.__get_data()
-        self.archon = self.data["LiteSorties"][0]
-        start = self.__get_timestamp(self.archon["Activation"])
-        end = self.__get_timestamp(self.archon["Expiry"])
-        boss = self.archon["Boss"]
-        missions = self.archon["Missions"]
-        for mission in missions:
-            mission["node"] = self.manifests.nodes.get(mission["node"], mission["node"])
-        return start, end, boss, missions
+            self.archon.data = self.data["LiteSorties"][0]
+            self.archon.start = self.__get_timestamp(self.archon.data["Activation"])
+            self.archon.end = self.__get_timestamp(self.archon.data["Expiry"])
+            self.archon.boss = self.archon.data["Boss"]
+            self.archon.missions = self.archon.data["Missions"]
+            for mission in self.archon.missions:
+                mission["node"] = self.manifests.nodes.get(mission["node"], mission["node"])
+        return self.archon.start, self.archon.end, self.archon.boss, self.archon.missions
 
     def get_fissure(self):
         self.__get_data()
@@ -187,20 +211,18 @@ class WorldStateParser:
     def get_nightwave(self):
         if self.data == {}:
             self.__get_data()
-        if "SeasonInfo" not in self.data:
-            return None
-        self.nightwave = self.data["SeasonInfo"]
-        self.nightwave["Activation"] = self.__get_timestamp(
-            self.nightwave["Activation"]
+        self.nightwave.data = self.data["SeasonInfo"]
+        self.nightwave.start = self.__get_timestamp(
+            self.nightwave.data["Activation"]
         )
-        self.nightwave["Expiry"] = self.__get_timestamp(self.nightwave["Expiry"])
+        self.nightwave.end = self.__get_timestamp(self.nightwave.data["Expiry"])
         if (
             "affiliationTag" not in self.manifests.nightwave
             or self.manifests.nightwave["affiliationTag"]
-            != self.nightwave["AffiliationTag"]
+            != self.nightwave.data["AffiliationTag"]
         ):
             self.manifests.update()
-        for challenge in self.nightwave["ActiveChallenges"]:
+        for challenge in self.nightwave.data["ActiveChallenges"]:
             del challenge["_id"]
             challenge["Activation"] = self.__get_timestamp(challenge["Activation"])
             challenge["Expiry"] = self.__get_timestamp(challenge["Expiry"])
@@ -213,15 +235,15 @@ class WorldStateParser:
             else:
                 challenge["name"] = challenge_info[self.language]["name"]
                 challenge["standing"] = challenge_info["standing"]
-        del self.nightwave["Params"]
-        del self.nightwave["Phase"]
-        del self.nightwave["Season"]
-        return self.nightwave
+        del self.nightwave.data["Params"]
+        del self.nightwave.data["Phase"]
+        del self.nightwave.data["Season"]
+        if "SeasonInfo" not in self.data:
+            return None
+        return self.nightwave.data
 
 
 if __name__ == "__main__":
     parser = WorldStateParser('en')
     parser.manifests.update()
-    pprint(parser.get_sortie())
-    print(f"{'':=^20}")
-    pprint(parser.get_sortie())
+    pprint(parser.get_nightwave())
