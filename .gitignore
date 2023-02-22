@@ -157,3 +157,4 @@ localization/.gitignore
 localization/README.md
 manifests/
 *.zip
+.vscode/

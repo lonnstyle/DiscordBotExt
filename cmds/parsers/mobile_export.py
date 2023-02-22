@@ -207,6 +207,8 @@ class MobileExportParser():
 
         name = self.clear_text_from_manifest(item['name'])
         description = item['description'] if 'description' in item else ''
+        if description == '' and 'levelStats' in item:
+            description = '\n'.join(item['levelStats'][-1]['stats'])
         description = self.clear_text_from_manifest(description)
 
         if uniq_name not in self.manifest_data:
