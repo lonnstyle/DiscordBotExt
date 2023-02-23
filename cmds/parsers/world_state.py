@@ -5,6 +5,7 @@ from datetime import datetime
 from pprint import pprint
 
 import requests
+from const import AVAILABLE_LANGUAGES
 from mobile_export import MobileExportParser
 
 # from localization.language import language
@@ -24,6 +25,7 @@ handler.setFormatter(
 )
 logger.addHandler(handler)
 
+
 class Sortie:
     start = 1
     end = 1
@@ -31,21 +33,25 @@ class Sortie:
     missions = []
     data = {}
 
+
 class Archon(Sortie):
     def __init__(self):
         super().__init__()
+
 
 class Baro():
     data = {}
     start = 1
     end = 1
-    node = {"name":"","system":""}
+    node = {"name": "", "system": ""}
     items = {}
+
 
 class Varzia(Baro):
     def __init__(self) -> None:
         super().__init__()
         # delattr(self,'node')
+
 
 class Nightwave():
     data = {}
@@ -65,7 +71,7 @@ class WorldStateParser:
     varzia = Varzia()
     nightwave = Nightwave()
 
-    def __init__(self,language=None):
+    def __init__(self, language=None):
         if language:
             self.language = language
         else:
@@ -86,9 +92,9 @@ class WorldStateParser:
         return int(timestamp["$date"]["$numberLong"]) // 1000
         # return timestamp in second. DE provided them as ms
 
-    def __get_data(self,force=False):
+    def __get_data(self, force=False):
         if force or self.last_update + 300 <= datetime.now().timestamp():
-        # timeout 
+            # timeout
             resp = requests.get(self.url)
             resp.raise_for_status()
             self.data = json.loads(resp.text)
@@ -96,9 +102,19 @@ class WorldStateParser:
 
     def __now(self):
         return int(datetime.now().timestamp())
+    
+    def __dump(self, obj, lang=None):
+        if lang is None:
+            lang = self.language
+        for attr in obj[lang]:
+            obj[attr] = obj[lang][attr]
+        for _lang in AVAILABLE_LANGUAGES:
+            del obj[_lang]
+        return obj
 
-    def __expired(self,obj):
-        return  self.__now() >= obj.end if hasattr(obj,'end') else True
+
+    def __expired(self, obj):
+        return self.__now() >= obj.end if hasattr(obj, 'end') else True
 
     def get_baro(self):
         if self.data == {} or self.__expired(self.baro):
@@ -110,8 +126,8 @@ class WorldStateParser:
                 self.baro.node['name'] = node[self.language]["name"]
                 self.baro.node['system'] = node[self.language]["system"]
             else:
-                node_name = self.baro.node
-                system = "Unknown"
+                self.baro.node['name'] = node
+                self.baro.node['system'] = "Unknown"
             self.baro.start = self.__get_timestamp(self.baro.data["Activation"])
             self.baro.end = self.__get_timestamp(self.baro.data["Expiry"])
             self.baro.items = {}
@@ -158,6 +174,8 @@ class WorldStateParser:
             self.sortie.missions = self.sortie.data["Variants"]
             for mission in self.sortie.missions:
                 mission["node"] = self.manifests.nodes.get(mission["node"], mission["node"])
+                if type(mission['node']) is not str:
+                    mission['node'] = self.__dump(mission['node'])
         return self.sortie.start, self.sortie.end, self.sortie.boss, self.sortie.missions
 
     def get_archon(self):
@@ -229,6 +247,7 @@ class WorldStateParser:
             challenge_info = self.manifests.nightwave["challenges"].get(
                 challenge["Challenge"]
             )
+            del challenge['Challenge']
             if challenge_info is None:
                 challenge["name"] = "Unknown"
                 challenge["standing"] = "Unknown"
@@ -246,4 +265,4 @@ class WorldStateParser:
 if __name__ == "__main__":
     parser = WorldStateParser('en')
     parser.manifests.update()
-    pprint(parser.get_nightwave())
+    pprint(parser.get_sortie())
