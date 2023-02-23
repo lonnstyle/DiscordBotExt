@@ -1,6 +1,6 @@
 import asyncio
 import json
-import logging
+from log import logger
 import os
 import re
 from random import randint
@@ -12,26 +12,17 @@ from discord.ext import commands
 from core.classes import Cog_Extension, Hybirdcmd_Aliases
 from localization import lang
 
-# from discord_slash import SlashContext, cog_ext
-# from discord_slash.utils.manage_commands import create_choice, create_option
-
 
 lang = lang.langpref()['common']
 
-dirname = os.path.dirname(__file__)
-
-with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfile:
+with open('setting.json', 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
 emoji = requests.get("http://gist.githubusercontent.com/Vexs/629488c4bb4126ad2a9909309ed6bd71/raw/416403f7080d1b353d8517dfef5acec9aafda6c3/emoji_map.json").text
 emoji = json.loads(emoji)
 emoji = {x: y for y, x in emoji.items()}
 
-logger = logging.getLogger('common')
-logger.setLevel(-1)
-handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'), encoding='utf-8', mode='a')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d,%H:%M:%S'))
-logger.addHandler(handler)
+logger = logger.getLogger('common')
 
 
 cmds = ['ping', 'sayd', 'poll']

@@ -1,5 +1,5 @@
 import json
-import logging
+from log import logger
 import os
 
 import discord
@@ -12,14 +12,10 @@ lang = lang.langpref()['admin']
 
 dirname = os.path.dirname(__file__)
 
-with open(os.path.join(dirname, '../setting.json'), 'r', encoding='utf8') as jfile:
+with open('setting.json', 'r', encoding='utf8') as jfile:
     jdata = json.load(jfile)
 
-logger = logging.getLogger('admin')
-logger.setLevel(-1)
-handler = logging.FileHandler(filename=os.path.join(dirname, '../log/runtime.log'), encoding='utf-8', mode='a')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
-logger.addHandler(handler)
+logger = logger.getLogger('admin')
 
 cmds = ['clear']
 hybirdAliases = Hybirdcmd_Aliases(lang, *cmds)
