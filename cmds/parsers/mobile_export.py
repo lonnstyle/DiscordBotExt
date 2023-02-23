@@ -5,14 +5,13 @@ import re
 from pprint import pprint
 
 import requests
-from const import AVAILABLE_LANGUAGES
+
+from log import logger
+
+from .const import AVAILABLE_LANGUAGES
 
 dirname = os.path.dirname(__file__)
-logger = logging.getLogger('mobileExportParser')
-logger.setLevel(-1)
-handler = logging.FileHandler(filename=os.path.join(dirname, '../../log/runtime.log'), encoding='utf-8', mode='a')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
-logger.addHandler(handler)
+logger = logger.getLogger('mobileExportParser')
 
 
 glyphs = [
@@ -117,7 +116,7 @@ class MobileExportParser():
         resp = requests.get(self.index_url.format(language_code=resp_lang))
         with open(os.path.join(self.manifests_dir, language, 'index.txt.lzma'), 'wb') as out:
             out.write(resp.content)
-        command = f"7z x -y {os.path.join(self.manifests_dir, language, 'index.txt.lzma')} -o{os.path.join(self.manifests_dir, language)}"
+        command = f"7zz x -y {os.path.join(self.manifests_dir, language, 'index.txt.lzma')} -o{os.path.join(self.manifests_dir, language)}"
         os.system(command)
         with open(os.path.join(self.manifests_dir, language, 'index.txt')) as index:
             for file in index.readlines():

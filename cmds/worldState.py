@@ -1,5 +1,4 @@
 import json
-from log import logger
 import os
 import time
 from datetime import datetime
@@ -11,7 +10,9 @@ from discord.ext import commands
 
 from core.classes import Cog_Extension, Hybirdcmd_Aliases
 from localization import lang
-from cmds.parsers.world_state import WorldStateParser
+from log import logger
+
+from .parsers.world_state import WorldStateParser
 
 # from discord_slash import SlashContext, cog_ext
 # from discord_slash.utils.manage_commands import create_choice, create_option
@@ -183,7 +184,6 @@ class worldState(Cog_Extension):
                 missionTier = tierList[str(fissure['tierNum'])]
                 expiry = self.timeConv(fissure['expiry'])
                 description = lang['fissure.embed.field'].format(tier=missionTier, missionType=missionType, expiry=expiry)
-                print(fissure['expired'] != True and fissure['isStorm'] != True)
                 embed.add_field(name=node, value=description, inline=False)
         await ctx.send(embed=embed)
 

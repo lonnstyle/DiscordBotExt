@@ -5,25 +5,17 @@ from datetime import datetime
 from pprint import pprint
 
 import requests
-from const import AVAILABLE_LANGUAGES
-from mobile_export import MobileExportParser
+
+from log import logger
+
+from .const import AVAILABLE_LANGUAGES
+from .mobile_export import MobileExportParser
 
 # from localization.language import language
 
 dirname = os.path.dirname(__file__)
 
-logger = logging.getLogger("worldState")
-logger.setLevel(-1)
-handler = logging.FileHandler(
-    filename=os.path.join(dirname, "../../log/runtime.log"), encoding="utf-8", mode="a"
-)
-handler.setFormatter(
-    logging.Formatter(
-        "%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
-)
-logger.addHandler(handler)
+logger = logger.getLogger("worldState")
 
 
 class Sortie:
@@ -79,7 +71,6 @@ class WorldStateParser:
                 jdata = json.load(_jfile)
             self.language = jdata["language"]
     
-
     def __get_timestamp(self, timestamp):
         """
         __get_timestamp get timestamp from worldState
