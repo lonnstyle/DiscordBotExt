@@ -77,7 +77,7 @@ class wfm(Cog_Extension):
     #   await self.translate(ctx,item)
 
     @hybirdAliases.hyb_cmd
-    async def market(self, ctx, args):
+    async def market(self, ctx, *, args):
         if str(ctx.channel.type) != 'private':
             channel_id = ctx.channel.id
         else:
@@ -85,7 +85,7 @@ class wfm(Cog_Extension):
         action = 'buy'
         order_type = 'sell'
         itemrank = None
-        args = ' '.join(args)
+        # args = ' '.join(args)
         if args.count(',') == 0:
             items = args
         elif args.count(',') == 1:
