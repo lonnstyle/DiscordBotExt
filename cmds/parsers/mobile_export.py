@@ -1,5 +1,6 @@
 import json
 import logging
+import lzma
 import os
 import re
 from pprint import pprint
@@ -88,19 +89,29 @@ class MobileExportParser():
     def __init__(self):
         self.index_url = "https://origin.warframe.com/PublicExport/index_{language_code}.txt.lzma"
         self.manifest_url = "http://content.warframe.com/PublicExport/Manifest/{file_name}"
-        paths = ['items.json', 'nodes.json', 'nightwave.json']
-        for path in paths:
-            if not os.path.exists(os.path.join(self.manifests_dir, path)):
-                logger.debug(f'[init] {path} not found, start to update')
-                self.update()
-                break
-        logger.debug('[init] local manifests found, loading into RAM')
-        with open(os.path.join(self.manifests_dir, 'items.json'), 'r', encoding='utf-8') as _manifests:
-            self.manifest_data = json.load(_manifests)
-        with open(os.path.join(self.manifests_dir, 'nodes.json'), 'r', encoding='utf-8') as _nodes:
-            self.nodes = json.load(_nodes)
-        with open(os.path.join(self.manifests_dir, 'nightwave.json'), 'r', encoding='utf-8') as _nightwave:
-            self.nightwave = json.load(_nightwave)
+        if os.path.exists(
+                os.path.join(self.manifests_dir, 'items.json')) and os.path.exists(
+                os.path.join(self.manifests_dir, 'nodes.json')) and os.path.exists(
+                os.path.join(self.manifests_dir, 'nightwave.json')) and os.path.exists(
+                os.path.join(self.manifests_dir, 'sortie.json')) and os.path.exists(
+                os.path.join(self.manifests_dir, 'mission.json')) and os.path.exists(
+                os.path.join(self.manifests_dir, 'fissuremod.json')):
+            logger.debug('[init] local manifests found, loading into RAM')
+            with open(os.path.join(self.manifests_dir, 'items.json'), 'r', encoding='utf-8') as _manifests:
+                self.manifest_data = json.load(_manifests)
+            with open(os.path.join(self.manifests_dir, 'nodes.json'), 'r', encoding='utf-8') as _nodes:
+                self.nodes = json.load(_nodes)
+            with open(os.path.join(self.manifests_dir, 'nightwave.json'), 'r', encoding='utf-8') as _nightwave:
+                self.nightwave = json.load(_nightwave)
+            with open(os.path.join(self.manifests_dir, 'sortie.json'), 'r', encoding='utf-8') as _sortie:
+                self.sortie = json.load(_sortie)
+            with open(os.path.join(self.manifests_dir, 'mission.json'), 'r', encoding='utf-8') as _mission:
+                self.mission = json.load(_mission)
+            with open(os.path.join(self.manifests_dir, 'fissuremod.json'), 'r', encoding='utf-8') as _fissuremod:
+                self.fissuremod = json.load(_fissuremod)
+        else:
+            logger.debug('[init] local manifests not found, start to update manifests')
+            self.update()
 
     def download_manifests(self, language):
         if language == "zh-hant":
@@ -117,7 +128,7 @@ class MobileExportParser():
             out.write(resp.content)
         command = f"7zz x -y {os.path.join(self.manifests_dir, language, 'index.txt.lzma')} -o{os.path.join(self.manifests_dir, language)}"
         os.system(command)
-        with open(os.path.join(self.manifests_dir, language, 'index.txt')) as index:
+        with open(os.path.join(self.manifests_dir, language, 'index.txt'),'r') as index:
             for file in index.readlines():
                 logger.debug(f'[download_manifests] downloading {language}/{file.strip()}')
                 print(f"\033[92mDownloading file\033[0m:{file.strip()}")
@@ -144,7 +155,10 @@ class MobileExportParser():
         self.manifest_data = {}
         self.nodes = {}
         self.nightwave = {'challenges': {}}
-        categories = ['ExportRelicArcane', 'ExportResources', 'ExportWeapons', 'ExportWarframes', 'ExportCustoms']
+        self.sortie = {}
+        self.mission = {}
+        self.fissuremod = {}
+        categories = ['ExportRelicArcane', 'ExportResources', 'ExportWeapons', 'ExportWarframes']
         for language in AVAILABLE_LANGUAGES:
             _items = []
             _locations = []
@@ -191,10 +205,24 @@ class MobileExportParser():
                     continue
                 self.__add_challenge(language, challenge)
 
-            for recipe in _recipes:
-                if 'uniqueName' not in recipe or 'resultType' not in recipe:
-                    continue
-                self.__add_recipe(language, recipe)
+        _sortie_zh = json.loads(requests.get("https://raw.githubusercontent.com/WFCD/warframe-worldstate-data/master/data/zh/sortieData.json").text)
+        _sortie_en = json.loads(requests.get("https://raw.githubusercontent.com/WFCD/warframe-worldstate-data/master/data/sortieData.json").text)
+        self.sortie['zh-hans'] = _sortie_zh
+        self.sortie['zh-hant'] = _sortie_zh
+        self.sortie['en'] = _sortie_en
+
+        _mission_zh = json.loads(requests.get("https://raw.githubusercontent.com/WFCD/warframe-worldstate-data/master/data/zh/missionTypes.json").text)
+        _mission_en = json.loads(requests.get("https://raw.githubusercontent.com/WFCD/warframe-worldstate-data/master/data/missionTypes.json").text)
+        self.mission['zh-hans'] = _mission_zh
+        self.mission['zh-hant'] = _mission_zh
+        self.mission['en'] = _mission_en
+
+        _fissuremod_zh = json.loads(requests.get("https://raw.githubusercontent.com/WFCD/warframe-worldstate-data/master/data/zh/fissureModifiers.json").text)
+        _fissuremod_en = json.loads(requests.get("https://raw.githubusercontent.com/WFCD/warframe-worldstate-data/master/data/fissureModifiers.json").text)
+        self.fissuremod['zh-hans'] = _fissuremod_zh
+        self.fissuremod['zh-hant'] = _fissuremod_zh
+        self.fissuremod['en'] = _fissuremod_en
+
         print()
         print('Finished Update')
 
@@ -206,6 +234,13 @@ class MobileExportParser():
         with open(os.path.join(self.manifests_dir, 'nightwave.json'), 'w', encoding='utf-8') as _file:
             _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.nightwave))
         logger.debug('[update] Dumped nightwave data')
+        
+        with open(os.path.join(self.manifests_dir, 'sortie.json'), 'w', encoding='utf-8') as _file:
+            _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.sortie))
+        with open(os.path.join(self.manifests_dir, 'mission.json'), 'w', encoding='utf-8') as _file:
+            _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.mission))
+        with open(os.path.join(self.manifests_dir, 'fissuremod.json'), 'w', encoding='utf-8') as _file:
+            _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.fissuremod))
 
     def __add_item(self, lang, item):
         """
