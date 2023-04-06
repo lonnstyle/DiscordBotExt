@@ -1,6 +1,5 @@
 import asyncio
 import json
-from log import logger
 import os
 import time
 from datetime import datetime
@@ -10,10 +9,10 @@ import requests
 from discord.ext import commands
 
 from cmds.parsers.world_state import WorldStateParser
-
 from core.classes import Cog_Extension, Hybirdcmd_Aliases
 # import chinese_converter
 from localization import lang
+from log import logger
 
 # from discord_slash import SlashContext, cog_ext
 
@@ -36,7 +35,7 @@ class baro(Cog_Extension):
     @hybirdAliases.hyb_cmd
     async def baro(self, ctx):
         arrive, expiry, node_name, system, items = parser.get_baro()
-        now =datetime.utcnow().timestamp()
+        now = datetime.utcnow().timestamp()
         location = node_name + '(' + system + ')'
         arrived = now > arrive
         arrive = int(arrive)
