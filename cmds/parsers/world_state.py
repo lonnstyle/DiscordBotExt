@@ -9,7 +9,8 @@ from pytz import utc
 
 from cmds.parsers.mobile_export import MobileExportParser
 from localization import lang
-from localization.language import language
+
+# from localization.language import language
 
 dirname = os.path.dirname(__file__)
 
@@ -26,8 +27,8 @@ class WorldStateParser():
         self.data = {}
         # with open(os.path.join(dirname, '../../setting.json'), 'r') as _jfile:
         #     jdata = json.load(_jfile)
-        # self.language = jdata['language']
-        self.language = lang.pref
+        self.language = 'en'
+        #self.language = lang.pref
         self.manifests = MobileExportParser()
         self.manifests_dir = MobileExportParser.manifests_dir
 
@@ -51,8 +52,9 @@ class WorldStateParser():
         expiry = self.__get_timestamp(self.baro['Expiry'])
         items = []
         for item in self.baro.get('Manifest', {}):
+            item['ItemType'] = item['ItemType'].replace('/StoreItems', '')
             item = {
-                'Name': self.manifests.manifest_data.get(item['ItemType'], item['ItemType']),
+                'Name': self.manifests.manifest_data[item['ItemType']][self.language]['item_name'],
                 'PrimePrice': item.get('PrimePrice', 0),
                 'RegularPrice': item.get('RegularPrice', 0)
             }

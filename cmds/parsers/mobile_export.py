@@ -163,9 +163,11 @@ class MobileExportParser():
         self.fissuremod = {}
         self.solnodes = {}
 
-        categories = ['ExportRelicArcane', 'ExportResources', 'ExportWeapons', 'ExportWarframes']
+        categories = ['ExportRelicArcane', 'ExportResources', 'ExportWeapons', 'ExportWarframes',
+                      'ExportCustoms', 'ExportRecipes', 'ExportUpgrades']
         for language in AVAILABLE_LANGUAGES:
             _items = []
+            _blueprints = []
             _locations = []
             _challenges = []
             _recipes = []
@@ -185,12 +187,11 @@ class MobileExportParser():
                         if _cat == 'ExportNightwave':
                             _challenges = data['challenges']
                             self.nightwave['affiliationTag'] = data['affiliationTag']
-                            continue
                         if _cat == 'ExportRecipes':
-                            _recipes += data
+                            _blueprints += data
                             continue
-                        if _cat not in categories:
-                            continue
+                        # if _cat not in categories:
+                        #    continue
                         _items += data
 
             for item in _items:
@@ -199,6 +200,9 @@ class MobileExportParser():
                 # do sth to add into memory storage then dump
                 # print uniqueName
                 self.__add_item(language, item)
+
+            for blueprint in _blueprints:
+                self.__add_blueprint(language, blueprint)
 
             for location in _locations:
                 if 'name' not in location or 'uniqueName' not in location:
@@ -255,6 +259,28 @@ class MobileExportParser():
         with open(os.path.join(self.manifests_dir, 'solnodes.json'), 'w', encoding='utf-8') as _file:
             _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.solnodes))
 
+    def __add_blueprint(self, lang, item):
+        try:
+            uniq_name = item['uniqueName']
+
+            if uniq_name not in self.manifest_data:
+                self.manifest_data[uniq_name] = {}
+
+            result = item['resultType']
+            item = self.manifest_data[uniq_name]
+            name = self.manifest_data[result][lang]['item_name']+' Blueprint'
+
+            item[lang] = {
+                'item_name': name
+            }
+
+            # check if all lang fields were defined
+            for _lang in AVAILABLE_LANGUAGES:
+                if _lang not in item:
+                    return
+        except:
+            pass
+
     def __add_item(self, lang, item):
         """
         lang (string): language
@@ -262,11 +288,9 @@ class MobileExportParser():
         """
 
         uniq_name = item['uniqueName']
-
         name = self.clear_text_from_manifest(item['name'])
         description = item['description'] if 'description' in item else ''
-        if description == '' and 'levelStats' in item:
-            description = '\n'.join(item['levelStats'][-1]['stats'])
+        description = ' '.join(description) if type(description) == list else description
         description = self.clear_text_from_manifest(description)
 
         if uniq_name not in self.manifest_data:
