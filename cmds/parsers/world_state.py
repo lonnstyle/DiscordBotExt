@@ -8,7 +8,7 @@ import requests
 from pytz import utc
 
 from cmds.parsers.mobile_export import MobileExportParser
-
+from localization import lang
 from localization.language import language
 
 dirname = os.path.dirname(__file__)
@@ -24,20 +24,12 @@ class WorldStateParser():
     def __init__(self):
         self.url = "https://content.warframe.com/dynamic/worldState.php"
         self.data = {}
-        with open(os.path.join(dirname, '../../setting.json'), 'r') as _jfile:
-            jdata = json.load(_jfile)
-        self.language = jdata['language']
-        self.manifests = MobileExportParser
-        self.manifests_dir = self.manifests.manifests_dir
-        # with open(os.path.join(self.manifests_dir, self.language, 'ExportRegions.json')) as regions:
-        #     self.nodes = json.load(regions)['ExportRegions']
-        with open(os.path.join(self.manifests_dir, self.language, 'ExportRelicArcane.json')) as arcane:
-            self.arcanes = json.load(arcane)['ExportRelicArcane']
-        with open(os.path.join(self.manifests_dir, self.language, 'ExportResources.json')) as resource:
-            self.resources = json.load(resource)['ExportResources']
-        with open(os.path.join(self.manifests_dir, self.language, 'ExportWeapons.json')) as weapon:
-            self.weapons = json.load(weapon)['ExportWeapons']
-        self.items = [self.arcanes, self.resources, self.weapons]
+        # with open(os.path.join(dirname, '../../setting.json'), 'r') as _jfile:
+        #     jdata = json.load(_jfile)
+        # self.language = jdata['language']
+        self.language = lang.pref
+        self.manifests = MobileExportParser()
+        self.manifests_dir = MobileExportParser.manifests_dir
 
     def __get_timestamp(self, timestamp):
         return int(timestamp['$date']['$numberLong'])/1000
@@ -53,8 +45,8 @@ class WorldStateParser():
             self.__get_data()
         self.baro = self.data['VoidTraders'][0]
         node = self.baro['Node']
-        # node_name = None
-        # systemName = None
+        node = self.manifests.solnodes[self.language][node]['value']
+
         arrive = self.__get_timestamp(self.baro['Activation'])
         expiry = self.__get_timestamp(self.baro['Expiry'])
         items = []
@@ -66,7 +58,7 @@ class WorldStateParser():
             }
             items.append(item)
         # print(self.baro)
-        return arrive, expiry, node_name, system, items
+        return arrive, expiry, node, items
 
     def __get_varzia(self):
         '''

@@ -34,9 +34,9 @@ hybirdAliases = Hybirdcmd_Aliases(lang, *cmds)
 class baro(Cog_Extension):
     @hybirdAliases.hyb_cmd
     async def baro(self, ctx):
-        arrive, expiry, node_name, system, items = parser.get_baro()
+        arrive, expiry, node_name, items = parser.get_baro()
         now = datetime.now().timestamp()
-        location = node_name + '(' + system + ')'
+        location = node_name
         arrived = now > arrive
         arrive = int(arrive)
         expiry = int(expiry)
