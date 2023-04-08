@@ -57,14 +57,15 @@ class WorldStateParser():
         # systemName = None
         arrive = self.__get_timestamp(self.baro['Activation'])
         expiry = self.__get_timestamp(self.baro['Expiry'])
-        items = {}
+        items = []
         for item in self.baro.get('Manifest', {}):
-            _item = self.manifests.manifest_data.get(item['ItemType'], item['ItemType'])
-            items[_item] = {
+            item = {
+                'Name': self.manifests.manifest_data.get(item['ItemType'], item['ItemType']),
                 'PrimePrice': item.get('PrimePrice', 0),
                 'RegularPrice': item.get('RegularPrice', 0)
             }
-        print(self.baro)
+            items.append(item)
+        # print(self.baro)
         return arrive, expiry, node_name, system, items
 
     def __get_varzia(self):
@@ -128,13 +129,13 @@ class WorldStateParser():
             mission['Activation'] = self.__get_timestamp(mission['Activation'])
             mission['Expiry'] = self.__get_timestamp(mission['Expiry'])
             mission['Node'] = self.manifests.nodes[mission['Node']]
-            mission['Node'] = mission['Node'][self.language]['name']+'('+mission['Node'][self.language]['system']+')'
+            mission['System'] = mission['Node'][self.language]['system']
+            mission['Node'] = mission['Node'][self.language]['name']
             mission['MissionType'] = self.manifests.mission[self.language][mission['MissionType']]['value']
             mission['Tier'] = self.manifests.fissuremod[self.language][mission['Modifier']]['value']
             del mission['_id']
             del mission['Region']
             del mission['Seed']
-            print(mission)
         return self.fissure
 
     def get_voidstorms(self):
@@ -144,10 +145,11 @@ class WorldStateParser():
         for mission in self.voidstorm:
             mission['Activation'] = self.__get_timestamp(mission['Activation'])
             mission['Expiry'] = self.__get_timestamp(mission['Expiry'])
-            mission['Node'] = self.manifests.nodes[mission['Node']]
-            mission['Node'] = mission['Node'][self.language]['name']+'('+mission['Node'][self.language]['system']+')'
-            mission['MissionType'] = self.manifests.mission[self.language][mission['MissionType']]['value']
-            mission['Tier'] = self.manifests.fissuremod[self.language][mission['Modifier']]['value']
+            mission['Node'] = self.manifests.solnodes[self.language][mission['Node']]
+            mission['MissionType'] = mission['Node']['type']
+            mission['Node'] = mission['Node']['value']
+            mission['Tier'] = self.manifests.fissuremod[self.language][mission['ActiveMissionTier']]['value']
+            del mission['_id']
         return self.voidstorm
 
     def get_daily_deals(self):

@@ -95,7 +95,8 @@ class MobileExportParser():
                 os.path.join(self.manifests_dir, 'nightwave.json')) and os.path.exists(
                 os.path.join(self.manifests_dir, 'sortie.json')) and os.path.exists(
                 os.path.join(self.manifests_dir, 'mission.json')) and os.path.exists(
-                os.path.join(self.manifests_dir, 'fissuremod.json')):
+                os.path.join(self.manifests_dir, 'fissuremod.json')) and os.path.exists(
+                os.path.join(self.manifests_dir, 'solnodes.json')):
             logger.debug('[init] local manifests found, loading into RAM')
             with open(os.path.join(self.manifests_dir, 'items.json'), 'r', encoding='utf-8') as _manifests:
                 self.manifest_data = json.load(_manifests)
@@ -109,6 +110,8 @@ class MobileExportParser():
                 self.mission = json.load(_mission)
             with open(os.path.join(self.manifests_dir, 'fissuremod.json'), 'r', encoding='utf-8') as _fissuremod:
                 self.fissuremod = json.load(_fissuremod)
+            with open(os.path.join(self.manifests_dir, 'solnodes.json'), 'r', encoding='utf-8') as _solnodes:
+                self.solnodes = json.load(_solnodes)
         else:
             logger.debug('[init] local manifests not found, start to update manifests')
             self.update()
@@ -128,7 +131,7 @@ class MobileExportParser():
             out.write(resp.content)
         command = f"7zz x -y {os.path.join(self.manifests_dir, language, 'index.txt.lzma')} -o{os.path.join(self.manifests_dir, language)}"
         os.system(command)
-        with open(os.path.join(self.manifests_dir, language, 'index.txt'),'r') as index:
+        with open(os.path.join(self.manifests_dir, language, 'index.txt'), 'r') as index:
             for file in index.readlines():
                 logger.debug(f'[download_manifests] downloading {language}/{file.strip()}')
                 print(f"\033[92mDownloading file\033[0m:{file.strip()}")
@@ -158,6 +161,8 @@ class MobileExportParser():
         self.sortie = {}
         self.mission = {}
         self.fissuremod = {}
+        self.solnodes = {}
+
         categories = ['ExportRelicArcane', 'ExportResources', 'ExportWeapons', 'ExportWarframes']
         for language in AVAILABLE_LANGUAGES:
             _items = []
@@ -223,6 +228,12 @@ class MobileExportParser():
         self.fissuremod['zh-hant'] = _fissuremod_zh
         self.fissuremod['en'] = _fissuremod_en
 
+        _solnodes_zh = json.loads(requests.get("https://raw.githubusercontent.com/WFCD/warframe-worldstate-data/master/data/zh/solNodes.json").text)
+        _solnodes_en = json.loads(requests.get("https://raw.githubusercontent.com/WFCD/warframe-worldstate-data/master/data/solNodes.json").text)
+        self.solnodes['zh-hans'] = _solnodes_zh
+        self.solnodes['zh-hant'] = _solnodes_zh
+        self.solnodes['en'] = _solnodes_en
+
         print()
         print('Finished Update')
 
@@ -234,13 +245,15 @@ class MobileExportParser():
         with open(os.path.join(self.manifests_dir, 'nightwave.json'), 'w', encoding='utf-8') as _file:
             _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.nightwave))
         logger.debug('[update] Dumped nightwave data')
-        
+
         with open(os.path.join(self.manifests_dir, 'sortie.json'), 'w', encoding='utf-8') as _file:
             _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.sortie))
         with open(os.path.join(self.manifests_dir, 'mission.json'), 'w', encoding='utf-8') as _file:
             _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.mission))
         with open(os.path.join(self.manifests_dir, 'fissuremod.json'), 'w', encoding='utf-8') as _file:
             _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.fissuremod))
+        with open(os.path.join(self.manifests_dir, 'solnodes.json'), 'w', encoding='utf-8') as _file:
+            _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.solnodes))
 
     def __add_item(self, lang, item):
         """

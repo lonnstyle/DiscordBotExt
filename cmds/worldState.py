@@ -24,7 +24,7 @@ lang = lang.langpref()['worldState']
 logger = logger.getLogger('worldState')
 
 
-cmds = ['poe', 'earth', 'cambion', 'orb', 'arbitration', 'sortie', 'fissure']
+cmds = ['poe', 'earth', 'cambion', 'orb', 'arbitration', 'sortie', 'archon', 'fissure']
 hybirdAliases = Hybirdcmd_Aliases(lang, *cmds)
 
 
@@ -133,7 +133,7 @@ class worldState(Cog_Extension):
             count += 1
         await ctx.send(embed=embed)
 
-    @commands.command(name='Archon', aliases=lang['archon.aliases'], brief=lang['archon.brief'], description=lang['archon.description'])
+    @hybirdAliases.hyb_cmd
     async def archon(self, ctx):
         count = 1
         start, end, boss, missions = parser.get_archon()
@@ -152,17 +152,26 @@ class worldState(Cog_Extension):
     # async def slash_Sortie(self, ctx: SlashContext):
     #     await self.sortie(ctx)
 
-    @commands.command(name="Fissure", aliases=lang['fissure.aliases'], brief=lang['fissure.brief'], description=lang['fissure.description'])
-    async def fissure(self, ctx, tier="all", isStorm="False"):
+    @hybirdAliases.hyb_cmd
+    async def fissure(self, ctx, Storm="True"):
         fissures = parser.get_fissure()
+        voidstroms = parser.get_voidstorms()
         embed = discord.Embed(title=lang['fissure.embed.title'], description=lang['fissure.embed.description'], color=0x725D33)
         for fissure in fissures:
-            node = fissure['Node']
+            node = fissure['Node'] + '(' + fissure['System'] + ')'
             missionType = fissure['MissionType']
             missionTier = fissure['Tier']
             expiry = int(fissure['Expiry'])
             description = lang['fissure.embed.field'].format(tier=missionTier, missionType=missionType, expiry=expiry)
             embed.add_field(name=node, value=description, inline=False)
+        if Storm:
+            for fissure in voidstroms:
+                node = fissure['Node']
+                missionType = fissure['MissionType'] + '(' + lang['fissure.proxima'] + ')'
+                missionTier = fissure['Tier']
+                expiry = int(fissure['Expiry'])
+                description = lang['fissure.embed.field'].format(tier=missionTier, missionType=missionType, expiry=expiry)
+                embed.add_field(name=node, value=description, inline=False)
         await ctx.send(embed=embed)
 
 

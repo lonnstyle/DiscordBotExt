@@ -35,7 +35,7 @@ class baro(Cog_Extension):
     @hybirdAliases.hyb_cmd
     async def baro(self, ctx):
         arrive, expiry, node_name, system, items = parser.get_baro()
-        now = datetime.utcnow().timestamp()
+        now = datetime.now().timestamp()
         location = node_name + '(' + system + ')'
         arrived = now > arrive
         arrive = int(arrive)
@@ -45,12 +45,12 @@ class baro(Cog_Extension):
             # location = chinese_converter.to_traditional(location)
             stay = expiry
             logger.info(f"[baro] Baro arrived, leaving at {stay}")
-            stay = int(time.mktime(datetime.strptime(stay, "%Y-%m-%dT%H:%M:%S.%fZ").timetuple()))
+            # stay = int(time.mktime(datetime.strptime(stay, "%Y-%m-%dT%H:%M:%S.%fZ").timetuple()))
             # convert datetime string to UNIX timestamp
             for item in items:
-                name = item
-                ducats = items['PrimePrice']
-                credits = items['RegularPrice']
+                name = item['Name']
+                ducats = item['PrimePrice']
+                credits = item['RegularPrice']
                 message += lang['baro.item'].format(name=name, ducats=ducats, credits=credits)
             message += "```"
             embed = discord.Embed(title=lang['baro.arrived'].format(location=location, stay=stay), description=message, color=0x429990)
