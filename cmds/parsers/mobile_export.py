@@ -144,7 +144,7 @@ class MobileExportParser():
         self.manifest_data = {}
         self.nodes = {}
         self.nightwave = {'challenges': {}}
-        categories = ['ExportRelicArcane', 'ExportResources', 'ExportWeapons', 'ExportWarframes','ExportCustoms','ExportRecipes']
+        categories = ['ExportRelicArcane', 'ExportResources', 'ExportWeapons', 'ExportWarframes','ExportCustoms']
         for language in AVAILABLE_LANGUAGES:
             _items = []
             _locations = []
@@ -169,6 +169,7 @@ class MobileExportParser():
                             continue
                         if _cat == 'ExportRecipes':
                             _recipes += data
+                            continue
                         if _cat not in categories:
                             continue
                         _items += data
