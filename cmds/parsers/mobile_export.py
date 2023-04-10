@@ -88,20 +88,19 @@ class MobileExportParser():
     def __init__(self):
         self.index_url = "https://origin.warframe.com/PublicExport/index_{language_code}.txt.lzma"
         self.manifest_url = "http://content.warframe.com/PublicExport/Manifest/{file_name}"
-        if os.path.exists(
-                os.path.join(self.manifests_dir, 'items.json')) and os.path.exists(
-                os.path.join(self.manifests_dir, 'nodes.json')) and os.path.exists(
-                os.path.join(self.manifests_dir, 'nightwave.json')):
-            logger.debug('[init] local manifests found, loading into RAM')
-            with open(os.path.join(self.manifests_dir, 'items.json'), 'r', encoding='utf-8') as _manifests:
-                self.manifest_data = json.load(_manifests)
-            with open(os.path.join(self.manifests_dir, 'nodes.json'), 'r', encoding='utf-8') as _nodes:
-                self.nodes = json.load(_nodes)
-            with open(os.path.join(self.manifests_dir, 'nightwave.json'), 'r', encoding='utf-8') as _nightwave:
-                self.nightwave = json.load(_nightwave)
-        else:
-            logger.debug('[init] local manifests not found, start to update manifests')
-            self.update()
+        paths = ['items.json', 'nodes.json', 'nightwave.json']
+        for path in paths:
+            if not os.path.exists(os.path.join(self.manifests_dir, path)):
+                logger.debug(f'[init] {path} not found, start to update')
+                self.update()
+                break
+        logger.debug('[init] local manifests found, loading into RAM')
+        with open(os.path.join(self.manifests_dir, 'items.json'), 'r', encoding='utf-8') as _manifests:
+            self.manifest_data = json.load(_manifests)
+        with open(os.path.join(self.manifests_dir, 'nodes.json'), 'r', encoding='utf-8') as _nodes:
+            self.nodes = json.load(_nodes)
+        with open(os.path.join(self.manifests_dir, 'nightwave.json'), 'r', encoding='utf-8') as _nightwave:
+            self.nightwave = json.load(_nightwave)
 
     def download_manifests(self, language):
         if language == "zh-hant":
@@ -145,11 +144,12 @@ class MobileExportParser():
         self.manifest_data = {}
         self.nodes = {}
         self.nightwave = {'challenges': {}}
-        categories = ['ExportRelicArcane', 'ExportResources', 'ExportWeapons', 'ExportWarframes']
+        categories = ['ExportRelicArcane', 'ExportResources', 'ExportWeapons', 'ExportWarframes','ExportCustoms','ExportRecipes']
         for language in AVAILABLE_LANGUAGES:
             _items = []
             _locations = []
             _challenges = []
+            _recipes = []
             logger.debug(f'[update] Updating {language} manifests data')
             dir_language_manifests = os.path.join(self.manifests_dir, language)
 
@@ -162,9 +162,13 @@ class MobileExportParser():
                     for _cat, data in _json.items():
                         if _cat == 'ExportRegions':
                             _locations += data
+                            continue
                         if _cat == 'ExportNightwave':
                             _challenges = data['challenges']
                             self.nightwave['affiliationTag'] = data['affiliationTag']
+                            continue
+                        if _cat == 'ExportRecipes':
+                            _recipes += data
                         if _cat not in categories:
                             continue
                         _items += data
@@ -173,6 +177,7 @@ class MobileExportParser():
                 if 'name' not in item or 'uniqueName' not in item:
                     continue
                 # do sth to add into memory storage then dump
+                # print uniqueName
                 self.__add_item(language, item)
 
             for location in _locations:
@@ -184,6 +189,11 @@ class MobileExportParser():
                 if 'name' not in challenge or 'uniqueName' not in challenge:
                     continue
                 self.__add_challenge(language, challenge)
+
+            for recipe in _recipes:
+                if 'uniqueName' not in recipe or 'resultType' not in recipe:
+                    continue
+                self.__add_recipe(language, recipe)
         print()
         print('Finished Update')
 
@@ -228,6 +238,42 @@ class MobileExportParser():
 
         print('', end='\x1b[2K\r')
         print(f"\033[92madded item\033[0m: {item['en']['item_name']}", end='\r', flush=True)
+
+    def __add_recipe(self, lang, recipe):
+        """
+        lang (string): language
+        recipe (dict): raw recipe record
+        """
+
+        uniq_name = recipe['uniqueName']
+
+        result_type = recipe['resultType']
+        result = self.manifest_data.get(result_type, {})
+        if result == {}:
+            return
+        # TODO: add `Blueprint` to localized names
+        name = result[lang]['item_name'] + ' Blueprint'
+        description = result[lang]['description']
+
+        if uniq_name not in self.manifest_data:
+            self.manifest_data[uniq_name] = {}
+
+        item = self.manifest_data[uniq_name]
+
+        # Set locale values
+        item[lang] = {
+            'item_name': name,
+            'result': result[lang]['item_name'],
+            'description': description
+        }
+
+        # check if all lang fields were defined
+        for _lang in AVAILABLE_LANGUAGES:
+            if _lang not in item:
+                return
+
+        print('', end='\x1b[2K\r')
+        print(f"\033[92madded recipe\033[0m: {item['en']['item_name']}", end='\r', flush=True)
 
     def __add_node(self, lang, node):
         """
