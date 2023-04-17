@@ -27,8 +27,8 @@ class WorldStateParser():
         self.data = {}
         # with open(os.path.join(dirname, '../../setting.json'), 'r') as _jfile:
         #     jdata = json.load(_jfile)
-        self.language = 'en'
-        #self.language = lang.pref
+        #self.language = 'en'
+        self.language = lang.pref
         self.manifests = MobileExportParser()
         self.manifests_dir = MobileExportParser.manifests_dir
 
@@ -53,8 +53,12 @@ class WorldStateParser():
         items = []
         for item in self.baro.get('Manifest', {}):
             item['ItemType'] = item['ItemType'].replace('/StoreItems', '')
+            try:
+                name = self.manifests.manifest_data[item['ItemType']][self.language]['item_name']
+            except:
+                name = item['ItemType']
             item = {
-                'Name': self.manifests.manifest_data[item['ItemType']][self.language]['item_name'],
+                'Name': name,
                 'PrimePrice': item.get('PrimePrice', 0),
                 'RegularPrice': item.get('RegularPrice', 0)
             }
