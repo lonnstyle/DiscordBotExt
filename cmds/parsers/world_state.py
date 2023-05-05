@@ -41,7 +41,7 @@ class WorldStateParser():
         resp.raise_for_status()
         self.data = json.loads(resp.text)
 
-    def __get_baro(self):
+    def get_baro(self):
         if self.data == {}:
             self.__get_data()
         self.baro = self.data['VoidTraders'][0]
@@ -66,7 +66,7 @@ class WorldStateParser():
         # print(self.baro)
         return arrive, expiry, node, items
 
-    def __get_varzia(self):
+    def get_varzia(self):
         '''
         get offering list of PrimeVaultTraders
         '''

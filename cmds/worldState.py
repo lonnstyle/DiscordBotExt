@@ -153,21 +153,22 @@ class worldState(Cog_Extension):
     #     await self.sortie(ctx)
 
     @hybirdAliases.hyb_cmd
-    async def fissure(self, ctx, Storm="True"):
+    async def fissure(self, ctx, Storm=False):
         fissures = parser.get_fissure()
         voidstroms = parser.get_voidstorms()
         embed = discord.Embed(title=lang['fissure.embed.title'], description=lang['fissure.embed.description'], color=0x725D33)
-        for fissure in fissures:
-            node = fissure['Node'] + '(' + fissure['System'] + ')'
-            missionType = fissure['MissionType']
-            missionTier = fissure['Tier']
-            expiry = int(fissure['Expiry'])
-            description = lang['fissure.embed.field'].format(tier=missionTier, missionType=missionType, expiry=expiry)
-            embed.add_field(name=node, value=description, inline=False)
         if Storm:
             for fissure in voidstroms:
                 node = fissure['Node']
                 missionType = fissure['MissionType'] + '(' + lang['fissure.proxima'] + ')'
+                missionTier = fissure['Tier']
+                expiry = int(fissure['Expiry'])
+                description = lang['fissure.embed.field'].format(tier=missionTier, missionType=missionType, expiry=expiry)
+                embed.add_field(name=node, value=description, inline=False)
+        else:
+            for fissure in fissures:
+                node = fissure['Node'] + '(' + fissure['System'] + ')'
+                missionType = fissure['MissionType']
                 missionTier = fissure['Tier']
                 expiry = int(fissure['Expiry'])
                 description = lang['fissure.embed.field'].format(tier=missionTier, missionType=missionType, expiry=expiry)
