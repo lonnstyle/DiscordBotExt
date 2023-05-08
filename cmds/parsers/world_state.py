@@ -50,6 +50,7 @@ class WorldStateParser():
 
         arrive = self.__get_timestamp(self.baro['Activation'])
         expiry = self.__get_timestamp(self.baro['Expiry'])
+        self.manifests.update()
         items = []
         for item in self.baro.get('Manifest', {}):
             item['ItemType'] = item['ItemType'].replace('/StoreItems', '')

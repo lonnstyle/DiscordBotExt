@@ -349,5 +349,8 @@
             "axi": 4,
             "requiem": 5
         }
+    },
+    "mobile_export": {
+        "blueprint": "Blueprint"
     }
 }

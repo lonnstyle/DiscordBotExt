@@ -153,11 +153,11 @@ class worldState(Cog_Extension):
     #     await self.sortie(ctx)
 
     @hybirdAliases.hyb_cmd
-    async def fissure(self, ctx, Storm=False):
+    async def fissure(self, ctx, storm=False):
         fissures = parser.get_fissure()
         voidstroms = parser.get_voidstorms()
         embed = discord.Embed(title=lang['fissure.embed.title'], description=lang['fissure.embed.description'], color=0x725D33)
-        if Storm:
+        if storm:
             for fissure in voidstroms:
                 node = fissure['Node']
                 missionType = fissure['MissionType'] + '(' + lang['fissure.proxima'] + ')'
