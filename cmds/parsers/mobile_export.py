@@ -7,16 +7,17 @@ from pprint import pprint
 
 import requests
 
-# from .const import AVAILABLE_LANGUAGES
+from .const import AVAILABLE_LANGUAGES
+
 AVAILABLE_LANGUAGES = ['en','zh-hant','zh-hans']
 
-# from log import logger
 from localization import lang
+from log import logger
 
 lang = lang.langpref()['mobile_export']
 
 dirname = os.path.dirname(__file__)
-# logger = logger.getLogger('mobileExportParser')
+logger = logger.getLogger('mobileExportParser')
 
 
 glyphs = [
@@ -95,7 +96,7 @@ class MobileExportParser():
         self.index_url = "https://origin.warframe.com/PublicExport/index_{language_code}.txt.lzma"
         self.manifest_url = "http://content.warframe.com/PublicExport/Manifest/{file_name}"
         if all(os.path.exists(os.path.join(self.manifests_dir, file)) for file in self.files):
-            # logger.debug('[init] local manifests found, loading into RAM')
+            logger.debug('[init] local manifests found, loading into RAM')
             with open(os.path.join(self.manifests_dir, 'items.json'), 'r', encoding='utf-8') as _manifests:
                 self.manifest_data = json.load(_manifests)
             with open(os.path.join(self.manifests_dir, 'nodes.json'), 'r', encoding='utf-8') as _nodes:
@@ -111,7 +112,7 @@ class MobileExportParser():
             with open(os.path.join(self.manifests_dir, 'solnodes.json'), 'r', encoding='utf-8') as _solnodes:
                 self.solnodes = json.load(_solnodes)
         else:
-            # logger.debug('[init] local manifests not found, start to update manifests')
+            logger.debug('[init] local manifests not found, start to update manifests')
             self.update()
 
     def download_manifests(self, language):
@@ -122,7 +123,7 @@ class MobileExportParser():
         else:
             resp_lang = language
         if not os.path.exists(os.path.join(self.manifests_dir, language)):
-            # logger.debug(f'[download_manifests] manifests_languagr_dir not exists, creating {language}')
+            logger.debug(f'[download_manifests] manifests_languagr_dir not exists, creating {language}')
             os.makedirs(os.path.join(self.manifests_dir, language))
         resp = requests.get(self.index_url.format(language_code=resp_lang))
         with open(os.path.join(self.manifests_dir, language, 'index.txt.lzma'), 'wb') as out:
@@ -131,7 +132,7 @@ class MobileExportParser():
         os.system(command)
         with open(os.path.join(self.manifests_dir, language, 'index.txt'), 'r') as index:
             for file in index.readlines():
-                # logger.debug(f'[download_manifests] downloading {language}/{file.strip()}')
+                logger.debug(f'[download_manifests] downloading {language}/{file.strip()}')
                 print(f"\033[92mDownloading file\033[0m:{file.strip()}")
                 resp = requests.get(self.manifest_url.format(file_name=file).replace('\n', ''))
                 file = file.split("!")[0].replace(f"_{resp_lang}", "")
@@ -141,7 +142,7 @@ class MobileExportParser():
         for file in os.listdir(os.path.join(self.manifests_dir, language)):
             if 'index.txt' in file:
                 continue
-            # logger.debug(f'[download_manifests] fixing {language}/{file}')
+            logger.debug(f'[download_manifests] fixing {language}/{file}')
             print(f"\033[92mFixing file\033[0m: {file}")
             with open(os.path.join(self.manifests_dir, language, file), 'r', encoding="utf-8") as f:
                 text = f.read()
@@ -169,7 +170,7 @@ class MobileExportParser():
             _locations = []
             _challenges = []
             _recipes = []
-            # logger.debug(f'[update] Updating {language} manifests data')
+            logger.debug(f'[update] Updating {language} manifests data')
             dir_language_manifests = os.path.join(self.manifests_dir, language)
 
             # Concat the manifests into one
@@ -189,8 +190,8 @@ class MobileExportParser():
                         if _cat == 'ExportRecipes':
                             _blueprints += data
                             continue
-                        # if _cat not in categories:
-                        #    continue
+                        if _cat not in categories:
+                            continue
                         _items += data
 
             for item in _items:
@@ -244,10 +245,10 @@ class MobileExportParser():
             _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.manifest_data))
         with open(os.path.join(self.manifests_dir, 'nodes.json'), 'w', encoding='utf-8') as _file:
             _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.nodes))
-        # logger.debug('[update] Dumped manifests data')
+        logger.debug('[update] Dumped manifests data')
         with open(os.path.join(self.manifests_dir, 'nightwave.json'), 'w', encoding='utf-8') as _file:
             _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.nightwave))
-        # logger.debug('[update] Dumped nightwave data')
+        logger.debug('[update] Dumped nightwave data')
 
         with open(os.path.join(self.manifests_dir, 'sortie.json'), 'w', encoding='utf-8') as _file:
             _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.sortie))
