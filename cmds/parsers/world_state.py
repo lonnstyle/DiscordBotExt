@@ -50,7 +50,7 @@ class WorldStateParser():
 
         arrive = self.__get_timestamp(self.baro['Activation'])
         expiry = self.__get_timestamp(self.baro['Expiry'])
-        self.manifests.update()
+        
         items = []
         for item in self.baro.get('Manifest', {}):
             item['ItemType'] = item['ItemType'].replace('/StoreItems', '')
@@ -225,5 +225,5 @@ class WorldStateParser():
 
 if __name__ == '__main__':
     parser = WorldStateParser()
-    parser.manifests.update()
+    # parser.manifests.update()
     pprint(parser.get_nightwave())
