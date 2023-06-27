@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 from pprint import pprint
 
@@ -10,7 +11,7 @@ from pytz import utc
 from cmds.parsers.mobile_export import MobileExportParser
 from localization import lang
 
-# from localization.language import language
+lang = lang.langpref()['world_state']
 
 dirname = os.path.dirname(__file__)
 
@@ -25,10 +26,10 @@ class WorldStateParser():
     def __init__(self):
         self.url = "https://content.warframe.com/dynamic/worldState.php"
         self.data = {}
-        # with open(os.path.join(dirname, '../../setting.json'), 'r') as _jfile:
-        #     jdata = json.load(_jfile)
-        #self.language = 'en'
-        self.language = lang.pref
+        with open(os.path.join(dirname, '../../setting.json'), 'r') as _jfile:
+            jdata = json.load(_jfile)
+        self.language = jdata['language']
+        # TODO: support for self-defined translation
         self.manifests = MobileExportParser()
         self.manifests_dir = MobileExportParser.manifests_dir
 
@@ -46,7 +47,9 @@ class WorldStateParser():
             self.__get_data()
         self.baro = self.data['VoidTraders'][0]
         node = self.baro['Node']
-        node = self.manifests.solnodes[self.language][node]['value']
+        # TODO: this is a temporary fix for solnodes, add translation later
+        if node in self.manifests.nodes:
+            node = self.manifests.nodes[node]['value']
 
         arrive = self.__get_timestamp(self.baro['Activation'])
         expiry = self.__get_timestamp(self.baro['Expiry'])
@@ -96,13 +99,14 @@ class WorldStateParser():
         start = self.__get_timestamp(self.sortie['Activation'])
         end = self.__get_timestamp(self.sortie['Expiry'])
         boss = self.sortie['Boss']
-        boss = self.manifests.sortie[self.language]['bosses'][boss]['name']
+        boss = lang['sortie']['bosses'][boss]['name']
         missions = self.sortie['Variants']
         for mission in missions:
             mission['node'] = self.manifests.nodes[mission['node']]
             mission['node'] = mission['node'][self.language]['name']+'('+mission['node'][self.language]['system']+')'
-            mission['modifierType'] = self.manifests.sortie[self.language]['modifierTypes'][mission['modifierType']]
-            mission['missionType'] = self.manifests.mission[self.language][mission['missionType']]['value']
+            mission['modifierType'] = lang['sortie']['modifierTypes'][mission['modifierType']]
+            print(lang['missionTypes'][mission['missionType']])
+            mission['missionType'] = lang['missionTypes'][mission['missionType']]
         return start, end, boss, missions
 
     def get_archon(self):
@@ -112,12 +116,12 @@ class WorldStateParser():
         start = self.__get_timestamp(self.archon['Activation'])
         end = self.__get_timestamp(self.archon['Expiry'])
         boss = self.archon['Boss']
-        boss = self.manifests.sortie[self.language]['bosses'][boss]['name']
-        missions = self.archon['Missions']
+        boss = lang['sortie']['bosses'][boss]['name']
+        missions = deepcopy(self.archon['Missions'])
         for mission in missions:
             mission['node'] = self.manifests.nodes[mission['node']]
             mission['node'] = mission['node'][self.language]['name']+'('+mission['node'][self.language]['system']+')'
-            mission['missionType'] = self.manifests.mission[self.language][mission['missionType']]['value']
+            mission['missionType'] = lang['missionTypes'][mission['missionType']]
         return start, end, boss, missions
 
     def get_fissure(self):
@@ -130,8 +134,8 @@ class WorldStateParser():
             mission['Node'] = self.manifests.nodes[mission['Node']]
             mission['System'] = mission['Node'][self.language]['system']
             mission['Node'] = mission['Node'][self.language]['name']
-            mission['MissionType'] = self.manifests.mission[self.language][mission['MissionType']]['value']
-            mission['Tier'] = self.manifests.fissuremod[self.language][mission['Modifier']]['value']
+            mission['MissionType'] = lang['missionTypes'][mission['MissionType']]
+            mission['Tier'] = lang['fissuremod'][mission['Modifier']]['value']
             del mission['_id']
             del mission['Region']
             del mission['Seed']
@@ -144,10 +148,14 @@ class WorldStateParser():
         for mission in self.voidstorm:
             mission['Activation'] = self.__get_timestamp(mission['Activation'])
             mission['Expiry'] = self.__get_timestamp(mission['Expiry'])
-            mission['Node'] = self.manifests.solnodes[self.language][mission['Node']]
-            mission['MissionType'] = mission['Node']['type']
-            mission['Node'] = mission['Node']['value']
-            mission['Tier'] = self.manifests.fissuremod[self.language][mission['ActiveMissionTier']]['value']
+            # TODO: fix solnodes is blank in manifest
+            # CrewBattleNode is not in manifest
+            if mission['Node'] in self.manifests.nodes:
+                mission['Node'] = self.manifests.nodes[mission['Node']]
+                print(mission['Node'])
+                mission['MissionType'] = mission['Node']['type']
+                mission['Node'] = mission['Node']['value']
+            mission['Tier'] = lang['fissuremod'][mission['ActiveMissionTier']]['value']
             del mission['_id']
         return self.voidstorm
 
@@ -186,10 +194,13 @@ class WorldStateParser():
         del self.nightwave['Season']
         return self.nightwave
 
-    def get_arbitration(self):
-        raw = requests.get("https://api.warframestat.us/pc/tc/arbitration", headers={'Accept-Language': 'zh'})
-        text = raw.text
-        return json.loads(text)
+    # def get_arbitration(self):
+    #     # TODO: change to use official worldstate api
+    #     # but DE is not providing it
+    #     # stop providing it
+    #     raw = requests.get("https://api.warframestat.us/pc/tc/arbitration", headers={'Accept-Language': 'zh'})
+    #     text = raw.text
+    #     return json.loads(text)
 
     def __get_openworld_state(self, start_time: datetime, loop_time: timedelta, delay_time: timedelta, state_a: str, state_b: str):
         current_time = datetime.utcnow()

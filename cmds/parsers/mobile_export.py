@@ -2,17 +2,16 @@ import json
 import logging
 import lzma
 import os
+import platform
 import re
 from pprint import pprint
 
 import requests
 
-from .const import AVAILABLE_LANGUAGES
-
-AVAILABLE_LANGUAGES = ['en','zh-hant','zh-hans']
-
 from localization import lang
 from log import logger
+
+from .const import AVAILABLE_LANGUAGES
 
 lang = lang.langpref()['mobile_export']
 
@@ -103,8 +102,6 @@ class MobileExportParser():
                 self.nodes = json.load(_nodes)
             with open(os.path.join(self.manifests_dir, 'nightwave.json'), 'r', encoding='utf-8') as _nightwave:
                 self.nightwave = json.load(_nightwave)
-            with open(os.path.join(self.manifests_dir, 'sortie.json'), 'r', encoding='utf-8') as _sortie:
-                self.sortie = json.load(_sortie)
             with open(os.path.join(self.manifests_dir, 'mission.json'), 'r', encoding='utf-8') as _mission:
                 self.mission = json.load(_mission)
             with open(os.path.join(self.manifests_dir, 'fissuremod.json'), 'r', encoding='utf-8') as _fissuremod:
@@ -128,7 +125,8 @@ class MobileExportParser():
         resp = requests.get(self.index_url.format(language_code=resp_lang))
         with open(os.path.join(self.manifests_dir, language, 'index.txt.lzma'), 'wb') as out:
             out.write(resp.content)
-        command = f"7zz x -y {os.path.join(self.manifests_dir, language, 'index.txt.lzma')} -o{os.path.join(self.manifests_dir, language)}"
+        zip_name = '7zz' if platform.system() == 'Linux' else '7z'
+        command = f"{zip_name} x -y {os.path.join(self.manifests_dir, language, 'index.txt.lzma')} -o{os.path.join(self.manifests_dir, language)}"
         os.system(command)
         with open(os.path.join(self.manifests_dir, language, 'index.txt'), 'r') as index:
             for file in index.readlines():
@@ -152,6 +150,7 @@ class MobileExportParser():
                     _file.write(json.dumps(_json, ensure_ascii=False, indent=4))
 
     def update(self):
+        logger.debug('[update] Updating manifests')
         for language in AVAILABLE_LANGUAGES:
             self.download_manifests(language)
         self.manifest_data = {}
@@ -214,29 +213,9 @@ class MobileExportParser():
                     continue
                 self.__add_challenge(language, challenge)
 
-        _sortie_zh = json.loads(requests.get("https://raw.githubusercontent.com/WFCD/warframe-worldstate-data/master/data/zh/sortieData.json").text)
-        _sortie_en = json.loads(requests.get("https://raw.githubusercontent.com/WFCD/warframe-worldstate-data/master/data/sortieData.json").text)
-        self.sortie['zh-hans'] = _sortie_zh
-        self.sortie['zh-hant'] = _sortie_zh
-        self.sortie['en'] = _sortie_en
 
-        _mission_zh = json.loads(requests.get("https://raw.githubusercontent.com/WFCD/warframe-worldstate-data/master/data/zh/missionTypes.json").text)
-        _mission_en = json.loads(requests.get("https://raw.githubusercontent.com/WFCD/warframe-worldstate-data/master/data/missionTypes.json").text)
-        self.mission['zh-hans'] = _mission_zh
-        self.mission['zh-hant'] = _mission_zh
-        self.mission['en'] = _mission_en
-
-        _fissuremod_zh = json.loads(requests.get("https://raw.githubusercontent.com/WFCD/warframe-worldstate-data/master/data/zh/fissureModifiers.json").text)
-        _fissuremod_en = json.loads(requests.get("https://raw.githubusercontent.com/WFCD/warframe-worldstate-data/master/data/fissureModifiers.json").text)
-        self.fissuremod['zh-hans'] = _fissuremod_zh
-        self.fissuremod['zh-hant'] = _fissuremod_zh
-        self.fissuremod['en'] = _fissuremod_en
-
-        _solnodes_zh = json.loads(requests.get("https://raw.githubusercontent.com/WFCD/warframe-worldstate-data/master/data/zh/solNodes.json").text)
-        _solnodes_en = json.loads(requests.get("https://raw.githubusercontent.com/WFCD/warframe-worldstate-data/master/data/solNodes.json").text)
-        self.solnodes['zh-hans'] = _solnodes_zh
-        self.solnodes['zh-hant'] = _solnodes_zh
-        self.solnodes['en'] = _solnodes_en
+        # self.sortie = lang['sortie']
+        self.mission = lang['mission']
 
         print()
         print('Finished Update')
@@ -250,12 +229,8 @@ class MobileExportParser():
             _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.nightwave))
         logger.debug('[update] Dumped nightwave data')
 
-        with open(os.path.join(self.manifests_dir, 'sortie.json'), 'w', encoding='utf-8') as _file:
-            _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.sortie))
         with open(os.path.join(self.manifests_dir, 'mission.json'), 'w', encoding='utf-8') as _file:
             _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.mission))
-        with open(os.path.join(self.manifests_dir, 'fissuremod.json'), 'w', encoding='utf-8') as _file:
-            _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.fissuremod))
         with open(os.path.join(self.manifests_dir, 'solnodes.json'), 'w', encoding='utf-8') as _file:
             _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.solnodes))
 

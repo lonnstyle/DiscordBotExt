@@ -24,7 +24,8 @@ lang = lang.langpref()['worldState']
 logger = logger.getLogger('worldState')
 
 
-cmds = ['poe', 'earth', 'cambion', 'orb', 'arbitration', 'sortie', 'archon', 'fissure']
+# cmds = ['poe', 'earth', 'cambion', 'orb', 'arbitration', 'sortie', 'archon', 'fissure']
+cmds = ['poe', 'earth', 'cambion', 'orb', 'sortie', 'archon', 'fissure']
 hybirdAliases = Hybirdcmd_Aliases(lang, *cmds)
 
 
@@ -99,24 +100,14 @@ class worldState(Cog_Extension):
             embed = discord.Embed(title=lang["orb.embed.title.warm"], description=desc, color=0xd9b4a1)
             await ctx.send(embed=embed)
 
-    # @cog_ext.cog_slash(name="Orb", description=lang['orb.description'])
-    # async def slash_Orb(self, ctx: SlashContext):
-    #     await self.orbtime(ctx)
+    # @hybirdAliases.hyb_cmd
+    # async def arbitration(self, ctx):
+    #     data = parser.get_arbitration()
+    #     expiry = self.timeConv(data['expiry'])
+    #     embed = discord.Embed(title=lang["arbitration.embed.title"], description=lang['arbitration.embed.description'].format(type=data['type']), color=0x302f36)
+    #     embed.add_field(name=lang['arbitration.embed.field.name'].format(node=data['node']), value=lang["arbitration.embed.field.value"].format(enemy=data['enemy'], expiry=expiry))
+    #     await ctx.send(embed=embed)
 
-    # @commands.hybrid_command(name=hybirdAliases.c_name(), aliases=hybirdAliases.c_aliases(), brief=lang['arbitration.brief'], description=lang['arbitration.description'][:99])
-    @hybirdAliases.hyb_cmd
-    async def arbitration(self, ctx):
-        data = parser.get_arbitration()
-        expiry = self.timeConv(data['expiry'])
-        embed = discord.Embed(title=lang["arbitration.embed.title"], description=lang['arbitration.embed.description'].format(type=data['type']), color=0x302f36)
-        embed.add_field(name=lang['arbitration.embed.field.name'].format(node=data['node']), value=lang["arbitration.embed.field.value"].format(enemy=data['enemy'], expiry=expiry))
-        await ctx.send(embed=embed)
-
-    # @cog_ext.cog_slash(name="Arbitration", description=lang['arbitration.description'])
-    # async def slash_Arbitration(self, ctx: SlashContext):
-    #     await self.arbitration(ctx)
-
-    # @commands.hybrid_command(name=hybirdAliases.c_name(), aliases=hybirdAliases.c_aliases(), brief=lang['sortie.brief'], description=lang['sortie.description'])
     @hybirdAliases.hyb_cmd
     async def sortie(self, ctx):
         count = 1

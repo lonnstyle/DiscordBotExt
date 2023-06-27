@@ -237,7 +237,7 @@ async def on_command_error(ctx, error):
         logger.error(f"[command_error]error: {error}")
         traceback_lines = traceback.format_exception(type(error), error, error.__traceback__)
         traceback_text = ''.join(traceback_lines)
-        logger.error(f"[command_error]traceback: {traceback_text}")
+        logger.error(f"[command_error]{traceback_text}")
         
 
 if __name__ == "__main__":
