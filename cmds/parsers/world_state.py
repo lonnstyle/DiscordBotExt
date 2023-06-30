@@ -43,7 +43,7 @@ class WorldStateParser():
         self.data = json.loads(resp.text)
 
     def get_baro(self):
-        if self.data == {}:
+        if self.data == {} or (datetime.now().timestamp() > self.__get_timestamp(self.data['VoidTraders'][0]['Expiry']) and len(self.data['VoidTraders']['Manifest']) == 0):
             self.__get_data()
         self.baro = self.data['VoidTraders'][0]
         node = self.baro['Node']

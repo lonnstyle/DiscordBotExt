@@ -100,7 +100,7 @@ async def on_ready():
                     await bot.load_extension(f'cmds.{extname}')
                     logger.debug(f'[init] loaded extension: {extname}')
                 except Exception as exc:
-                    logger.error(f'[init] {exc}')
+                    logger.error(f'[init] {exc}', exc_info=True)
             else:
                 logger.debug(f'extension: {extname} is not loaded,its in "cmds/noload.json"')
     bot.help_command = CustomHelpCommand()

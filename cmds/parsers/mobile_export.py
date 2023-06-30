@@ -162,7 +162,7 @@ class MobileExportParser():
         self.solnodes = {}
 
         categories = ['ExportRelicArcane', 'ExportResources', 'ExportWeapons', 'ExportWarframes',
-                      'ExportCustoms', 'ExportRecipes', 'ExportUpgrades','ExportFlavour']
+                      'ExportCustoms', 'ExportUpgrades','ExportFlavour', 'ExportKeys']
         for language in AVAILABLE_LANGUAGES:
             _items = []
             _blueprints = []
@@ -200,8 +200,6 @@ class MobileExportParser():
                 # print uniqueName
                 self.__add_item(language, item)
 
-            for blueprint in _blueprints:
-                self.__add_blueprint(language, blueprint)
 
             for location in _locations:
                 if 'name' not in location or 'uniqueName' not in location:
@@ -212,6 +210,9 @@ class MobileExportParser():
                 if 'name' not in challenge or 'uniqueName' not in challenge:
                     continue
                 self.__add_challenge(language, challenge)
+
+            for blueprint in _blueprints:
+                self.__add_blueprint(language, blueprint)
 
 
         # self.sortie = lang['sortie']
@@ -234,27 +235,29 @@ class MobileExportParser():
         with open(os.path.join(self.manifests_dir, 'solnodes.json'), 'w', encoding='utf-8') as _file:
             _file.write(json.JSONEncoder(indent=4, ensure_ascii=False).encode(self.solnodes))
 
-    def __add_blueprint(self, lang, item):
-        try:
-            uniq_name = item['uniqueName']
+    def __add_blueprint(self, language, item):
+        uniq_name = item['uniqueName']
 
-            if uniq_name not in self.manifest_data:
-                self.manifest_data[uniq_name] = {}
+        if uniq_name not in self.manifest_data:
+            self.manifest_data[uniq_name] = {}
 
-            result = item['resultType']
+        result = item['resultType']
+        if result in self.manifest_data:            
             item = self.manifest_data[uniq_name]
-            name = self.manifest_data[result][lang]['item_name']+' ' + lang['blueprint']
+            name = self.manifest_data[result][language]['item_name']+' ' + lang['blueprint']
 
-            item[lang] = {
+            item[language] = {
                 'item_name': name
             }
 
-            # check if all lang fields were defined
-            for _lang in AVAILABLE_LANGUAGES:
-                if _lang not in item:
-                    return
-        except:
-            pass
+        # check if all lang fields were defined
+        for _lang in AVAILABLE_LANGUAGES:
+            if _lang not in item:
+                return
+            
+        print('', end='\x1b[2K\r')
+        print(f'Added blueprint {item[language]["item_name"]}',end='\r', flush=True)
+
 
     def __add_item(self, lang, item):
         """
