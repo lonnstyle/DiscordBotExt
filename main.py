@@ -4,6 +4,7 @@ import json
 import logging
 import math
 import os
+import traceback
 from datetime import datetime, timedelta
 
 import discord
@@ -13,8 +14,6 @@ from discord.ui import Button, View, button
 
 from localization import lang
 from log import logger
-
-
 
 dirname = os.path.dirname(__file__)
 
@@ -101,18 +100,19 @@ async def on_ready():
                     await bot.load_extension(f'cmds.{extname}')
                     logger.debug(f'[init] loaded extension: {extname}')
                 except Exception as exc:
-                    logger.error(f'[init] {exc}')
+                    logger.error(f'[init] {exc}', exc_info=True)
             else:
                 logger.debug(f'extension: {extname} is not loaded,its in "cmds/noload.json"')
     bot.help_command = CustomHelpCommand()
     logger.debug('[init] Replaced default help command')
+
 
 @bot.command(name='sync', aliases=[], brief='Bot synced!', description='The bot has been fully synchronized!')
 async def sync_command(ctx):
     await bot.tree.sync()
     await ctx.send('Bot is fully synchronized!')
     logger.debug(f'extentions are synced to the command tree')
-    
+
 
 def gen_help_menu(commands, page=1):
     embed = discord.Embed(title=lang['help.embed.title'], color=0xccab2b)
@@ -233,13 +233,16 @@ async def on_command_error(ctx, error):
         embed.add_field(name="Channel", value=ctx.guild.name+'/'+ctx.channel.name)
     if ctx.command in bot.commands:
         await owner.send(embed=embed)
-        logger.info(f"[command_error]message: {ctx.message.clean_content}")
-        logger.info(f"[command_error]error: {error}")
-
+        logger.error(f"[command_error]message: {ctx.message.clean_content}")
+        logger.error(f"[command_error]error: {error}")
+        traceback_lines = traceback.format_exception(type(error), error, error.__traceback__)
+        traceback_text = ''.join(traceback_lines)
+        logger.error(f"[command_error]{traceback_text}")
+        
 
 if __name__ == "__main__":
     try:
         file_handler = logging.FileHandler(filename='runtime.log', encoding='utf-8', mode='a')
         bot.run(jdata['TOKEN'], log_handler=file_handler, log_formatter=logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
     except Exception as exc:
-        logger.critical(exc)
+        logger.critical(exc, exc_info=True)
